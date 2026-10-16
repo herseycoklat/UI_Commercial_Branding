@@ -1,0 +1,189 @@
+{
+  "projects": [
+    {
+      "group_id": "G01",
+      "project_name": "Kampanye digital edukasi \"Cek Belakang, Cek-Out Belakangan\" (#MulaiCekBelakang)",
+      "type": "group"
+    },
+    {
+      "group_id": "G02",
+      "project_name": "Leftovers Fashion Brand",
+      "type": "group"
+    },
+    {
+      "group_id": "G03",
+      "project_name": "Ruang Tamu (A Fashion Lifestyle Event for Deforestation Issues)",
+      "type": "group"
+    },
+    {
+      "group_id": "G04",
+      "project_name": "Tjempaka Parfume Brand",
+      "type": "group"
+    },
+    {
+      "group_id": "G05",
+      "project_name": "Arnold Hernandes — Debut Music Project",
+      "type": "group"
+    },
+    {
+      "group_id": "G06",
+      "project_name": "\"Bumi Merekah\" Sustainable Fashion-Lifestyle Workshop (Upcycling PET & Eco Printing)",
+      "type": "group"
+    },
+    {
+      "group_id": "G07",
+      "project_name": "Kampanye Foto \"Satu Orang, Lima Pekerjaan\"",
+      "type": "group"
+    },
+    {
+      "group_id": "G08",
+      "project_name": "Fashion Creative Deck untuk single kedua TINGZ \"Pelan-Pelan Baby\"",
+      "type": "group"
+    },
+    {
+      "group_id": "G09",
+      "project_name": "Workshop Revive (Sustainable Fashion Education for Gen Z)",
+      "type": "group"
+    },
+    {
+      "group_id": "G10",
+      "project_name": "Fashion Auction",
+      "type": "group"
+    },
+    {
+      "group_id": "G11",
+      "project_name": "Film Dokumenter \"Seen and Silenced: a Narcissistic Parenting Documentary\"",
+      "type": "group"
+    },
+    {
+      "group_id": "G12",
+      "project_name": "Song Product by TINGZ \"Pelan-Pelan Baby\"",
+      "type": "group"
+    },
+    {
+      "group_id": "G13",
+      "project_name": "Short 2D-Mograph Animation \"Beyond the Cosmic Circus\"",
+      "type": "group"
+    },
+    {
+      "group_id": "G14",
+      "project_name": "\"Angga dan Hari-Harinya\" Interactive Book & Card Game",
+      "type": "group"
+    },
+    {
+      "group_id": "I01",
+      "project_name": "Conversational Copywriting Playbook for UMKM",
+      "type": "individual"
+    },
+    {
+      "group_id": "I02",
+      "project_name": "Humorous Branded Content Playbook for F&B Brands",
+      "type": "individual"
+    },
+    {
+      "group_id": "I03",
+      "project_name": "Deck Workshop Event for Baimstorming On-site Copywriting Class",
+      "type": "individual"
+    },
+    {
+      "group_id": "I04",
+      "project_name": "Deck Digital Marketing Planning for TINGZ upcoming song \"Pelan-Pelan Baby\"",
+      "type": "individual"
+    },
+    {
+      "group_id": "I05",
+      "project_name": "Digital Guidebook for Green Advertising in Local F&B Social Media Content",
+      "type": "individual"
+    },
+    {
+      "group_id": "I06",
+      "project_name": "Strategic Deck / Prototype for Campaign",
+      "type": "individual"
+    },
+    {
+      "group_id": "I07",
+      "project_name": "Visual Brand and Campaign Eco-Friendly Parfume \"Ever After\"",
+      "type": "individual"
+    },
+    {
+      "group_id": "I08",
+      "project_name": "Video Marketing UGC Style untuk jadi Stimulus Penelitian skripsi",
+      "type": "individual"
+    },
+    {
+      "group_id": "I09",
+      "project_name": "Strategic Deck for product placement campaign on film or series",
+      "type": "individual"
+    },
+    {
+      "group_id": "I10",
+      "project_name": "Strategic Deck for Marketing FILM",
+      "type": "individual"
+    },
+    {
+      "group_id": "I11",
+      "project_name": "Digital Advertising Campaign Lagu 'Semakin Dewasa'",
+      "type": "individual"
+    },
+    {
+      "group_id": "I12",
+      "project_name": "Guidebook \"Panduan Membangun Narasi Inklusif di Media Sosial untuk Usaha F&B\"",
+      "type": "individual"
+    },
+    {
+      "group_id": "I13",
+      "project_name": "Fashion Editorial Campaign di Instagram",
+      "type": "individual"
+    },
+    {
+      "group_id": "I14",
+      "project_name": "Personal Style Discovery Website",
+      "type": "individual"
+    },
+    {
+      "group_id": "I15",
+      "project_name": "Akun tiktok @urnextreads untuk isu literasi",
+      "type": "individual"
+    },
+    {
+      "group_id": "I16",
+      "project_name": "Jurnal Ilmiah - Pengaruh Literasi Digital Terhadap Persepsi Video Berita Viral di DKI Jakarta",
+      "type": "individual"
+    },
+    {
+      "group_id": "I17",
+      "project_name": "Artikel Ilmiah \"Menahan Suara di Ruang Digital: Self-Censorship Generasi Z dalam Menghadapi Risiko Konsekuensi Hukum di Media Sosial Indonesia\"",
+      "type": "individual"
+    },
+    {
+      "group_id": "I18",
+      "project_name": "Music Artist Development \"Secret Hideaway\"",
+      "type": "individual"
+    },
+    {
+      "group_id": "I19",
+      "project_name": "Festival Musik \"Besok Konser\"",
+      "type": "individual"
+    },
+    {
+      "group_id": "I20",
+      "project_name": "Mini Dokumenter - Proses kreatif Band SecretHideaway Single \"Alleen\"",
+      "type": "individual"
+    },
+    {
+      "group_id": "I21",
+      "project_name": "solo music",
+      "type": "individual"
+    },
+    {
+      "group_id": "I22",
+      "project_name": "SOP pra-produksi untuk alur kerja lokalisasi dubbing microdrama China berbasis AI di RHS Studio",
+      "type": "individual"
+    },
+    {
+      "group_id": "I23",
+      "project_name": "Emosional Metadata framework Strategic prototype High fidelity - ADIS",
+      "type": "individual"
+    }
+  ]
+}

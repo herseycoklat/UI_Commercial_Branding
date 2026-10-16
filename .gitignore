@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+# Data mahasiswa tidak pernah masuk repo
+*_sd-S*.json
+roster*.csv
+daftar-proyek.csv
