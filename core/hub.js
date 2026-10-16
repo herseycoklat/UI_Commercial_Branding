@@ -4,7 +4,7 @@
   var CB = window.CB, U = CB.util;
   var SESSION_IDS = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"];
   // Sesi yang halamannya sudah ada di repo. Ditambah oleh chat pembangun saat sesi baru di-deploy.
-  var LIVE_PAGES = ["S1", "S2"];
+  var LIVE_PAGES = ["S1", "S2", "S3"];
 
   function fld(id, label, input, help) {
     var d = U.el("div", { class: "fld" });

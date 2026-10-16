@@ -162,6 +162,19 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
 
 /* Print: hanya isian, berformat halaman workbook */
 #print-root{display:none;}
+/* Sesi 3: slider kutub dan panel bawaan */
+.sliderrow{display:grid; grid-template-columns:90px 1fr 90px 90px; gap:12px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-bottom:8px;}
+.sliderrow .pole{font-weight:bold; color:var(--terra); font-size:14px;}
+.sliderrow .pole.r{text-align:left;}
+.sliderrow input[type=range]{width:100%; accent-color:var(--terra);}
+.sliderrow input[type=range].untouched{opacity:.45;}
+.sliderrow .slval{text-align:right;}
+.carry{margin:0 0 14px; padding:12px 14px; border:1px solid var(--line); border-left:4px solid var(--sage); border-radius:8px; background:#fff;}
+.carry h4{font-size:14px; color:var(--deep); margin-bottom:8px;}
+.carryrow{margin-bottom:10px; font-size:14px;}
+.carryval{margin-top:3px; padding:7px 10px; background:var(--field); border-radius:6px; white-space:pre-wrap; max-height:180px; overflow:auto;}
+.carryval.empty{font-style:italic; color:var(--muted);}
+
 @media print{
   body{background:#fff; padding:0;}
   body > *:not(#print-root){display:none !important;}

@@ -484,6 +484,35 @@
     return box;
   };
 
+  /* ---------- sliders (pasangan kutub, mis. Playful ↔ Serious) ----------
+   * f.pairs: [{k, left, right}] · nilai: { <k>: 0–1 } (0 = kutub kiri, 1 = kutub kanan).
+   * Posisi baru tersimpan setelah slider disentuh; slider yang belum disentuh = belum berkomitmen. */
+  F.sliders = function (sessId, f) {
+    var box = U.el("div", { class: "box slidersbox", "data-fid": f.id });
+    if (f.label) box.appendChild(U.el("label", { text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var val = clone(CB.getField(sessId, f.id));
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    f.pairs.forEach(function (pr) {
+      var row = U.el("div", { class: "sliderrow" });
+      var id = fid(f) + "_" + pr.k;
+      row.appendChild(U.el("label", { class: "pole l", for: id, text: pr.left }));
+      var inp = U.el("input", { id: id, type: "range", min: "0", max: "100", step: "1", "aria-label": pr.left + " sampai " + pr.right });
+      var set = typeof val[pr.k] === "number";
+      inp.value = set ? String(Math.round(val[pr.k] * 100)) : "50";
+      var st = U.el("span", { class: "slval small muted" });
+      function paint() { inp.className = set ? "" : "untouched"; st.textContent = set ? Math.round(val[pr.k] * 100) + "" : "belum dipilih"; }
+      paint();
+      function upd() { set = true; val[pr.k] = parseInt(inp.value, 10) / 100; paint(); commit(); }
+      inp.addEventListener("input", upd); inp.addEventListener("change", upd);
+      row.appendChild(inp);
+      row.appendChild(U.el("span", { class: "pole r", text: pr.right }));
+      row.appendChild(st);
+      box.appendChild(row);
+    });
+    return box;
+  };
+
   /* ---------- copyfrom: longtext dengan tombol salin dari field lain (TARIK) ---------- */
   F.copytext = function (sessId, f) {
     var box = F.longtext(sessId, f);
@@ -537,6 +566,12 @@
         var x = v[s.id] || {}, n = 0;
         var parts = f.criteria.map(function (c) { n += x[c.k] || 0; return c.label + " " + (x[c.k] || "—"); });
         return (s.name || "(tanpa nama)") + ": " + parts.join(", ") + " · TOTAL " + n;
+      }).join("\n");
+    }
+    if (f.type === "sliders") {
+      return f.pairs.map(function (pr) {
+        var x = v[pr.k];
+        return pr.left + " – " + pr.right + ": " + (typeof x === "number" ? Math.round(x * 100) + "/100 (0 = " + pr.left + ", 100 = " + pr.right + ")" : "belum dipilih");
       }).join("\n");
     }
     if (f.type === "map2d") return (v.points || []).map(function (p) { return (p.name || "?") + " (" + Math.round(p.x * 100) + ", " + Math.round(p.y * 100) + ")"; }).join("; ");

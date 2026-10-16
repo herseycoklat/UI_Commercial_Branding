@@ -182,3 +182,72 @@
     return out;
   };
 })();
+
+/* ---------- S3: cek kelengkapan mengikuti TIGA TES Gate 2 (silabus §13); bukan penilaian, bukan status ---------- */
+(function () {
+  "use strict";
+  var CB = window.CB;
+  function txt(v) { return typeof v === "string" ? v.trim() : ""; }
+  var REFUSE = /\b(refuse|refuses|refusal|menolak|tolak|penolakan|tidak akan|won't|will not|never)\b/i;
+
+  CB.checkIntro = CB.checkIntro || {};
+  CB.checkIntro.S3 = "Gate 2 dibaca dari dokumenmu lewat <b>tiga tes</b>: Evidence, Positioning, Platform. Daftar di bawah mengikuti tiga tes itu. App hanya memeriksa apa yang bisa diperiksa mesin (terisi, berjejak, bukti bernama); isi dan kekuatannya dibaca penilai. Kartu hlm. 7 tidak dihitung di sini.";
+  CB.checkGroups = CB.checkGroups || {};
+  CB.checkGroups.S3 = {
+    e: { title: "Tes 1 · Evidence (dibawa dari Sesi 2, informasi)", help: "Gate 2 meminta bukti yang menyentuh segmen primer, minimal dua jenis dari daftar silabus §7, salah satunya dari audiens primer di luar lingkar tim. Angka di bawah dibaca dari halaman Sesi 2-mu; app tidak menilainya." },
+    p: { title: "Tes 2 · Positioning (hlm. 2 dan 3)", help: "Lolos kalau setiap blank bisa ditelusuri ke Sesi 1–2, kalimat memuat satu gagasan, dan lolos uji pesaing. Mesin hanya memeriksa kelengkapan dan tanda bukti yang belum ada." },
+    f: { title: "Tes 3 · Platform (hlm. 4–6)", help: "Lolos kalau canvas koheren, Promise punya bukti bernama atau sudah dipersempit, dan pilar message house bisa dilacak ke halaman 3–5." }
+  };
+
+  CB.checks.S3 = function (data) {
+    var all = data.sessions || {};
+    var c = (all.S3 || {}).current || {};
+    var s2 = (all.S2 || {}).current || {};
+    var out = [];
+
+    /* Tes 1 · Evidence */
+    var iv = (s2["s2.p9.interviews"] || {}).items || [];
+    var outside = iv.filter(function (x) { return x.outside === "Ya" && txt(x.notes); }).length;
+    var kinds = {};
+    ((s2["s2.p2.fact"] || {}).items || []).forEach(function (f) { if (txt(f.text) && f.kind) kinds[f.kind] = 1; });
+    if (outside) kinds["Audience interviews"] = 1;
+    var nk = Object.keys(kinds).length;
+    out.push({ group: "e", key: "e1", label: "Jenis bukti di FACT Sesi 2: " + nk + (nk ? " (" + Object.keys(kinds).join(", ") + ")" : "") + ". Gate 2 meminta minimal dua.", where: "S2 · hlm. 2 dan 9", state: nk >= 2 ? "info" : "warn" });
+    out.push({ group: "e", key: "e2", label: "Wawancara di luar tim yang bercatatan: " + outside + " dari minimal 5. Teman sekelas dan teman dekat dihitung di dalam lingkar tim.", where: "S2 · hlm. 9", state: outside >= 5 ? "info" : "warn" });
+    out.push({ group: "e", key: "e3", label: txt(s2["s2.p4.primary"]) ? "PRIMARY AUDIENCE tertulis di Sesi 2, jadi segmen di kalimat positioning punya sumber." : "PRIMARY AUDIENCE di Sesi 2 masih kosong; blank [segment] di hlm. 2 belum punya sumber.", where: "S2 · hlm. 4", state: txt(s2["s2.p4.primary"]) ? "info" : "no" });
+
+    /* Tes 2 · Positioning */
+    var d = c["s3.p2.draft"] || {};
+    var blanks = ["segment", "insight", "name", "category", "benefit", "proof"];
+    var bn = blanks.filter(function (k) { return txt(d[k]); }).length;
+    out.push({ group: "p", key: "p1", label: "Draf keenam blank kalimat positioning terisi (" + bn + "/6)", where: "S3 · hlm. 2", state: bn === 6 ? "ok" : "no" });
+    out.push({ group: "p", key: "p2", label: "OUR FINAL MERGED STATEMENT (satu kalimat tim) ditulis", where: "S3 · hlm. 2", state: txt(c["s3.p2.final"]) ? "ok" : "no" });
+    out.push({ group: "p", key: "p3", label: "THE TEST dijawab: satu hal di kalimatmu yang pesaing tidak bisa klaim", where: "S3 · hlm. 2", state: txt(c["s3.p2.test"]) ? "ok" : "no" });
+    var fin = txt(c["s3.p2.final"]);
+    var marked = /PLANNED|UNKNOWN/.test(fin + " " + (d.proof || ""));
+    out.push({ group: "p", key: "p4", label: marked ? "Ada bukti yang ditandai PLANNED atau UNKNOWN di dalam kalimat (jujur, bukan kekurangan)" : "Tidak ada tanda PLANNED atau UNKNOWN. Kalau semua bukti sudah ada hari ini, itu baik. Kalau ada yang masih rencana, tandai di kalimat.", where: "S3 · hlm. 2", state: fin ? (marked ? "info" : "warn") : "pending" });
+    var par = txt(c["s3.p3.parity"]), dif = txt(c["s3.p3.difference"]);
+    out.push({ group: "p", key: "p5", label: "Kolom parity terisi (jangan dikosongkan)", where: "S3 · hlm. 3", state: par ? "ok" : "no" });
+    out.push({ group: "p", key: "p6", label: "Kolom difference terisi", where: "S3 · hlm. 3", state: dif ? "ok" : "no" });
+
+    /* Tes 3 · Platform */
+    var boxes = ["purpose", "vision", "mission", "values", "essence", "promise", "personality", "rtb"];
+    var bf = boxes.filter(function (k) { return txt(c["s3.p4." + k]); }).length;
+    out.push({ group: "f", key: "f1", label: "Delapan kotak Brand Platform Canvas terisi (" + bf + "/8)", where: "S3 · hlm. 4", state: bf === 8 ? "ok" : "no" });
+    var pur = txt(c["s3.p4.purpose"]);
+    out.push({ group: "f", key: "f2", label: pur ? (REFUSE.test(pur) ? "PURPOSE menyebut hal yang ditolak. Cek sendiri: apakah penolakan itu tersedia, menguntungkan, dan berbiaya untuk dilepas?" : "PURPOSE belum menyebut hal yang ditolak. Tanya: what does this purpose make you REFUSE to do?") : "PURPOSE masih kosong", where: "S3 · hlm. 4", state: pur ? (REFUSE.test(pur) ? "warn" : "no") : "pending" });
+    var sl = c["s3.p5.sliders"] || {};
+    var keys = ["playful_serious", "mass_niche", "warm_cool", "bold_safe", "modern_classic"];
+    var sn = keys.filter(function (k) { return typeof sl[k] === "number"; }).length;
+    var mid = keys.filter(function (k) { return typeof sl[k] === "number" && sl[k] >= 0.45 && sl[k] <= 0.55; }).length;
+    out.push({ group: "f", key: "f3", label: "Kelima slider dipilih (" + sn + "/5)" + (mid ? "; " + mid + " ada di tengah. Kalau memang keputusan sadar, tulis alasannya di WHY WE PLACED IT THERE" : ""), where: "S3 · hlm. 5", state: sn === 5 ? (mid ? "warn" : "ok") : "no" });
+    out.push({ group: "f", key: "f4", label: "WHY WE PLACED IT THERE terisi", where: "S3 · hlm. 5", state: txt(c["s3.p5.why_placed"]) ? "ok" : "no" });
+    var pp = ((c["s3.p5.promise_proof"] || {}).items || []).filter(function (x) { return txt(x.promise); });
+    var noProof = pp.filter(function (x) { return !txt(x.proof); }).length;
+    out.push({ group: "f", key: "f5", label: !pp.length ? "PROMISE → PROOF masih kosong" : pp.length + " promise didaftar" + (noProof ? ", " + noProof + " belum punya bukti bernama. Perkecil promise-nya sampai benar, jangan dihapus." : ", semuanya punya bukti bernama"), where: "S3 · hlm. 5", state: !pp.length ? "no" : (noProof ? "warn" : "ok") });
+    var house = ["roof", "pillar1", "pillar2", "pillar3", "proof1", "proof2", "proof3", "cta"].filter(function (k) { return txt(c["s3.p6." + k]); }).length;
+    out.push({ group: "f", key: "f6", label: "Message House terisi (" + house + "/8: atap, tiga pilar, tiga proof point, CTA)", where: "S3 · hlm. 6", state: house === 8 ? "ok" : "no" });
+    out.push({ group: "f", key: "f7", label: "Cek terbalik tetap di tanganmu: tunjuk tiap pilar ke kotak asalnya di hlm. 3, 4, atau 5.", where: "S3 · hlm. 6", state: "info" });
+    return out;
+  };
+})();
