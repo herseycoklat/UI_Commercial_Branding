@@ -180,14 +180,14 @@
     sc.appendChild(list);
     main.appendChild(sc);
 
-    // Leadership Log
+    // Leadership Log (halaman sendiri, kontrak v3.3)
     var lg = U.el("section", { class: "card" });
     lg.appendChild(U.el("h2", { text: "Leadership Log" }));
-    var ents = CB.data.leadership_log.entries;
-    var last = ents.length ? ents[ents.length - 1] : null;
-    lg.appendChild(U.el("p", { class: "lead", text: "Decision Log (S1 · hlm. 8). Terbuka sepanjang semester, satu entri per keputusan. Ikut di setiap file yang kamu unduh." }));
+    var ents = CB.data.leadership_log.entries.filter(function (e) { return (e.text || "").trim(); });
+    var last = ents.length ? ents.slice().sort(function (x, y) { return (y.updated_at || y.created_at || "").localeCompare(x.updated_at || x.created_at || ""); })[0] : null;
+    lg.appendChild(U.el("p", { class: "lead", text: "Catatan individualmu sepanjang kursus (silabus §9D, nilai individual 10%). Satu entri per kerja yang kamu pimpin atau putuskan. Ikut di setiap file yang kamu unduh." }));
     lg.appendChild(U.el("p", null, "<b>" + ents.length + "</b> entri" + (last ? " · terakhir " + U.esc(U.fmtDate(last.updated_at || last.created_at)) : "")));
-    if (CB.isReleased("S1")) lg.appendChild(U.el("a", { class: "btn", href: "s1.html#p8", text: "Buka Leadership Log" }));
+    if (CB.isReleased("S1")) lg.appendChild(U.el("a", { class: "btn", href: "leadership.html", text: "Buka Leadership Log" }));
     else lg.appendChild(U.el("p", { class: "small muted", text: "Log terbuka bersama Sesi 1." }));
     main.appendChild(lg);
   }

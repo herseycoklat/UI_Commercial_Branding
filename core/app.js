@@ -9,8 +9,10 @@
  *    Semua perubahan bentuk data ditangani di migrate(), jangan di tempat lain.
  * 3. App mahasiswa tidak pernah menampilkan kata status Gate
  *    (APPROVED / APPROVED WITH A CONDITION / REVISION DUE).
- * 4. Leadership Log (field s1.p8.log) disimpan di data.leadership_log, di luar
- *    data.sessions. Mengubah Log TIDAK mengubah status atau versi S1.
+ * 4. Leadership Log (silabus §9D) disimpan di data.leadership_log, di luar data.sessions,
+ *    dan punya halaman sendiri (leadership.html). Mengubah Log TIDAK mengubah status
+ *    atau versi sesi mana pun. Decision Log S1 (field s1.p8.log) adalah field biasa
+ *    di sessions.S1 (kontrak v3.3).
  * 5. NIM dikunci setelah layar identitas disimpan. Impor file memuat identitas
  *    file itu dan menimpa data browser untuk NIM yang sama (dengan konfirmasi).
  * Tanpa server, tanpa library CDN, tanpa build step.
@@ -18,7 +20,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.1.0";
+  var APP_VERSION = "0.2.0";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
@@ -96,9 +98,38 @@
         group_id: identity.group_id || "", project_name: identity.project_name || ""
       },
       sessions: {},
-      leadership_log: { field_id: "s1.p8.log", entries: [] },
+      leadership_log: { field_id: "leadership_log", entries: [] },
       saved_at: isoLocal()
     };
+  }
+
+  /* v0.1 menyimpan Decision Log S1 dan sembilan butir §9D dalam satu entri di leadership_log.
+   * v0.2 (kontrak v3.3): kolom workbook (WHEN/DECIDED/WHY/EVIDENCE) pindah ke sessions.S1 "s1.p8.log";
+   * tiap butir §9D yang terisi menjadi satu entri Leadership Log berkategori. Aman diulang. */
+  var CATS_9D = ["decisions_led", "meetings_facilitated", "research_conducted", "commercial_documents",
+    "contributions_other_streams", "conflicts_addressed", "evidence_used", "changes_initiated", "personal_reflection"];
+  function migrateLegacyLog(d) {
+    var keep = [], moved = [], more = [];
+    d.leadership_log.entries.forEach(function (e) {
+      if (e.category) { keep.push(e); return; }
+      var isLegacy = ["decided", "why", "evidence"].concat(CATS_9D).some(function (k) { return e[k] !== undefined; });
+      if (!isLegacy) { keep.push(e); return; }
+      if ((e.decided || "").trim() || (e.why || "").trim() || (e.evidence || "").trim()) {
+        moved.push({ id: e.id || uuid(), when: e.date || "", decided: e.decided || "", why: e.why || "", evidence: e.evidence || "" });
+      }
+      CATS_9D.forEach(function (k) {
+        if ((e[k] || "").trim()) {
+          more.push({ id: uuid(), date: e.date || "", created_at: e.created_at || "", updated_at: e.updated_at || "", category: k, text: e[k], ref: "" });
+        }
+      });
+    });
+    if (moved.length) {
+      var s1 = d.sessions.S1 = d.sessions.S1 || { status: "draft", current: {}, changed_since_submit: false, versions: [], reflections: {} };
+      var cur = s1.current["s1.p8.log"] = s1.current["s1.p8.log"] || { items: [] };
+      cur.items = (cur.items || []).concat(moved);
+      if (s1.versions && s1.versions.length) s1.changed_since_submit = true;
+    }
+    d.leadership_log.entries = keep.concat(more);
   }
   function migrate(d) {
     // Satu-satunya tempat yang boleh mengubah bentuk data lama.
@@ -114,8 +145,10 @@
       if (typeof s.changed_since_submit !== "boolean") s.changed_since_submit = false;
       s.reflections = s.reflections || {};
     });
-    if (!d.leadership_log) d.leadership_log = { field_id: "s1.p8.log", entries: [] };
+    if (!d.leadership_log) d.leadership_log = { field_id: "leadership_log", entries: [] };
+    d.leadership_log.field_id = "leadership_log";
     d.leadership_log.entries = d.leadership_log.entries || [];
+    migrateLegacyLog(d);
     if (!d.student_id) d.student_id = uuid();
     d.app_version = APP_VERSION; // dicatat ulang saat disimpan oleh versi ini
     return d;

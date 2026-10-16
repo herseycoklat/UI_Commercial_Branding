@@ -156,7 +156,7 @@
 
     // Isian
     var wa = U.el("div", { class: "workarea" });
-    wa.appendChild(U.el("div", { class: "wahead", text: pg.fields[0] && pg.fields[0].type === "log" ? "Log-mu" : "Isianmu" }));
+    wa.appendChild(U.el("div", { class: "wahead", text: pg.workLabel || "Isianmu" }));
     var byId = byIdOf(pg);
     if (pg.layout === "canvas2" && pg.columns) {
       var grid = U.el("div", { class: "canvas2" });
@@ -194,32 +194,80 @@
     return card;
   }
 
+  /* Cek kelengkapan. Baris diberi key supaya elemen dipakai ulang antar-gambar ulang
+   * (kotak isian di dalam baris tidak boleh kehilangan fokus saat mengetik).
+   * Baris: { key, group?, label, where, state: ok|no|warn|pending|info, input?: {id, ph} }
+   * Judul kelompok: CB.checkGroups[sessId][group] = { title, help }. */
   function renderChecks(sessId, built, host) {
     var fn = CB.checks[sessId]; if (!fn) return null;
     var card = U.el("section", { class: "card", id: "cek" });
     card.appendChild(U.el("h2", { text: "Cek kelengkapan" + ({ S1: " — Gate 1", S2: " — bukti S2 (informasi)" }[sessId] || "") }));
     card.appendChild(U.el("p", { class: "lead", text: "Ini pemeriksaan kelengkapan berbasis aturan, bukan penilaian. Keputusan Gate dibaca dari file yang kamu kumpulkan." }));
+    var intro = CB.checkIntro && CB.checkIntro[sessId];
+    if (intro) card.appendChild(U.el("p", { class: "small" }, intro));
+    card.appendChild(U.el("p", { class: "small muted checklegend", text: "✓ terpenuhi · ✗ belum terpenuhi · ! cek lagi sendiri · … menunggu halaman lain · i informasi" }));
     var sumEl = U.el("div", { class: "checksum" }); card.appendChild(sumEl);
     var list = U.el("div", { class: "checks" }); card.appendChild(list);
+    var els = {};
+    var groups = (CB.checkGroups && CB.checkGroups[sessId]) || {};
+    var IC = { ok: "✓", no: "✗", warn: "!", pending: "…", info: "i" };
+
+    function makeRow(r) {
+      var row = U.el("div", { class: "checkrow" });
+      var ic = U.el("span", { class: "ic" });
+      var t = U.el("div");
+      var lab = U.el("div", { class: "clabel" });
+      t.appendChild(lab);
+      var ta = null;
+      if (r.input) {
+        ta = U.el("textarea", { id: "chk_" + r.input.id.replace(/\./g, "_"), rows: "2", placeholder: r.input.ph || "— tulis di sini —" });
+        ta.value = CB.getField(sessId, r.input.id) || "";
+        ta.addEventListener("input", function () {
+          CB.setField(sessId, r.input.id, ta.value);
+          CB.emit("change", r.input.id);
+          ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, 54) + "px";
+        });
+        t.appendChild(ta);
+        setTimeout(function () { ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, 54) + "px"; }, 0);
+      }
+      var wh = U.el("div", { class: "where" });
+      t.appendChild(wh);
+      row.appendChild(ic); row.appendChild(t);
+      return { row: row, ic: ic, lab: lab, wh: wh };
+    }
+    function makeGroup(g) {
+      var d = U.el("div", { class: "checkgroup" });
+      d.appendChild(U.el("h3", { text: g.title }));
+      if (g.help) d.appendChild(U.el("p", { class: "small muted", text: g.help }));
+      return { row: d };
+    }
     function draw() {
       var rows = fn(CB.data, built);
       sumEl.textContent = CB.checkSummary(rows);
-      list.innerHTML = "";
-      rows.forEach(function (r) {
-        var row = U.el("div", { class: "checkrow " + r.state });
-        row.appendChild(U.el("span", { class: "ic", text: { ok: "✓", no: "✗", warn: "!", pending: "…", info: "i" }[r.state] }));
-        var t = U.el("div");
-        if (r.reflection) {
-          var lb = U.el("label", { class: "chk" }); lb.style.cssText = "display:flex;gap:8px;cursor:pointer";
-          var cb = U.el("input", { type: "checkbox" });
-          cb.checked = !!CB.sess(sessId).reflections[r.reflection];
-          cb.onchange = function () { CB.sess(sessId).reflections[r.reflection] = cb.checked; CB.save(); draw(); };
-          lb.appendChild(cb); lb.appendChild(U.el("span", { text: r.label }));
-          t.appendChild(lb);
-        } else t.appendChild(U.el("div", { text: r.label }));
-        t.appendChild(U.el("div", { class: "where", text: r.state === "pending" ? r.where + " · belum diisi" : r.where }));
-        row.appendChild(t); list.appendChild(row);
+      var seen = {}, idx = 0, lastGroup = null;
+      function place(o, key) {
+        seen[key] = true;
+        var cur = list.children[idx];
+        if (cur !== o.row) list.insertBefore(o.row, cur || null);
+        idx++;
+      }
+      rows.forEach(function (r, i) {
+        if (r.group && r.group !== lastGroup && groups[r.group]) {
+          var gk = "g:" + r.group;
+          if (!els[gk]) els[gk] = makeGroup(groups[r.group]);
+          place(els[gk], gk);
+        }
+        lastGroup = r.group || null;
+        var k = r.key || ("r" + i);
+        if (!els[k]) els[k] = makeRow(r);
+        var o = els[k];
+        o.row.className = "checkrow " + r.state;
+        o.ic.textContent = IC[r.state] || "";
+        o.lab.textContent = r.label;
+        o.wh.textContent = r.state === "pending" ? r.where + " · belum diisi" : r.where;
+        place(o, k);
       });
+      Object.keys(els).forEach(function (k) { if (!seen[k]) { els[k].row.remove(); delete els[k]; } });
     }
     draw(); CB.on("change", draw);
     host.appendChild(card);

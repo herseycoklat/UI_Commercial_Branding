@@ -1,13 +1,14 @@
 /* core/fields.js — komponen field.
  * Setiap komponen menerima (sessId, field) dan mengembalikan elemen DOM.
- * Nilai disimpan lewat CB.setField(sessId, field.id, value), kecuali komponen "log"
- * yang menulis ke CB.data.leadership_log (kontrak v3.2 bagian 4).
+ * Nilai disimpan lewat CB.setField(sessId, field.id, value).
+ * Leadership Log punya halaman sendiri (core/leadership.js) dan menulis ke
+ * CB.data.leadership_log (kontrak v3.3). Decision Log S1 (s1.p8.log) = tipe "list".
  * Bentuk nilai per tipe (JANGAN diubah setelah rilis; tambah saja):
  *   longtext / text : "teks"
  *   table           : { rows: { <baris>: { <kolom>: "teks" } }, extra: [ { label, <kolom>... } ] }
  *   score           : { score: 1–5, justification: "teks" }
  *   trace           : { text: "teks", trace: [ "<id sumber>" ] }
- *   log             : (di leadership_log.entries)
+ *   list            : { items: [ { id, <k>: "teks" } ] }
  */
 (function () {
   "use strict";
@@ -186,86 +187,6 @@
     CB.on("change", function (id) { if (id && id !== f.id && (/\.p6\./.test(id) || /b8_gaps$/.test(id))) draw(); });
     box.appendChild(tr);
     return box;
-  };
-
-  /* ---------- log (Decision Log = Leadership Log, di leadership_log) ---------- */
-  var LOG_MAIN = [
-    { k: "decided", label: "WHAT WE DECIDED" },
-    { k: "why", label: "WHY" },
-    { k: "evidence", label: "EVIDENCE" }
-  ];
-  var LOG_9D = [
-    { k: "decisions_led", label: "Decisions led" },
-    { k: "meetings_facilitated", label: "Meetings facilitated" },
-    { k: "research_conducted", label: "Research conducted" },
-    { k: "commercial_documents", label: "Commercial documents produced" },
-    { k: "contributions_other_streams", label: "Contributions to other streams" },
-    { k: "conflicts_addressed", label: "Conflicts or coordination problems addressed" },
-    { k: "evidence_used", label: "Evidence used" },
-    { k: "changes_initiated", label: "Changes initiated" },
-    { k: "personal_reflection", label: "Personal reflection" }
-  ];
-  CB.LOG_MAIN = LOG_MAIN; CB.LOG_9D = LOG_9D;
-  function today() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
-  F.log = function (sessId, f) {
-    var wrap = U.el("div", { class: "logwrap", "data-fid": f.id });
-    var list = U.el("div", { class: "loglist" });
-    var entries = CB.data.leadership_log.entries;
-    function touch(e) { e.updated_at = U.isoLocal(); CB.save(); changed(f.id); }
-    function draw() {
-      list.innerHTML = "";
-      if (!entries.length) list.appendChild(U.el("p", { class: "small muted", text: "Belum ada entri. Tambahkan keputusan pertamamu hari ini." }));
-      entries.forEach(function (e, i) {
-        var card = U.el("div", { class: "logentry" });
-        var top = U.el("div", { class: "loghead" });
-        var dl = U.el("label", { class: "small", text: "DATE " }); dl.style.fontWeight = "bold";
-        var di = U.el("input", { type: "date", class: "datein", "aria-label": "Tanggal entri " + (i + 1) });
-        di.value = e.date || "";
-        di.onchange = function () { e.date = di.value; touch(e); };
-        dl.appendChild(di); top.appendChild(dl);
-        top.appendChild(U.el("span", { class: "small muted", text: "Entri " + (i + 1) + (e.updated_at ? " · diubah " + U.fmtDate(e.updated_at) : "") }));
-        var del = U.el("button", { type: "button", class: "iconbtn", text: "Hapus", title: "Hapus entri" });
-        del.onclick = function () {
-          CB.modal({ title: "Hapus entri " + (i + 1) + "?", paras: ["Entri yang dihapus tidak bisa dikembalikan, kecuali dari file yang pernah kamu unduh."], buttons: [{ label: "Batal", value: false, cls: "ghost" }, { label: "Hapus", value: true, cls: "primary" }] })
-            .then(function (ok) { if (ok) { entries.splice(i, 1); CB.save(); changed(f.id); draw(); } });
-        };
-        top.appendChild(del); card.appendChild(top);
-        var grid = U.el("div", { class: "loggrid" });
-        LOG_MAIN.forEach(function (c) {
-          var b = U.el("div", { class: "box" });
-          var id = "log_" + e.id + "_" + c.k;
-          b.appendChild(U.el("label", { for: id, text: c.label }));
-          b.appendChild(textarea(id, e[c.k], function (v) { e[c.k] = v; touch(e); }, 56));
-          grid.appendChild(b);
-        });
-        card.appendChild(grid);
-        var det = U.el("details", { class: "log9d" });
-        var sum9 = U.el("summary");
-        var upd9 = function () { sum9.textContent = "Butir Leadership Log (silabus §9D) · " + LOG_9D.filter(function (c) { return (e[c.k] || "").trim(); }).length + "/9 terisi · boleh kosong per entri"; };
-        upd9(); det.appendChild(sum9);
-        var g9 = U.el("div", { class: "loggrid" });
-        LOG_9D.forEach(function (c) {
-          var b = U.el("div", { class: "box" });
-          var id = "log_" + e.id + "_" + c.k;
-          b.appendChild(U.el("label", { for: id, text: c.label }));
-          b.appendChild(textarea(id, e[c.k], function (v) { e[c.k] = v; touch(e); upd9(); }, 44));
-          g9.appendChild(b);
-        });
-        det.appendChild(g9); card.appendChild(det);
-        list.appendChild(card);
-      });
-    }
-    draw();
-    wrap.appendChild(list);
-    var add = U.el("button", { type: "button", class: "btn", text: "+ Tambah entri keputusan" });
-    add.onclick = function () {
-      var now = U.isoLocal();
-      entries.push({ id: U.uuid(), date: today(), created_at: now, updated_at: now, decided: "", why: "", evidence: "" });
-      CB.save(); changed(f.id); draw();
-      var last = list.lastElementChild; if (last) { var t = last.querySelector("textarea"); if (t) t.focus(); }
-    };
-    wrap.appendChild(add);
-    return wrap;
   };
 
   /* ---------- list (daftar item, tiap item bisa punya beberapa isian) ----------
@@ -578,17 +499,6 @@
 
   /* ---------- teks cetak per tipe ---------- */
   F.printText = function (f, v, sessId) {
-    if (f.type === "log") {
-      var es = CB.data.leadership_log.entries;
-      if (!es.length) return "";
-      return es.map(function (e, i) {
-        var lines = [(i + 1) + ". " + (e.date || "") + " — " + (e.decided || "")];
-        if (e.why) lines.push("   WHY: " + e.why);
-        if (e.evidence) lines.push("   EVIDENCE: " + e.evidence);
-        LOG_9D.forEach(function (c) { if ((e[c.k] || "").trim()) lines.push("   " + c.label + ": " + e[c.k]); });
-        return lines.join("\n");
-      }).join("\n");
-    }
     if (v == null || v === "") return "";
     if (typeof v === "string") return v;
     if (f.type === "score") return (v.score ? v.score + " / 5" : "—") + (v.justification ? " — " + v.justification : "");

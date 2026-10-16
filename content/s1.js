@@ -581,6 +581,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<ul>" +
             "<li><b>Masalah, bukan solusi.</b> \"We don't know if parents would pay\" adalah masalah. \"We will lower the price\" adalah solusi yang belum pantas kamu klaim.</li>" +
             "<li><b>Ambil dari jejak, bukan ide baru.</b> Lihat tiga skor terendah di hlm. 6 dan kotak 8 Canvas. Setiap masalah harus bisa ditunjuk asalnya; di app, centang sumbernya di bawah tiap masalah.</li>" +
+            "<li><b>Satu kalimat \"kenapa komersial\" per masalah.</b> Di Cek kelengkapan (bawah halaman sesi), tulis untuk tiap masalah apa yang berubah dalam keputusan orang membayar atau memilih kalau masalah itu selesai. Ini bukti uji pertama Gate 1, dan tidak ada yang bisa memeriksanya otomatis, jadi kalimatmu yang dibaca.</li>" +
             "<li><b>Permintaan lintas-stream:</b> satu baris per stream, berisi APA yang dibutuhkan, KENAPA (celah mana yang diperbaiki), dan KAPAN. \"Tolong bantu\" bukan permintaan. Kamu mengidentifikasi kebutuhan informasi, bukan mendikte eksekusi kreatif.</li>" +
             "</ul>"
         },
@@ -604,7 +605,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           items: [
             "Ketiga masalah terdengar seperti \"We don't know if…\", bukan \"We will…\"?",
             "Tiap masalah tercentang ke kotak 8 atau ke skor 1–2?",
-            "Memperbaiki tiap masalah mengubah apakah orang membayar atau memilih?",
+            "Di Cek kelengkapan, tiap masalah punya satu kalimat kenapa memperbaikinya mengubah apakah orang membayar atau memilih?",
             "Tiap permintaan punya apa, kenapa, dan kapan, dan bisa dikerjakan orang asing tanpa menebak?"
           ]
         },
@@ -615,6 +616,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s1.p7.problem1": "We don't know if ordinary (non-industry) Indonesian parents believe local animation can match imported quality — we have no outside-audience evidence.",
               "s1.p7.problem2": "We don't have a validated post-theatrical revenue plan — streaming, merchandise, and licensing aren't locked beyond ticket sales.",
               "s1.p7.problem3": "We don't know if our Lebaran release window is actually an advantage, or if it just puts us head-to-head with imported family titles releasing the same season.",
+              "s1.p7.problem1_commercial": "Whether parents believe local quality decides ticket buying.",
+              "s1.p7.problem2_commercial": "Post-theatrical revenue decides whether the film earns beyond tickets.",
+              "s1.p7.problem3_commercial": "The release window decides who shows up and against which titles.",
               "s1.p7.req_designer": { label: "From our DESIGNER / ARTIST", text: "3 poster concepts that say “world-class quality, distinctly Indonesian” — needed in 2 weeks, to outside-audience test before locking key art." },
               "s1.p7.req_engineer": { label: "From our ANIMATION / TECHNICAL LEAD", text: "Confirmed animation completion timeline — needed in 1 week, so we know how much runway exists to plan the release window." },
               "s1.p7.req_content": { label: "From our CONTENT / PRODUCTION TEAM", text: "5–10 minutes of shareable behind-the-scenes footage — needed in 3 weeks, for outside-audience testing and social teasers." }
@@ -634,6 +638,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s1.p7.problem1": "We don't know if people who trust Gojek for rides will actually trust the same app with their food orders — that trust transfer is assumed, not proven.",
               "s1.p7.problem2": "We don't know how many merchants make GoFood reliable enough that a first-time user orders again.",
               "s1.p7.problem3": "We don't have proven delivery economics — we don't know if driver pay plus merchant commission actually works at real scale.",
+              "s1.p7.problem1_commercial": "Whether ride trust carries over decides the first food orders.",
+              "s1.p7.problem2_commercial": "The first-order experience decides whether users trust GoFood.",
+              "s1.p7.problem3_commercial": "Delivery economics decide whether GoFood can survive at scale.",
               "s1.p7.req_designer": { label: "From our PRODUCT DESIGNER", text: "The GoFood ordering flow needs to feel like “the same app, one more thing you can do” — needed in 2 weeks, to keep identity consistency high." },
               "s1.p7.req_engineer": { label: "From our ENGINEERING LEAD", text: "Confirmed technical capacity for real-time order + delivery tracking — needed in 3 weeks, before committing to a public pilot date." },
               "s1.p7.req_content": { label: "From our OPS / BUSINESS DEV TEAM", text: "A first target of 50 reliable merchants onboarded in one district (an opening target — whether 50 is enough is untested) — needed in 4 weeks, to fix the distribution-readiness gap before any public marketing." }
@@ -651,6 +658,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s1.p7.problem1": "We have no box-office evidence that a lesser-known Marvel character can headline a film — we rely on comic sales, not film demand.",
               "s1.p7.problem2": "We financed this by mortgaging future characters' film rights — if Iron Man underperforms, we don't have a real fallback plan.",
               "s1.p7.problem3": "We don't know if people outside the comic community will recognise this film from its poster and trailer.",
+              "s1.p7.problem1_commercial": "Whether this character can headline a film decides ticket sales.",
+              "s1.p7.problem2_commercial": "The mortgaged rights make a flop a financial threat to the studio.",
+              "s1.p7.problem3_commercial": "If non-fans cannot tell what the film is, they will not buy a ticket.",
               "s1.p7.req_designer": { label: "From our DESIGN / MARKETING TEAM", text: "Poster and trailer concepts that introduce Iron Man to non-readers of the comic — needed in 3 weeks, to test if non-fans understand him." },
               "s1.p7.req_engineer": { label: "From our DIRECTOR / PRODUCTION TEAM", text: "A clear answer on how the post-credits scene hints at the larger universe without confusing newcomers — needed in 4 weeks, before final cut." },
               "s1.p7.req_content": { label: "From our BUSINESS / LEGAL TEAM", text: "Confirmed terms on the mortgaged rights if this film underperforms — needed in 2 weeks, before any franchise announcement." }
@@ -668,6 +678,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s1.p7.problem1": "We don't know if enough people will pay a premium price for significantly more complexity — our current sales data is for the existing line, not this step up.",
               "s1.p7.problem2": "We don't know if pushing Technic further reads as disciplined specialisation, or as repeating the pre-crisis pattern of adding complexity without real audience validation.",
               "s1.p7.problem3": "We don't have a distribution and marketing plan built specifically for a flagship premium product — our current channels are built for the existing line.",
+              "s1.p7.problem1_commercial": "Willingness to pay a premium decides whether the tier is viable.",
+              "s1.p7.problem2_commercial": "Whether the step reads as disciplined decides if loyal hobbyists trust it.",
+              "s1.p7.problem3_commercial": "A flagship without its own plan may never reach the right buyers.",
               "s1.p7.req_designer": { label: "From our DESIGN / ENGINEERING TEAM", text: "A working functional prototype tested with real hobbyists before committing to full production — needed in 4 weeks, before the greenlight meeting." },
               "s1.p7.req_engineer": { label: "From our MARKETING TEAM", text: "Messaging that demonstrates real function, not complexity for its own sake — needed in 3 weeks, to test with hobbyist reviewers before any general announcement." },
               "s1.p7.req_content": { label: "From our FINANCE / PRICING TEAM", text: "A clear price-elasticity estimate — how far price can go before the audience shrinks below profitability — needed in 2 weeks, before the final price is locked." }
@@ -686,17 +699,18 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
       8: {
         theory: {
           title: "Baca ini dulu",
-          src: "Silabus §9D (Individual PM/Business Leadership Log) dan §10",
+          src: "Workbook S1 hlm. 8; Leadership Log: silabus §9D dan §10",
           html:
-            "<p>Mulai hari ini, setiap keputusan nyata mendapat satu entri: <b>kapan, apa yang diputuskan, kenapa, dan bukti apa</b>. Tulis di hari yang sama keputusan dibuat. Log yang ditulis dari ingatan di minggu ke-7 bukan log, itu tebakan.</p>" +
+            "<p><b>Decision Log</b> mencatat keputusan proyekmu, satu baris per keputusan: <b>kapan, apa yang diputuskan, kenapa, dan bukti apa</b>. Isi halaman ini <b>di akhir Sesi 1</b>, setelah halaman 2–7 selesai, dari keputusan yang benar-benar lahir waktu kamu mengerjakan Sesi 1. Contohnya memilih tiga masalah di hlm. 7, atau menunda sesuatu karena skornya rendah di hlm. 6.</p>" +
             "<ul>" +
-            "<li><b>Log ini juga Leadership Log-mu.</b> Silabus §9D meminta tiap mahasiswa mencatat: decisions led, meetings facilitated, research conducted, commercial documents produced, contributions to other streams, conflicts or coordination problems addressed, evidence used, changes initiated, dan personal reflection. Butir-butir itu ada di bawah tiap entri; isi yang relevan, boleh kosong.</li>" +
-            "<li><b>Kolom WHY dan EVIDENCE menunjuk halaman.</b> Keputusan yang baik bisa ditelusuri ke kotak Canvas, skor Scorecard, atau bukti yang kamu kumpulkan.</li>" +
-            "<li><b>Halaman ini selalu terbuka</b> sampai akhir semester dan ikut di setiap file yang kamu unduh. Mengubah Log tidak mengubah status S1.</li>" +
+            "<li><b>Hanya keputusan Sesi 1.</b> Keputusan dari sesi berikutnya tidak dicatat di sini. Keempat contoh kasus di bawah masing-masing berisi tiga baris; kamu boleh lebih banyak.</li>" +
+            "<li><b>Ini bukan Leadership Log.</b> Decision Log ini ikut di-submit bersama S1. Leadership Log (silabus §9D) adalah catatan <i>individual</i> yang kamu isi sepanjang kursus, di halaman tersendiri: <a href='leadership.html'>buka Leadership Log</a>.</li>" +
+            "<li><b>WHY dan EVIDENCE menunjuk halaman.</b> Keputusan yang baik bisa ditelusuri ke kotak Canvas, skor Scorecard, atau bukti yang kamu kumpulkan.</li>" +
+            "<li><b>Tambah baris, jangan duplikat halaman.</b> Catatan \"duplicate this page\" di bawah halaman berlaku untuk workbook cetak. Di app, tekan tombol tambah.</li>" +
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> PM/Business Leadership Log adalah komponen nilai individual 10% (silabus §10), dan bersama Individual Defence membentuk 20% nilaimu yang bersifat individu. Log ini adalah bukti apa yang benar-benar kamu kerjakan dan kenapa, dan menjadi bahan written defence di akhir semester.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> Decision Log membuat keputusan Sesi 1 bisa dilacak. Pembaca bisa melihat bahwa tiga masalah di hlm. 7 lahir dari bukti, bukan dari selera. Log yang ditulis dari ingatan berminggu-minggu kemudian adalah tebakan, jadi tulis selagi alasannya masih segar. Yang berbeda dan bernilai sendiri adalah Leadership Log: komponen individual 10% (silabus §10) yang berisi apa yang kamu pimpin dan kerjakan, dan menjadi bahan written defence di akhir semester.</p>",
         deeper: {
           summary: "Deeper read — log yang meyakinkan vs log yang hanya ada",
           html:
@@ -709,9 +723,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         reverse: {
           title: "Cek terbalik",
           items: [
-            "Keputusan minggu ini sudah dicatat di minggu ini?",
-            "Setiap entri punya WHY dan EVIDENCE yang menunjuk ke halaman atau bukti nyata?",
-            "Butir §9D yang kamu kerjakan minggu ini (mis. research conducted, meetings facilitated) sudah tercatat?"
+            "Setiap keputusan penting di Sesi 1 (mis. pilihan tiga masalah) punya satu baris?",
+            "Setiap WHY dan EVIDENCE menunjuk halaman atau bukti nyata?",
+            "Keputusan yang kamu pimpin sendiri sudah kamu catat di Leadership Log, halaman terpisah?"
           ]
         },
         examples: {
