@@ -48,7 +48,7 @@ tools/audit.py        audit parity spec ↔ ekstrak workbook
 ## Audit sebelum deploy
 
 ```
-python3 tools/audit.py S1 <ekstrak-workbook-S1.md>
-python3 tools/audit.py S2 <ekstrak-workbook-S2.md>
+python3 tools/audit.py S1 tools/extracts/S1.md
+python3 tools/audit.py S2 tools/extracts/S2.md
 # saat sesi dirilis: tambahkan --lock untuk mencatat ID di tools/field-ids.lock.json
 ```
