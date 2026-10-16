@@ -1,5 +1,7 @@
 /* core/session.js — merender halaman sesi dari SPEC (sessions/sN.js) + KONTEN (content/sN.js).
- * Halaman workbook yang belum punya konten tidak dirender (ditandai "menyusul" di navigasi). */
+ * Halaman workbook yang belum punya konten tidak dirender (ditandai "menyusul" di navigasi).
+ * Layout yang tersedia (pg.layout): "canvas2" (dua kolom bernama), "grid" (pg.cols kolom),
+ * "groups" (blok berjudul, pg.groups), default = tumpuk. */
 (function () {
   "use strict";
   var CB = window.CB, U = CB.util;
@@ -16,6 +18,7 @@
   function builtPages(spec, content) {
     return spec.pages.filter(function (pg) { return content.pages && content.pages[pg.p]; }).map(function (pg) { return pg.p; });
   }
+  function byIdOf(pg) { var m = {}; pg.fields.forEach(function (f) { m[f.id] = f; }); return m; }
 
   function renderField(sessId, f) {
     var comp = CB.fields[f.type];
@@ -23,11 +26,32 @@
     return comp(sessId, f);
   }
 
+  /* ---------- contoh empat kasus ---------- */
+  function exampleValue(f, v) {
+    var d = U.el("div", { class: "exval" });
+    if (typeof v === "string") { d.textContent = v; return d; }
+    if (v.cols && v.rows) {
+      var sc = U.el("div", { class: "tscroll" });
+      var t = U.el("table", { class: "wbtable ex" });
+      var hr = U.el("tr"); v.cols.forEach(function (c) { hr.appendChild(U.el("th", { text: c })); });
+      t.appendChild(hr);
+      v.rows.forEach(function (r) { var tr = U.el("tr"); r.forEach(function (c, i) { tr.appendChild(U.el(i ? "td" : "th", { text: c })); }); t.appendChild(tr); });
+      sc.appendChild(t); d.appendChild(sc); return d;
+    }
+    if (v.score != null) {
+      var s = U.el("span", { class: "exscore" + (v.score <= 2 ? " low" : ""), text: String(v.score) });
+      d.appendChild(s); d.appendChild(document.createTextNode(" " + (v.justification || "")));
+      return d;
+    }
+    d.textContent = v.text || "";
+    return d;
+  }
   function renderExamples(sessId, pg, ct, host) {
     var bar = U.el("div", { class: "exbar" });
     bar.appendChild(U.el("span", { class: "lbl", text: "Masih bingung setelah baca teori? Lihat contoh:" }));
     var panel = U.el("div", { class: "expanel hidden" });
     var active = null;
+    var byId = byIdOf(pg);
     CASES.forEach(function (c) {
       var ex = ct.examples && ct.examples[c.k];
       var b = U.el("button", { class: "chip", type: "button", text: ex ? c.label : c.label + " (menyusul)" });
@@ -40,18 +64,15 @@
         panel.innerHTML = "";
         panel.appendChild(U.el("h4", { text: "Contoh — " + ex.name + " · " + pg.title }));
         if (ex.sub) panel.appendChild(U.el("div", { class: "exsub", text: ex.sub + (ex.caveat ? " " + ex.caveat : "") }));
-        var order = pg.columns ? pg.columns[0].ids.concat(pg.columns[1].ids) : pg.fields.map(function (f) { return f.id; });
-        // urut nomor kotak supaya mudah dibandingkan
-        order = pg.fields.map(function (f) { return f.id; }).filter(function (id) { return order.indexOf(id) >= 0; });
-        order.forEach(function (fid) {
-          var f = pg.fields.filter(function (x) { return x.id === fid; })[0];
-          var v = ex.values[fid]; if (v == null) return;
+        pg.fields.forEach(function (f) {
+          var v = ex.values[f.id]; if (v == null) return;
           var bx = U.el("div", { class: "exbox" });
-          bx.appendChild(U.el("b", { text: f.label }));
-          bx.appendChild(U.el("div", { class: "exval", text: v }));
-          if (ex.anno && ex.anno[fid]) bx.appendChild(U.el("div", { class: "anno", text: ex.anno[fid] }));
+          bx.appendChild(U.el("b", { text: (v && v.label) || f.label || pg.title }));
+          bx.appendChild(exampleValue(byId[f.id], v));
+          if (ex.anno && ex.anno[f.id]) bx.appendChild(U.el("div", { class: "anno", text: ex.anno[f.id] }));
           panel.appendChild(bx);
         });
+        if (ex.notice) panel.appendChild(U.el("div", { class: "exnotice", text: ex.notice }));
         if (ex.note) panel.appendChild(U.el("div", { class: "exnote", text: ex.note }));
         panel.classList.remove("hidden");
       };
@@ -83,13 +104,29 @@
     host.appendChild(r);
   }
 
+  /* Tiga skor terendah (hlm. 6) — dihitung, bukan field */
+  function renderLowest(sessId, pg, host) {
+    var box = U.el("div", { class: "lowest" });
+    function draw() {
+      var arr = pg.fields.map(function (f) { var v = CB.getField(sessId, f.id) || {}; return { label: f.label, score: v.score }; })
+        .filter(function (x) { return x.score; });
+      box.innerHTML = "";
+      if (arr.length < pg.fields.length) { box.appendChild(U.el("span", { class: "small muted", text: "Tiga skor terendahmu muncul di sini setelah keenam skor terisi." })); return; }
+      arr.sort(function (a, b) { return a.score - b.score; });
+      box.appendChild(U.el("b", { text: "Tiga skor terendahmu: " }));
+      box.appendChild(document.createTextNode(arr.slice(0, pg.lowest).map(function (x) { return x.label + " (" + x.score + ")"; }).join(", ") + ". Bawa ketiganya ke hlm. 7."));
+    }
+    draw(); CB.on("change", draw);
+    host.appendChild(box);
+  }
+
   function renderPage(sessId, spec, pg, ct) {
     var card = U.el("section", { class: "card", id: "p" + pg.p });
     var head = U.el("div", { class: "pagehead" });
     head.appendChild(U.el("span", { class: "num", text: String(pg.p) }));
     var ht = U.el("div");
     ht.appendChild(U.el("h2", { text: pg.title }));
-    var lab = U.el("span", { class: "pglabel", text: sessId + " · hlm. " + pg.p }); ht.appendChild(lab);
+    ht.appendChild(U.el("span", { class: "pglabel", text: sessId + " · hlm. " + pg.p }));
     if (pg.tag) ht.appendChild(U.el("span", { class: "tag", text: pg.tag }));
     if (pg.sub) ht.appendChild(U.el("p", { class: "wbsub", text: pg.sub }));
     head.appendChild(ht); card.appendChild(head);
@@ -110,11 +147,12 @@
       det.appendChild(nd);
     }
     tb.appendChild(det); card.appendChild(tb);
+    if (ct.callout) card.appendChild(U.el("div", { class: "callout" }, ct.callout));
 
     // Isian
     var wa = U.el("div", { class: "workarea" });
-    wa.appendChild(U.el("div", { class: "wahead", text: "Isianmu" }));
-    var byId = {}; pg.fields.forEach(function (f) { byId[f.id] = f; });
+    wa.appendChild(U.el("div", { class: "wahead", text: pg.fields[0] && pg.fields[0].type === "log" ? "Log-mu" : "Isianmu" }));
+    var byId = byIdOf(pg);
     if (pg.layout === "canvas2" && pg.columns) {
       var grid = U.el("div", { class: "canvas2" });
       pg.columns.forEach(function (col) {
@@ -124,10 +162,25 @@
         grid.appendChild(c);
       });
       wa.appendChild(grid);
+    } else if (pg.layout === "grid") {
+      var g = U.el("div", { class: "fgrid cols" + (pg.cols || 2) });
+      pg.fields.forEach(function (f) { g.appendChild(renderField(sessId, f)); });
+      wa.appendChild(g);
+    } else if (pg.layout === "groups") {
+      pg.groups.forEach(function (gr) {
+        var sec = U.el("div", { class: "fgroup" });
+        var gh = U.el("div", { class: "colhead" }, U.esc(gr.head) + (gr.badge ? ' <span class="gbadge">' + U.esc(gr.badge) + "</span>" : ""));
+        sec.appendChild(gh);
+        var gg = U.el("div", { class: "fgrid cols" + (gr.cols || 1) });
+        gr.ids.forEach(function (id) { gg.appendChild(renderField(sessId, byId[id])); });
+        sec.appendChild(gg);
+        wa.appendChild(sec);
+      });
     } else {
       pg.fields.forEach(function (f) { wa.appendChild(renderField(sessId, f)); });
     }
-    if (pg.footer) wa.appendChild(U.el("p", { class: "footrule", text: pg.footer }));
+    if (pg.lowest) renderLowest(sessId, pg, wa);
+    if (pg.footer) wa.appendChild(U.el("p", { class: "footrule", text: CB.fill(pg.footer, sessId) }));
     card.appendChild(wa);
 
     renderReverse(sessId, ct, card);
@@ -136,7 +189,7 @@
   }
 
   function renderChecks(sessId, built, host) {
-    var fn = CB.checks[sessId]; if (!fn) return;
+    var fn = CB.checks[sessId]; if (!fn) return null;
     var card = U.el("section", { class: "card", id: "cek" });
     card.appendChild(U.el("h2", { text: "Cek kelengkapan" + (sessId === "S1" ? " — Gate 1" : "") }));
     card.appendChild(U.el("p", { class: "lead", text: "Ini pemeriksaan kelengkapan berbasis aturan, bukan penilaian. Keputusan Gate dibaca dari file yang kamu kumpulkan." }));
@@ -148,7 +201,7 @@
       list.innerHTML = "";
       rows.forEach(function (r) {
         var row = U.el("div", { class: "checkrow " + r.state });
-        row.appendChild(U.el("span", { class: "ic", text: { ok: "✓", no: "✗", warn: "!", pending: "…" }[r.state] }));
+        row.appendChild(U.el("span", { class: "ic", text: { ok: "✓", no: "✗", warn: "!", pending: "…", info: "i" }[r.state] }));
         var t = U.el("div");
         if (r.reflection) {
           var lb = U.el("label", { class: "chk" }); lb.style.cssText = "display:flex;gap:8px;cursor:pointer";
@@ -158,7 +211,7 @@
           lb.appendChild(cb); lb.appendChild(U.el("span", { text: r.label }));
           t.appendChild(lb);
         } else t.appendChild(U.el("div", { text: r.label }));
-        t.appendChild(U.el("div", { class: "where", text: r.state === "pending" ? r.where + " · halaman belum tersedia di app" : r.where }));
+        t.appendChild(U.el("div", { class: "where", text: r.state === "pending" ? r.where + " · belum diisi" : r.where }));
         row.appendChild(t); list.appendChild(row);
       });
     }
@@ -181,11 +234,11 @@
       h.appendChild(U.el("div", { class: "pp-title", text: pg.title + "  ·  " + sessId + " · hlm. " + pg.p }));
       pp.appendChild(h);
       if (pg.sub) pp.appendChild(U.el("p", { class: "pp-sub", text: pg.sub }));
-      var byId = {}; pg.fields.forEach(function (f) { byId[f.id] = f; });
+      var byId = byIdOf(pg);
       function box(f) {
         var b = U.el("div", { class: "pp-box" + (f.output ? " output" : "") });
-        b.appendChild(U.el("b", { text: f.label }));
-        b.appendChild(U.el("div", { text: CB.fields.printValue(CB.getField(sessId, f.id)) || "—" }));
+        b.appendChild(U.el("b", { text: f.label || pg.title }));
+        b.appendChild(U.el("div", { text: CB.fields.printText(f, CB.getField(sessId, f.id), sessId) || "—" }));
         return b;
       }
       if (pg.layout === "canvas2" && pg.columns) {
@@ -196,8 +249,19 @@
           g.appendChild(c);
         });
         pp.appendChild(g);
-      } else pg.fields.forEach(function (f) { pp.appendChild(box(f)); });
-      if (pg.footer) pp.appendChild(U.el("div", { class: "pp-foot", text: pg.footer }));
+      } else if (pg.layout === "grid") {
+        var g2 = U.el("div", { class: "pp-grid c" + (pg.cols || 2) });
+        pg.fields.forEach(function (f) { g2.appendChild(box(f)); });
+        pp.appendChild(g2);
+      } else if (pg.layout === "groups") {
+        pg.groups.forEach(function (gr) {
+          pp.appendChild(U.el("div", { class: "pp-colh", text: gr.head }));
+          var g3 = U.el("div", { class: "pp-grid c" + (gr.cols || 1) });
+          gr.ids.forEach(function (fid) { g3.appendChild(box(byId[fid])); });
+          pp.appendChild(g3);
+        });
+      } else pg.fields.forEach(function (f) { var bx = box(f); bx.style.marginTop = "5pt"; pp.appendChild(bx); });
+      if (pg.footer) pp.appendChild(U.el("div", { class: "pp-foot", text: CB.fill(pg.footer, sessId) }));
       pp.appendChild(U.el("div", { class: "pp-foot", text: "Dicetak dari Workbook App · " + U.fmtDate(new Date().toISOString()) + " · arsip pribadi, bukan file pengumpulan." }));
       root.appendChild(pp);
     });
@@ -223,7 +287,7 @@
       var intro = U.el("section", { class: "card" });
       intro.appendChild(U.el("h2", { text: "Sesi " + spec.n + " · " + spec.title }));
       intro.appendChild(U.el("p", { class: "lead", text: spec.coverNote }));
-      intro.appendChild(U.el("p", { class: "small" }, "Tenggat pengumpulan file Minggu " + U.esc(cfg.week) + ": <b>" + U.esc(CB.fill("{{due}}", sessId)) + "</b>. Semua halaman sesi ini dikumpulkan dalam satu file."));
+      intro.appendChild(U.el("p", { class: "small" }, "Tenggat pengumpulan file Minggu " + U.esc(cfg.week) + ": <b>" + U.esc(CB.fill("{{due}}", sessId)) + "</b>. Semua halaman sesi ini dikumpulkan dalam satu file." + (spec.coverExtra ? " " + CB.fill(spec.coverExtra, sessId) : "")));
       var nav = U.el("nav", { class: "sessnav", "aria-label": "Halaman workbook" });
       spec.fillOrder.forEach(function (p, i) {
         var pg = spec.pages.filter(function (x) { return x.p === p; })[0];
@@ -262,7 +326,6 @@
           title: "Submit " + sessId,
           paras: [
             "File ini berisi " + U.esc(range) + " dan Leadership Log-mu. Simpan file ini — ini satu-satunya salinan kerjamu, dan minggu depan kamu melanjutkan dari file ini. Kumpulkan file TERBARU saja lewat Google Form, pilih Minggu " + U.esc(cfg.week) + ".",
-            "Di iPhone/iPad, file tersimpan di aplikasi Files (folder Downloads).",
             "<span class='small muted'>Cek kelengkapan saat ini: " + U.esc(CB.checkSummary(rows)) + "</span>"
           ],
           buttons: [{ label: "Batal", value: false, cls: "ghost" }, { label: "Unduh file", value: true, cls: "primary" }]
@@ -270,7 +333,7 @@
           if (!go) return;
           var name = CB.submitSession(sessId, { rows: rows });
           st.textContent = "File diunduh: " + name;
-          CB.modal({ title: "File sudah diunduh", paras: ["Nama file: <b>" + U.esc(name) + "</b>", CB.config.form_url ? "Kumpulkan lewat <a href='" + U.esc(CB.config.form_url) + "' target='_blank' rel='noopener'>Google Form</a>, pilih Minggu " + U.esc(cfg.week) + "." : "Kumpulkan lewat Google Form yang diumumkan dosen, pilih Minggu " + U.esc(cfg.week) + "."] });
+          CB.modal({ title: "File sudah diunduh", paras: ["Nama file: <b>" + U.esc(name) + "</b>. Biasanya ada di folder Downloads.", CB.config.form_url ? "Kumpulkan lewat <a href='" + U.esc(CB.config.form_url) + "' target='_blank' rel='noopener'>Google Form</a>, pilih Minggu " + U.esc(cfg.week) + "." : "Kumpulkan lewat Google Form yang diumumkan dosen, pilih Minggu " + U.esc(cfg.week) + "."] });
         });
       };
       if (location.hash) { var t = document.querySelector(location.hash); if (t) setTimeout(function () { t.scrollIntoView(); }, 50); }

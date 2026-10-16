@@ -70,7 +70,7 @@ def main():
         for key in ("sub", "footer"):
             if pg.get(key):
                 check(norm(pg[key]) in txt, f"hlm. {p}: {key} tidak persis sama dengan workbook: {pg[key]!r}")
-        for col in pg.get("columns", []):
+        for col in pg.get("columns", []) + pg.get("groups", []):
             check(norm(col["head"]) in txt, f"hlm. {p}: judul kolom '{col['head']}' tidak ada di workbook")
         for f in pg["fields"]:
             ids.append(f["id"])

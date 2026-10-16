@@ -187,7 +187,8 @@
     var last = ents.length ? ents[ents.length - 1] : null;
     lg.appendChild(U.el("p", { class: "lead", text: "Decision Log (S1 · hlm. 8). Terbuka sepanjang semester, satu entri per keputusan. Ikut di setiap file yang kamu unduh." }));
     lg.appendChild(U.el("p", null, "<b>" + ents.length + "</b> entri" + (last ? " · terakhir " + U.esc(U.fmtDate(last.updated_at || last.created_at)) : "")));
-    lg.appendChild(U.el("p", { class: "small muted", text: "Halaman Log dibuka bersama halaman S1 lainnya setelah format halaman disetujui." }));
+    if (CB.isReleased("S1")) lg.appendChild(U.el("a", { class: "btn", href: "s1.html#p8", text: "Buka Leadership Log" }));
+    else lg.appendChild(U.el("p", { class: "small muted", text: "Log terbuka bersama Sesi 1." }));
     main.appendChild(lg);
   }
 

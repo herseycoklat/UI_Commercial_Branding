@@ -50,7 +50,11 @@
       } else {
         var probs = [1, 2, 3].map(function (i) { return c["s1.p7.problem" + i] || {}; });
         var written = probs.filter(function (p) { return txt(p.text); }).length;
-        var traced = probs.filter(function (p) { return txt(p.text) && p.trace && p.trace.length; }).length;
+        var valid = function (id) {
+          if (id === "s1.p2.b8_gaps") return !!txt(c["s1.p2.b8_gaps"]);
+          var v = c[id]; return !!(v && v.score && v.score <= 2);
+        };
+        var traced = probs.filter(function (p) { return txt(p.text) && (p.trace || []).some(valid); }).length;
         out.push({ label: "Tiga masalah terisi (" + written + "/3)", where: "S1 · hlm. 7 (atas)", state: written === 3 ? "ok" : "no" });
         out.push({ label: "Tiap masalah tertaut ke kotak 8 atau ke skor 1–2 (" + traced + "/3)", where: "S1 · hlm. 7 (atas)", state: traced === 3 ? "ok" : "no" });
         var sol = probs.filter(function (p) { return SOLUTION.test(txt(p.text)); }).length;

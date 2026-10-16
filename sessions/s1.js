@@ -33,7 +33,7 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 3, title: "Product-to-Brand Map",
+      p: 3, title: "Product-to-Brand Map", layout: "grid", cols: 3,
       sub: "Trace the chain left to right, in order — no skipping. You may not fill box 5 before box 3.",
       footer: "Money follows feeling — not the other way around.",
       fields: [
@@ -46,7 +46,7 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 4, title: "Stakeholder Map",
+      p: 4, title: "Stakeholder Map", layout: "grid", cols: 2,
       sub: "For every name: what do they WANT from this project, and what POWER do they have to help or block it?",
       footer: "The most-forgotten box: who could give this project money — or stop it from launching?",
       fields: [
@@ -72,7 +72,7 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 6, title: "Commercial Readiness Scorecard", tag: "GATE 1 PACK",
+      p: 6, title: "Commercial Readiness Scorecard", tag: "GATE 1 PACK", lowest: 3,
       sub: "Score 1–5. Every score needs a one-line justification — the justification matters more than the number. At least one score must be a 1 or 2.",
       footer: "YOUR THREE LOWEST SCORES:  these become your stage-one priorities on page 7  →",
       fields: [
@@ -85,7 +85,11 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 7, title: "Stage-One Commitment & Cross-Stream Requests", tag: "GATE 1 PACK: TOP HALF",
+      p: 7, title: "Stage-One Commitment & Cross-Stream Requests", tag: "GATE 1 PACK: TOP HALF", layout: "groups",
+      groups: [
+        { head: "OUR THREE PRIORITY COMMERCIAL-BRANDING PROBLEMS", ids: ["s1.p7.problem1", "s1.p7.problem2", "s1.p7.problem3"], badge: "isi terakhir" },
+        { head: "WHAT WE NEED FROM OTHER STREAMS  ·  what / why (which gap it fixes) / by when", ids: ["s1.p7.req_designer", "s1.p7.req_engineer", "s1.p7.req_content"], cols: 3, badge: "isi dulu" }
+      ],
       sub: "Problems, not solutions. 'We don't know if parents would pay' is a problem. 'We will lower the price' is a solution you haven't earned yet.",
       fields: [
         { id: "s1.p7.problem1", type: "trace", label: "PROBLEM 1", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },

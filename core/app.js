@@ -236,6 +236,22 @@
       .replace(/\{\{week\}\}/g, c.week != null ? c.week : "");
   };
 
+  /* ---------- pencarian spec ---------- */
+  function specOf(id) { var m = /^s(\d+)\./.exec(id); return m ? CB.specs["S" + m[1]] : null; }
+  CB.findPage = function (prefix) { // "s1.p6"
+    var m = /^s(\d+)\.p(\d+)/.exec(prefix), sp = specOf(prefix);
+    if (!m || !sp) return null;
+    return sp.pages.filter(function (p) { return p.p === parseInt(m[2], 10); })[0] || null;
+  };
+  CB.findField = function (id) {
+    var pg = CB.findPage(id);
+    return pg ? pg.fields.filter(function (f) { return f.id === id; })[0] || null : null;
+  };
+  CB.pageLabel = function (id) {
+    var m = /^s(\d+)\.p(\d+)/.exec(id);
+    return m ? "S" + m[1] + " · hlm. " + m[2] : id;
+  };
+
   /* ---------- field ---------- */
   CB.getField = function (sessId, fid) { return sess(sessId).current[fid]; };
   CB.setField = function (sessId, fid, val) {

@@ -192,3 +192,66 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
   .pagehead h2{font-size:19px;}
 }
 @page{size:A4 landscape; margin:12mm;}
+
+/* ---------- komponen tambahan (v0.2) ---------- */
+input.line{width:100%; padding:8px 9px; border:1px solid var(--line); border-radius:6px; background:var(--field); font-size:14.5px;}
+.fgrid{display:grid; gap:12px;}
+.fgrid.cols1{grid-template-columns:1fr;}
+.fgrid.cols2{grid-template-columns:1fr 1fr;}
+.fgrid.cols3{grid-template-columns:1fr 1fr 1fr;}
+@media (max-width:800px){.fgrid.cols3{grid-template-columns:1fr 1fr;}}
+@media (max-width:640px){.fgrid.cols2,.fgrid.cols3{grid-template-columns:1fr;}}
+.fgrid > .box{margin-bottom:0;}
+.fgroup{margin-bottom:16px;}
+.gbadge{font-family:var(--sans); font-size:11px; font-weight:bold; color:#fff; background:var(--terra); border-radius:10px; padding:1px 8px; margin-left:6px; vertical-align:middle;}
+.callout{margin:0 0 16px; padding:12px 14px; border-radius:8px; background:var(--sand); border:1px solid var(--line); font-size:14px;}
+.callout b{color:var(--deep);}
+
+.tscroll{overflow-x:auto;}
+table.wbtable{border-collapse:collapse; width:100%; font-size:14px;}
+table.wbtable th, table.wbtable td{border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top;}
+table.wbtable thead th, table.wbtable.ex tr:first-child th{background:var(--field); color:var(--deep); font-size:12px; letter-spacing:.3px;}
+table.wbtable tbody th{font-weight:bold; color:var(--terra); white-space:nowrap; background:#fff;}
+table.wbtable td{background:#fff; min-width:150px;}
+table.wbtable td.act, table.wbtable th.act{min-width:0; width:36px; text-align:center;}
+table.wbtable input.cell{width:100%; border:1px solid transparent; background:var(--field); border-radius:4px; padding:6px 7px; font-size:14px;}
+table.wbtable input.cell:focus{border-color:var(--deep); background:#fff;}
+table.wbtable.ex td{min-width:120px;}
+.iconbtn{border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:6px; cursor:pointer; padding:3px 8px; font-size:12.5px;}
+.iconbtn:hover{color:var(--terra); border-color:var(--terra);}
+.addbtn{margin-top:8px; font-size:13px; border:1px dashed var(--terra); color:var(--terra); background:none; border-radius:6px; padding:6px 10px; cursor:pointer;}
+.addbtn:hover{background:var(--terra); color:#fff;}
+
+.scorerow{display:grid; grid-template-columns:200px 80px 1fr; gap:10px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:8px; padding:9px 12px; margin-bottom:8px;}
+@media (max-width:640px){.scorerow{grid-template-columns:1fr 80px;} .scorerow input.line{grid-column:1/-1;}}
+.scorerow .dim{font-weight:bold; color:var(--terra); font-size:14px;}
+select.scoresel{padding:7px 8px; border:1px solid var(--line); border-radius:6px; background:var(--field); font-size:15px; font-weight:bold; text-align:center;}
+select.scoresel.low{background:var(--deep); color:#fff; border-color:var(--deep);}
+.lowest{margin-top:6px; padding:10px 12px; border:1px dashed var(--deep); border-radius:8px; background:#fff; font-size:14px;}
+
+.traceopts{margin-top:8px; padding:8px 10px; background:var(--work-bg); border-radius:6px;}
+.traceopts .tlabel{font-size:12.5px; font-weight:bold; color:var(--ok); margin-bottom:6px;}
+.traceopts label.chk{display:flex; gap:8px; align-items:flex-start; font-size:13.5px; margin-bottom:5px; cursor:pointer;}
+.traceopts label.chk input{margin-top:3px;}
+.traceopts .tdetail{color:var(--muted);}
+
+.loglist{display:flex; flex-direction:column; gap:12px; margin-bottom:12px;}
+.logentry{background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px;}
+.loghead{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:8px;}
+.loghead .iconbtn{margin-left:auto;}
+.datein{margin-left:6px; padding:5px 7px; border:1px solid var(--line); border-radius:6px; background:var(--field);}
+.loggrid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+@media (max-width:800px){.loggrid{grid-template-columns:1fr;}}
+.loggrid .box{margin-bottom:0;}
+details.log9d{margin-top:10px;}
+details.log9d summary{cursor:pointer; font-size:13px; font-weight:bold; color:var(--deep); margin-bottom:8px;}
+
+.exscore{display:inline-block; min-width:24px; text-align:center; font-weight:bold; color:#fff; background:var(--terra); border-radius:4px; padding:0 6px; margin-right:4px;}
+.exscore.low{background:var(--deep);}
+.exnotice{font-size:13.5px; margin-top:8px; padding:8px 10px; border-left:3px solid var(--sage); background:#fff; border-radius:4px;}
+
+@media print{
+  .pp-grid.c1{grid-template-columns:1fr;}
+  .pp-grid.c2{grid-template-columns:1fr 1fr;}
+  .pp-grid.c3{grid-template-columns:1fr 1fr 1fr;}
+}
