@@ -38,6 +38,11 @@
       v.rows.forEach(function (r) { var tr = U.el("tr"); r.forEach(function (c, i) { tr.appendChild(U.el(i ? "td" : "th", { text: c })); }); t.appendChild(tr); });
       sc.appendChild(t); d.appendChild(sc); return d;
     }
+    if (v.items) {
+      var ul = U.el("ul", { class: "exlist" });
+      v.items.forEach(function (x) { ul.appendChild(U.el("li", { text: x })); });
+      d.appendChild(ul); return d;
+    }
     if (v.score != null) {
       var s = U.el("span", { class: "exscore" + (v.score <= 2 ? " low" : ""), text: String(v.score) });
       d.appendChild(s); d.appendChild(document.createTextNode(" " + (v.justification || "")));
@@ -137,13 +142,13 @@
     var sm = U.el("summary");
     sm.innerHTML = U.esc(ct.theory.title) + ' <span class="small muted" style="font-family:var(--sans);font-weight:normal;font-style:italic">· ' + U.esc(ct.theory.src) + "</span>";
     det.appendChild(sm);
-    var body = U.el("div", null, ct.theory.html); body.style.marginTop = "8px";
+    var body = U.el("div", null, CB.fill(ct.theory.html, sessId)); body.style.marginTop = "8px";
     det.appendChild(body);
-    if (ct.why) det.appendChild(U.el("div", { class: "why" }, ct.why));
+    if (ct.why) det.appendChild(U.el("div", { class: "why" }, CB.fill(ct.why, sessId)));
     if (ct.deeper) {
       var nd = U.el("details", { class: "nuance" });
       nd.appendChild(U.el("summary", { text: ct.deeper.summary }));
-      nd.appendChild(U.el("div", { class: "nbody" }, ct.deeper.html));
+      nd.appendChild(U.el("div", { class: "nbody" }, CB.fill(ct.deeper.html, sessId)));
       det.appendChild(nd);
     }
     tb.appendChild(det); card.appendChild(tb);
@@ -162,6 +167,8 @@
         grid.appendChild(c);
       });
       wa.appendChild(grid);
+      var inCols = [].concat.apply([], pg.columns.map(function (c) { return c.ids; }));
+      pg.fields.forEach(function (f) { if (inCols.indexOf(f.id) < 0) wa.appendChild(renderField(sessId, f)); });
     } else if (pg.layout === "grid") {
       var g = U.el("div", { class: "fgrid cols" + (pg.cols || 2) });
       pg.fields.forEach(function (f) { g.appendChild(renderField(sessId, f)); });
@@ -169,8 +176,7 @@
     } else if (pg.layout === "groups") {
       pg.groups.forEach(function (gr) {
         var sec = U.el("div", { class: "fgroup" });
-        var gh = U.el("div", { class: "colhead" }, U.esc(gr.head) + (gr.badge ? ' <span class="gbadge">' + U.esc(gr.badge) + "</span>" : ""));
-        sec.appendChild(gh);
+        if (gr.head) sec.appendChild(U.el("div", { class: "colhead" }, U.esc(gr.head) + (gr.badge ? ' <span class="gbadge">' + U.esc(gr.badge) + "</span>" : "")));
         var gg = U.el("div", { class: "fgrid cols" + (gr.cols || 1) });
         gr.ids.forEach(function (id) { gg.appendChild(renderField(sessId, byId[id])); });
         sec.appendChild(gg);
@@ -191,7 +197,7 @@
   function renderChecks(sessId, built, host) {
     var fn = CB.checks[sessId]; if (!fn) return null;
     var card = U.el("section", { class: "card", id: "cek" });
-    card.appendChild(U.el("h2", { text: "Cek kelengkapan" + (sessId === "S1" ? " — Gate 1" : "") }));
+    card.appendChild(U.el("h2", { text: "Cek kelengkapan" + ({ S1: " — Gate 1", S2: " — bukti S2 (informasi)" }[sessId] || "") }));
     card.appendChild(U.el("p", { class: "lead", text: "Ini pemeriksaan kelengkapan berbasis aturan, bukan penilaian. Keputusan Gate dibaca dari file yang kamu kumpulkan." }));
     var sumEl = U.el("div", { class: "checksum" }); card.appendChild(sumEl);
     var list = U.el("div", { class: "checks" }); card.appendChild(list);
@@ -249,13 +255,15 @@
           g.appendChild(c);
         });
         pp.appendChild(g);
+        var inCols2 = [].concat.apply([], pg.columns.map(function (c) { return c.ids; }));
+        pg.fields.forEach(function (f) { if (inCols2.indexOf(f.id) < 0) { var bx2 = box(f); bx2.style.marginTop = "5pt"; pp.appendChild(bx2); } });
       } else if (pg.layout === "grid") {
         var g2 = U.el("div", { class: "pp-grid c" + (pg.cols || 2) });
         pg.fields.forEach(function (f) { g2.appendChild(box(f)); });
         pp.appendChild(g2);
       } else if (pg.layout === "groups") {
         pg.groups.forEach(function (gr) {
-          pp.appendChild(U.el("div", { class: "pp-colh", text: gr.head }));
+          if (gr.head) pp.appendChild(U.el("div", { class: "pp-colh", text: gr.head }));
           var g3 = U.el("div", { class: "pp-grid c" + (gr.cols || 1) });
           gr.ids.forEach(function (fid) { g3.appendChild(box(byId[fid])); });
           pp.appendChild(g3);

@@ -67,13 +67,23 @@ def main():
         p, txt = pg["p"], sl.get(pg["p"], "")
         first = txt.split(" ", 1)[1] if txt.startswith(str(p) + " ") else txt
         check(first.startswith(norm(pg["title"])), f"hlm. {p}: judul '{pg['title']}' bukan judul slide")
+        def present(t):
+            t = norm(t)
+            if "{{" not in t:
+                return t in txt
+            pat = re.escape(t)
+            pat = re.sub(r"\\\{\\\{\w+\\\}\\\}", ".+?", pat)
+            return re.search(pat, txt) is not None
         for key in ("sub", "footer"):
             if pg.get(key):
-                check(norm(pg[key]) in txt, f"hlm. {p}: {key} tidak persis sama dengan workbook: {pg[key]!r}")
-        for col in pg.get("columns", []) + pg.get("groups", []):
+                check(present(pg[key]), f"hlm. {p}: {key} tidak persis sama dengan workbook: {pg[key]!r}")
+        for col in [g for g in pg.get("columns", []) + pg.get("groups", []) if not g.get("appOnly")]:
             check(norm(col["head"]) in txt, f"hlm. {p}: judul kolom '{col['head']}' tidak ada di workbook")
         for f in pg["fields"]:
             ids.append(f["id"])
+            if f.get("appOnly"):
+                warns.append(f"hlm. {p}: {f['id']} adalah tambahan app (bukan kotak workbook) — diputuskan Fai")
+                continue
             check(re.fullmatch(rf"s{n}\.p{p}\.[a-z0-9_]+", f["id"]) is not None, f"hlm. {p}: ID '{f['id']}' tidak berpola s{n}.p{p}.<kotak>")
             if f.get("label"):
                 check(norm(f["label"]) in txt, f"hlm. {p}: label '{f['label']}' tidak ada di workbook")

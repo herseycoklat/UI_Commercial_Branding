@@ -255,3 +255,41 @@ details.log9d summary{cursor:pointer; font-size:13px; font-weight:bold; color:va
   .pp-grid.c2{grid-template-columns:1fr 1fr;}
   .pp-grid.c3{grid-template-columns:1fr 1fr 1fr;}
 }
+
+/* ---------- komponen S2 ---------- */
+.litems{display:flex; flex-direction:column; gap:8px; margin-top:6px;}
+.litem{display:flex; gap:8px; align-items:flex-end;}
+.litem .lfield{flex:1; min-width:0;}
+.litem.multi{flex-wrap:wrap; background:var(--field); border:1px solid var(--line); border-radius:6px; padding:8px;}
+.litem.multi .lfield{flex:1 1 180px;}
+.litem.multi .lfield.longtext{flex:1 1 100%;}
+.lfield label{display:block; font-size:11.5px; font-weight:bold; color:var(--muted); margin-bottom:2px;}
+.lfield label:empty{display:none;}
+.lfield select{width:100%; padding:7px 8px; border:1px solid var(--line); border-radius:6px; background:#fff; font-size:14px;}
+.lfield textarea{width:100%; padding:7px 8px; border:1px solid var(--line); border-radius:6px; background:#fff; font-size:14px; resize:vertical;}
+.litem .iconbtn{flex:0 0 auto; margin-bottom:4px;}
+.partgrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-top:4px;}
+.part label{display:block; font-size:12px; font-weight:bold; color:var(--deep); margin-bottom:3px;}
+.partpreview{margin-top:10px; padding:10px 12px; background:var(--sand); border-radius:6px; font-family:var(--serif); font-size:15px;}
+.enumrow{display:flex; flex-direction:column; gap:6px; margin-top:4px;}
+.enumrow label.chk{display:flex; gap:8px; align-items:center; font-size:14px; cursor:pointer;}
+table.wbtable.seg td{min-width:220px;}
+table.wbtable textarea.cell{width:100%; border:1px solid transparent; background:var(--field); border-radius:4px; padding:6px 7px; font-size:14px; resize:vertical;}
+table.wbtable textarea.cell:focus{border-color:var(--deep); background:#fff;}
+table.wbtable input.cell.strong{font-weight:bold;}
+table.wbtable td.total{font-weight:bold; text-align:center; font-family:var(--serif); font-size:16px; min-width:60px;}
+table.wbtable select.scoresel{width:100%;}
+.segbar{margin-top:4px;}
+.maplayout{display:grid; grid-template-columns:minmax(0, 420px) 1fr; gap:16px; align-items:start; margin-top:8px;}
+@media (max-width:760px){.maplayout{grid-template-columns:1fr;}}
+svg.mapsvg{width:100%; max-width:420px; aspect-ratio:1/1; background:#fff; border:1px solid var(--line); border-radius:8px; touch-action:none; user-select:none;}
+svg .mapbg{fill:#fff;}
+svg .mapaxis{stroke:var(--sage); stroke-width:2;}
+svg .maplab{fill:var(--deep); font-size:11px; font-weight:bold; font-family:var(--sans);}
+svg .mappt circle{fill:var(--terra); stroke:#fff; stroke-width:2; cursor:grab;}
+svg .mappt:focus{outline:none;}
+svg .mappt:focus circle{stroke:var(--deep); stroke-width:3;}
+svg .mapname{fill:var(--ink); font-size:12px; font-family:var(--sans);}
+.mapside{display:flex; flex-direction:column; gap:8px;}
+ul.exlist{margin:0; padding-left:20px;}
+ul.exlist li{margin-bottom:3px;}

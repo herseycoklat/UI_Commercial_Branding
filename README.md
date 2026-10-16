@@ -38,8 +38,17 @@ config/projects.json  dropdown proyek (diturunkan dari daftar-proyek.csv; tanpa 
 tools/audit.py        audit parity spec ↔ ekstrak workbook
 ```
 
+## Menambah sesi baru (untuk chat pembangun)
+
+1. Tulis `sessions/sN.js` (spec, label persis workbook) dan `content/sN.js` (teks + contoh 4 kasus).
+2. Salin `s1.html` menjadi `sN.html`, ganti nama file spec/konten dan `bootSession("SN")`.
+3. Tambahkan `"SN"` ke `LIVE_PAGES` di `core/hub.js`.
+4. Jalankan audit, lalu `--lock` saat sesi dirilis.
+
 ## Audit sebelum deploy
 
 ```
 python3 tools/audit.py S1 <ekstrak-workbook-S1.md>
+python3 tools/audit.py S2 <ekstrak-workbook-S2.md>
+# saat sesi dirilis: tambahkan --lock untuk mencatat ID di tools/field-ids.lock.json
 ```
