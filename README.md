@@ -25,7 +25,7 @@ Situs statis (tanpa server, tanpa build step, tanpa library CDN). Mahasiswa meng
 
 ```
 index.html            halaman utama: identitas, status sesi, ringkasan Leadership Log, impor file
-leadership.html       Leadership Log (silabus §9D): halaman sendiri, terbuka sepanjang semester
+leadership.html       Leadership Log (silabus §9D): tab sendiri di samping Workbook tiap sesi, terbuka sejak Week 1
 s1.html …             satu halaman per sesi (shell tipis)
 core/app.js           data, autosave, versi, submit/impor, rilis
 core/session.js       render halaman sesi dari spec + konten, cetak PDF

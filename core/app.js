@@ -386,6 +386,21 @@
       '<div class="brand">Workbook · Capstone: Commercial Branding<small>' + esc(subtitle || "") + "</small></div>" +
       (id ? '<div class="whois"><b>' + esc(id.full_name) + "</b> · NIM " + esc(id.nim) + "<br>" + esc(id.group_id) + " · " + esc(id.project_name) + "</div>" : "");
   };
+  /* Tab: Workbook sesi | Leadership Log. Leadership Log terbuka sejak S1 dan ikut di setiap file. */
+  CB.renderTabs = function (host, sessId, active) {
+    var wrap = document.createElement("nav");
+    wrap.className = "tabs"; wrap.setAttribute("aria-label", "Bagian halaman");
+    var a1 = document.createElement("a");
+    a1.href = sessId ? sessId.toLowerCase() + ".html" : "index.html";
+    a1.textContent = sessId ? "Workbook " + sessId : "Halaman utama";
+    var a2 = document.createElement("a");
+    a2.href = "leadership.html" + (sessId ? "?dari=" + sessId : "");
+    a2.textContent = "Leadership Log";
+    (active === "leadership" ? a2 : a1).className = "on";
+    wrap.appendChild(a1); wrap.appendChild(a2);
+    host.parentNode.insertBefore(wrap, host.nextSibling);
+    return wrap;
+  };
   CB.showError = function (host, msg) {
     host.innerHTML = '<div class="banner err"><b>App tidak bisa dimuat.</b> ' + esc(msg) +
       "<br>Coba muat ulang halaman. Kalau tetap gagal, kabari dosen lewat kanal kelas.</div>";

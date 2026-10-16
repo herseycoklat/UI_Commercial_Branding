@@ -95,10 +95,6 @@ CB.specs.S1 = {
         { id: "s1.p7.problem1", type: "trace", label: "PROBLEM 1", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
         { id: "s1.p7.problem2", type: "trace", label: "PROBLEM 2", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
         { id: "s1.p7.problem3", type: "trace", label: "PROBLEM 3", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
-        // Tambahan app (diputuskan Fai 16 Okt): bukti uji 1 Gate 1. Dirender di "Cek kelengkapan", bukan di halaman hlm. 7.
-        { id: "s1.p7.problem1_commercial", type: "longtext", appOnly: true, label: "PROBLEM 1 · kenapa ini masalah komersial?", hint: "Satu kalimat: apa yang berubah dalam keputusan orang membayar atau memilih kalau masalah ini selesai?" },
-        { id: "s1.p7.problem2_commercial", type: "longtext", appOnly: true, label: "PROBLEM 2 · kenapa ini masalah komersial?", hint: "Satu kalimat: apa yang berubah dalam keputusan orang membayar atau memilih kalau masalah ini selesai?" },
-        { id: "s1.p7.problem3_commercial", type: "longtext", appOnly: true, label: "PROBLEM 3 · kenapa ini masalah komersial?", hint: "Satu kalimat: apa yang berubah dalam keputusan orang membayar atau memilih kalau masalah ini selesai?" },
         { id: "s1.p7.req_designer", type: "longtext", label: "From our DESIGNER / ARTIST", hint: "what / why (which gap it fixes) / by when" },
         { id: "s1.p7.req_engineer", type: "longtext", label: "From our ENGINEER / TECHNICAL", hint: "what / why (which gap it fixes) / by when" },
         { id: "s1.p7.req_content", type: "longtext", label: "From our CONTENT / PRODUCTION", hint: "what / why (which gap it fixes) / by when" }
@@ -109,7 +105,7 @@ CB.specs.S1 = {
       sub: "One line per decision, starting today. This log is 20% of your grade's evidence — and your individual protection.",
       footer: "Duplicate this page when it fills up. It will fill up — that's the point.",
       // Kontrak v3.3: hlm. 8 kembali menjadi field biasa di sessions.S1, diisi di akhir Sesi 1.
-      // Leadership Log (silabus §9D) adalah halaman terpisah: leadership.html, data di leadership_log.
+      // Leadership Log (silabus §9D) = tab/halaman terpisah: leadership.html, data di leadership_log (bukan bagian hlm. 8).
       fields: [{
         id: "s1.p8.log", type: "list", addText: "+ Tambah keputusan",
         emptyText: "Belum ada keputusan. Isi di akhir Sesi 1, setelah halaman 2–7 selesai.",

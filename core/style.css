@@ -311,3 +311,9 @@ ul.exlist li{margin-bottom:3px;}
 .leadentry .head .iconbtn{margin-left:auto;}
 .leadguide td{vertical-align:top; font-size:13px;}
 .leadguide td:first-child{white-space:nowrap; font-weight:bold; color:var(--deep);}
+
+/* ---- Tab: Workbook sesi | Leadership Log ---- */
+.tabs{display:flex; gap:4px; margin:0 0 16px; border-bottom:1px solid var(--line);}
+.tabs a{font-size:14px; text-decoration:none; color:var(--muted); padding:8px 16px; border:1px solid transparent; border-bottom:none; border-radius:8px 8px 0 0; margin-bottom:-1px;}
+.tabs a.on{color:var(--ink); background:#fff; border-color:var(--line); font-weight:600;}
+.tabs a:hover{color:var(--ink);}

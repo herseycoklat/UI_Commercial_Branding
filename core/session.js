@@ -333,6 +333,7 @@
       var cfg = CB.sessionCfg(sessId) || {};
       CB.renderTopbar(top, "Sesi " + spec.n + " · " + spec.title);
       document.title = "Sesi " + spec.n + " — " + spec.title;
+      if (CB.isReleased("S1")) CB.renderTabs(top, sessId, "workbook");
       if (!CB.isReleased(sessId)) {
         main.innerHTML = '<div class="banner info"><b>Sesi ini belum dibuka.</b> Halaman sesi dibuka sesuai jadwal kelas. <a href="index.html">Kembali ke halaman utama</a>.</div>';
         return;
@@ -381,7 +382,7 @@
         CB.modal({
           title: "Submit " + sessId,
           paras: [
-            "File ini berisi " + U.esc(range) + " dan Leadership Log-mu. Simpan file ini — ini satu-satunya salinan kerjamu, dan minggu depan kamu melanjutkan dari file ini. Kumpulkan file TERBARU saja lewat Google Form, pilih Minggu " + U.esc(cfg.week) + ".",
+            "File ini berisi workbook " + U.esc(range) + " dan seluruh isi tab Leadership Log-mu sampai hari ini (Leadership Log tidak perlu dikumpulkan terpisah). Simpan file ini — ini satu-satunya salinan kerjamu, dan minggu depan kamu melanjutkan dari file ini. Kumpulkan file TERBARU saja lewat Google Form, pilih Minggu " + U.esc(cfg.week) + ".",
             "<span class='small muted'>Cek kelengkapan saat ini: " + U.esc(CB.checkSummary(rows)) + "</span>"
           ],
           buttons: [{ label: "Batal", value: false, cls: "ghost" }, { label: "Unduh file", value: true, cls: "primary" }]

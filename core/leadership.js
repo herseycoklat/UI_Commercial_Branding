@@ -184,6 +184,9 @@
       CB.data = nim ? CB.loadLocal(nim) : null;
       if (!CB.data) { location.href = "index.html?perlu=identitas"; return; }
       CB.renderTopbar(top, "Leadership Log");
+      var dari = (location.search.match(/dari=(S\d)/) || [])[1];
+      if (dari && !CB.isReleased(dari)) dari = null;
+      if (CB.isReleased("S1")) CB.renderTabs(top, dari || "S1", "leadership");
       document.title = "Leadership Log — Capstone: Commercial Branding";
       if (!CB.isReleased("S1")) {
         main.innerHTML = '<div class="banner info"><b>Leadership Log belum dibuka.</b> Halaman ini terbuka bersama Sesi 1. <a href="index.html">Kembali ke halaman utama</a>.</div>';

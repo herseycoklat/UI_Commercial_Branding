@@ -6,7 +6,7 @@
  *   pending = halaman belum tersedia / belum diisi sama sekali
  *   info    = informasi, tidak ikut hitungan
  * S1 disusun mengikuti TIGA UJI Gate 1 (silabus §13 + student guide S1), bukan mengikuti alat:
- *   uji 1 komersial (isian mahasiswa, dibaca penilai) · uji 2 bukti · uji 3 masalah bukan solusi.
+ *   uji 1 komersial (panduan, dibaca penilai) · uji 2 bukti · uji 3 masalah bukan solusi.
  * Kontrak v3.3. */
 (function () {
   "use strict";
@@ -26,7 +26,7 @@
   };
   CB.checkGroups = {
     S1: {
-      u1: { title: "Uji 1 · Komersial, bukan kreatif", help: "Lolos kalau memperbaiki masalah itu mengubah apakah seseorang membayar atau memilih. Gagal kalau hanya mengubah bagaimana produk terlihat atau dibuat. Tulis satu kalimat per masalah. App hanya memeriksa kotaknya terisi." },
+      u1: { title: "Uji 1 · Komersial, bukan kreatif", help: "Baca tiap masalah di atas lalu tanya: kalau ini selesai, apa yang berubah dalam keputusan orang membayar atau memilih? Kalau jawabannya hanya tampilan atau cara produk dibuat jadi lebih bagus, tulis ulang di hlm. 7. Contoh lolos (ilustrasi): \"Kami belum tahu apakah orang tua percaya animasi lokal sebanding dengan film impor sehingga mau membeli tiket.\" Contoh gagal (ilustrasi): \"Poster kami belum terlihat modern.\" Tidak ada kotak isian dan tidak ada status di sini: penilai membaca kalimat masalahmu." },
       u2: { title: "Uji 2 · Didukung bukti dari halamanmu sendiri", help: "Lolos kalau masalah bisa ditunjuk ke satu UNKNOWN jujur (Canvas kotak 8) atau satu skor rendah (Scorecard). Gagal kalau tebakan menit terakhir tanpa jejak." },
       u3: { title: "Uji 3 · Ditulis sebagai masalah, bukan solusi", help: "Lolos kalau ditulis sebagai hal yang belum diketahui atau belum terbukti (\"kami tidak tahu apakah orang tua mau membayar\"). Gagal kalau ditulis sebagai tindakan (\"kami akan menurunkan harga\")." },
       x: { title: "Di luar Gate 1", help: "Tidak memengaruhi Gate 1." }
@@ -42,15 +42,14 @@
       var probs = [1, 2, 3].map(function (i) { return c["s1.p7.problem" + i] || {}; });
       function snippet(t) { t = txt(t); return t ? " · \"" + (t.length > 70 ? t.slice(0, 70) + "…" : t) + "\"" : ""; }
 
-      // ---- Uji 1: komersial (isian mahasiswa) ----
+      // ---- Uji 1: komersial (panduan; tanpa isian, mesin tidak bisa menilainya) ----
       [1, 2, 3].forEach(function (i) {
-        var id = "s1.p7.problem" + i + "_commercial";
+        var t = txt(probs[i - 1].text);
         out.push({
           key: "u1p" + i, group: "u1",
-          label: "Masalah " + i + ": kenapa memperbaikinya mengubah apakah orang membayar atau memilih?",
-          where: "S1 · hlm. 7" + snippet(probs[i - 1].text),
-          state: has(7) ? (txt(c[id]) ? "ok" : "no") : "pending",
-          input: { id: id, ph: "Satu kalimat, mis. \"Apakah orang tua percaya kualitas lokal menentukan mereka beli tiket.\"" }
+          label: "Masalah " + i + ": " + (t || "belum diisi, isi dulu di hlm. 7"),
+          where: "S1 · hlm. 7 · dibaca penilai",
+          state: "info"
         });
       });
 
