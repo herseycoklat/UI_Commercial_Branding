@@ -161,7 +161,7 @@
 
     // Teori
     var tb = U.el("div", { class: "theorybox" });
-    var det = U.el("details", { class: "theory-collapse", open: "" });
+    var det = U.el("details", { class: "theory-collapse" });
     var sm = U.el("summary");
     sm.innerHTML = U.esc(ct.theory.title) + ' <span class="small muted" style="font-family:var(--sans);font-weight:normal;font-style:italic">· ' + U.esc(ct.theory.src) + "</span>";
     det.appendChild(sm);
@@ -180,7 +180,7 @@
     // Isian
     renderCarry(sessId, pg, card);
     var wa = U.el("div", { class: "workarea" });
-    if (pg.fields.length) wa.appendChild(U.el("div", { class: "wahead", text: pg.workLabel || "Isianmu" }));
+    if (pg.fields.length) wa.appendChild(U.el("div", { class: "wahead", text: pg.workLabel || "Workbook" }));
     var byId = byIdOf(pg);
     if (pg.layout === "canvas2" && pg.columns) {
       var grid = U.el("div", { class: "canvas2" });
@@ -362,13 +362,13 @@
         main.innerHTML = '<div class="banner info"><b>Sesi ini belum dibuka.</b> Halaman sesi dibuka sesuai jadwal kelas. <a href="index.html">Kembali ke halaman utama</a>.</div>';
         return;
       }
-      if (CB.preview) main.appendChild(U.el("div", { class: "banner preview" }, "<b>Mode pratinjau dosen.</b> Sesi yang belum dirilis ikut terlihat. Buka <code>?pratinjau=0</code> untuk keluar."));
       var built = builtPages(spec, content);
 
       var intro = U.el("section", { class: "card" });
       intro.appendChild(U.el("h2", { text: "Sesi " + spec.n + " · " + spec.title }));
       intro.appendChild(U.el("p", { class: "lead", text: spec.coverNote }));
-      intro.appendChild(U.el("p", { class: "small" }, "Tenggat pengumpulan file Minggu " + U.esc(cfg.week) + ": <b>" + U.esc(CB.fill("{{due}}", sessId)) + "</b>. Semua halaman sesi ini dikumpulkan dalam satu file." + (spec.coverExtra ? " " + CB.fill(spec.coverExtra, sessId) : "")));
+      var introNote = (spec.hideDue ? "" : "Tenggat pengumpulan file Minggu " + U.esc(cfg.week) + ": <b>" + U.esc(CB.fill("{{due}}", sessId)) + "</b>. Semua halaman sesi ini dikumpulkan dalam satu file.") + (spec.coverExtra ? " " + CB.fill(spec.coverExtra, sessId) : "");
+      if (introNote.trim()) intro.appendChild(U.el("p", { class: "small" }, introNote));
       var nav = U.el("nav", { class: "sessnav", "aria-label": "Halaman workbook" });
       spec.fillOrder.forEach(function (p, i) {
         var pg = spec.pages.filter(function (x) { return x.p === p; })[0];
@@ -377,7 +377,7 @@
         a.innerHTML = '<span class="ord">' + (i + 1) + ".</span>hlm. " + p + " · " + U.esc(pg.title) + (ok ? "" : " (menyusul)");
         nav.appendChild(a);
       });
-      intro.appendChild(U.el("p", { class: "small muted", text: "Urutan isi yang disarankan (sama dengan urutan di kelas):" }));
+      intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: Commercial Brand Audit" }));
       intro.appendChild(nav);
       main.appendChild(intro);
 

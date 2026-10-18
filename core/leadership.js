@@ -192,7 +192,6 @@
         main.innerHTML = '<div class="banner info"><b>Leadership Log belum dibuka.</b> Halaman ini terbuka bersama Sesi 1. <a href="index.html">Kembali ke halaman utama</a>.</div>';
         return;
       }
-      if (CB.preview) main.appendChild(U.el("div", { class: "banner preview" }, "<b>Mode pratinjau dosen.</b> Buka <code>?pratinjau=0</code> untuk keluar."));
 
       var intro = U.el("section", { class: "card" });
       intro.appendChild(U.el("h2", { text: "Leadership Log" }));

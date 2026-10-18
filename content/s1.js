@@ -44,7 +44,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         reverse: {
           title: "Cek terbalik sebelum lanjut",
           items: [
-            "Canvas-mu punya minimal satu UNKNOWN? (Nol UNKNOWN memberi tahu dosen bahwa kamu bluffing.)",
+            "Canvas-mu punya minimal satu UNKNOWN? (Nol UNKNOWN artinya kamu bluffing.)",
             "Kotak 4 berisi kata-kata orang LUAR tim, atau UNKNOWN?",
             "Setiap butir di kotak 8 bisa kamu tunjuk asalnya di kotak 1–7?",
             "Kotak 1–7 ditulis sebagai fakta hari ini, bukan aspirasi (\"kami paling inovatif\")?"

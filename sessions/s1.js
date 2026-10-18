@@ -9,13 +9,14 @@ CB.specs.S1 = {
   id: "S1", n: 1,
   title: "Commercial Brand Audit",
   wbCover: "SESSION 1 TEAM WORKBOOK",
-  coverNote: "Fill this together as a team, outside class. Facts only, present tense. UNKNOWN is a legal answer — zero UNKNOWNs tells your lecturer you're bluffing.",
+  hideDue: true,
+  coverNote: "Facts only, present tense. UNKNOWN is a legal answer — zero UNKNOWNs means you're bluffing.",
   // Urutan isi yang diajarkan di kelas (Bedah Mendalam S1 v5): 2 → 3 → 5 → 4 → 6 → 7 bawah → 7 atas → 8
   fillOrder: [2, 3, 5, 4, 6, 7, 8],
   pages: [
     {
       p: 2, title: "Brand Audit Canvas", tag: "GATE 1 PACK",
-      sub: "Your project AS IT IS TODAY — not your dreams. Fill INSIDE first (left), then OUTSIDE (right). Box 8 is the output.",
+      sub: "Fill INSIDE first (left), then OUTSIDE (right). Box 8 is the output.",
       layout: "canvas2",
       columns: [
         { head: "INSIDE — what we have", ids: ["s1.p2.b1_product_truth", "s1.p2.b3_identity_assets", "s1.p2.b5_touchpoints_today", "s1.p2.b7_evidence_on_hand"] },
@@ -102,7 +103,7 @@ CB.specs.S1 = {
     },
     {
       p: 8, title: "Decision Log", workLabel: "Log-mu · Decision Log S1",
-      sub: "One line per decision, starting today. This log is 20% of your grade's evidence — and your individual protection.",
+      sub: "One line per decision, starting today.",
       footer: "Duplicate this page when it fills up. It will fill up — that's the point.",
       // Kontrak v3.3: hlm. 8 kembali menjadi field biasa di sessions.S1, diisi di akhir Sesi 1.
       // Leadership Log (silabus §9D) = tab/halaman terpisah: leadership.html, data di leadership_log (bukan bagian hlm. 8).

@@ -215,7 +215,6 @@
     var nim = CB.activeNim();
     CB.data = nim ? CB.loadLocal(nim) : null;
     CB.renderTopbar(top, "Halaman utama");
-    if (CB.preview) main.appendChild(U.el("div", { class: "banner preview" }, "<b>Mode pratinjau dosen.</b> Sesi yang belum dirilis ikut terlihat. Buka <code>?pratinjau=0</code> untuk keluar."));
     if (!CB.storageOK) main.appendChild(U.el("div", { class: "banner err" }, "Browser ini memblokir penyimpanan lokal (mis. mode privat). Isianmu hilang saat tab ditutup. Pakai browser biasa, atau unduh file sesering mungkin."));
     if (/perlu=identitas/.test(location.search) && !CB.data) main.appendChild(U.el("div", { class: "banner info", text: "Isi identitas dulu sebelum membuka halaman sesi." }));
     if (CB.data) dashboard(main, notice); else identityForm(main);
