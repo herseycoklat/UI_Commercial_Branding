@@ -29,8 +29,21 @@
       });
       s.appendChild(og);
     });
+    var og2 = U.el("optgroup", { label: "Lainnya" });
+    og2.appendChild(U.el("option", { value: CB.CUSTOM_PROJECT, text: "+ Proyek lain (tidak ada di daftar)" }));
+    s.appendChild(og2);
     if (value) s.value = value;
     return s;
+  }
+  /* Kotak nama proyek sendiri: tampil hanya bila "Proyek lain" dipilih. */
+  function customProjectField(sel, initial) {
+    var i = inp("project_custom", "text", { placeholder: "Nama proyek, mis. Kampanye peluncuran produk X", maxlength: "160" });
+    i.value = initial || "";
+    var f = fld("project_custom", "Nama proyekmu", i, "Dipakai bila proyekmu belum ada di daftar. Beri tahu dosen supaya anggota timmu bisa digabung.");
+    f.classList.add("full");
+    function sync() { f.style.display = sel.value === CB.CUSTOM_PROJECT ? "" : "none"; }
+    sel.addEventListener("change", sync); sync();
+    return { el: f, input: i };
   }
   function showErrs(errs, ids) {
     ids.forEach(function (k) { var e = document.getElementById("err_" + k); if (e) e.textContent = errs[k] || ""; });
@@ -74,14 +87,16 @@
     g.appendChild(fld("nim2", "Ketik NIM sekali lagi", n2));
     var fn = fld("full_name", "Nama lengkap", nm); g.appendChild(fn);
     g.appendChild(fld("email", "Email", em, "Pakai email yang sama dengan akun Google untuk Form pengumpulan."));
-    var gpf = fld("group_id", "Proyek", gp, "Proyek grup dan individu ada di daftar ini."); gpf.classList.add("full"); g.appendChild(gpf);
+    var gpf = fld("group_id", "Proyek", gp, "Proyek grup dan individu ada di daftar ini. Kalau proyekmu belum ada, pilih \"+ Proyek lain\" di bagian bawah daftar."); gpf.classList.add("full"); g.appendChild(gpf);
+    var cp = customProjectField(gp, "");
+    g.appendChild(cp.el);
     card.appendChild(g);
     var row = U.el("div"); row.style.cssText = "display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center";
     var go = U.el("button", { class: "btn primary", type: "button", text: "Simpan dan mulai" });
     go.onclick = function () {
-      var f = { nim1: n1.value, nim2: n2.value, full_name: nm.value, email: em.value, group_id: gp.value };
+      var f = { nim1: n1.value, nim2: n2.value, full_name: nm.value, email: em.value, group_id: gp.value, project_custom: cp.input.value };
       var errs = CB.validateIdentity(f);
-      showErrs(errs, ["nim1", "nim2", "full_name", "email", "group_id"]);
+      showErrs(errs, ["nim1", "nim2", "full_name", "email", "group_id", "project_custom"]);
       if (Object.keys(errs).length) return;
       var r = CB.startStudent(f);
       render(r.resumed ? "Data lama untuk NIM ini ditemukan di browser dan dilanjutkan." : null);
@@ -122,14 +137,16 @@
     g.appendChild(fld("full_name", "Nama lengkap", nm));
     g.appendChild(fld("email", "Email", em));
     var gpf = fld("group_id", "Proyek", gp); gpf.classList.add("full"); g.appendChild(gpf);
+    var cp = customProjectField(gp, id.group_id === CB.CUSTOM_PROJECT ? id.project_name : "");
+    g.appendChild(cp.el);
     card.appendChild(g);
     var row = U.el("div"); row.style.cssText = "display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center";
     var sv = U.el("button", { class: "btn", type: "button", text: "Simpan perubahan identitas" });
     var msg = U.el("span", { class: "small muted" });
     sv.onclick = function () {
-      var f = { nim1: id.nim, nim2: id.nim, full_name: nm.value, email: em.value, group_id: gp.value };
+      var f = { nim1: id.nim, nim2: id.nim, full_name: nm.value, email: em.value, group_id: gp.value, project_custom: cp.input.value };
       var errs = CB.validateIdentity(f);
-      showErrs(errs, ["full_name", "email", "group_id"]);
+      showErrs(errs, ["full_name", "email", "group_id", "project_custom"]);
       if (Object.keys(errs).length) return;
       CB.updateIdentity(f); msg.textContent = "Tersimpan."; CB.renderTopbar(document.getElementById("topbar"), "Halaman utama");
     };

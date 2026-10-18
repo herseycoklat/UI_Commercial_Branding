@@ -60,3 +60,6 @@ python3 tools/audit.py S2 tools/extracts/S2.md
 - **Decision Log S1** = `s1.p8.log`, field biasa di `sessions.S1`, diisi di akhir Sesi 1, ikut status dan versi S1.
 - **Leadership Log** = `leadership_log.entries[]` di level atas file, satu entri per butir §9D (`category`, `text`, `ref`, `date`). Menambah entri tidak mengubah status sesi mana pun.
 - File v0.1 (satu entri berisi kolom workbook dan sembilan butir §9D) otomatis dipindahkan oleh `migrate()` di `core/app.js`.
+
+## Proyek di luar daftar
+Di pilihan Proyek (halaman utama) ada opsi "+ Proyek lain (tidak ada di daftar)". Memilihnya memunculkan kotak nama proyek. Di file hasil unduhan: `identifier.group_id = "LAIN"` dan `identifier.project_name` = nama yang diketik. Penerima file mengelompokkan tim lewat `group_id`, jadi semua file ber-ID `LAIN` perlu dicocokkan manual lewat nama proyek atau ditambahkan ke `config/projects.json`.

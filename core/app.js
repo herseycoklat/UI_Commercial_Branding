@@ -204,9 +204,12 @@
     if (!em) e.email = "Email wajib diisi.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) e.email = "Format email tidak benar.";
     if (!f.group_id) e.group_id = "Pilih proyekmu.";
+    else if (f.group_id === CB.CUSTOM_PROJECT && String(f.project_custom || "").trim().length < 3) e.project_custom = "Tulis nama proyekmu (minimal 3 huruf).";
     return e;
   };
-  CB.projectName = function (gid) {
+  CB.CUSTOM_PROJECT = "LAIN"; // proyek yang tidak ada di daftar; nama diketik sendiri
+  CB.projectName = function (gid, custom) {
+    if (gid === CB.CUSTOM_PROJECT) return String(custom || "").trim();
     var p = (CB.projects || []).filter(function (x) { return x.group_id === gid; })[0];
     return p ? p.project_name : "";
   };
@@ -217,7 +220,7 @@
     d.identifier.full_name = String(f.full_name).trim();
     d.identifier.email = String(f.email).trim();
     d.identifier.group_id = f.group_id;
-    d.identifier.project_name = CB.projectName(f.group_id);
+    d.identifier.project_name = CB.projectName(f.group_id, f.project_custom);
     CB.data = d; CB.setActive(nim); saveNow();
     return { resumed: !!existing };
   };
@@ -226,7 +229,7 @@
     id.full_name = String(f.full_name).trim();
     id.email = String(f.email).trim();
     id.group_id = f.group_id;
-    id.project_name = CB.projectName(f.group_id);
+    id.project_name = CB.projectName(f.group_id, f.project_custom);
     saveNow();
   };
 
