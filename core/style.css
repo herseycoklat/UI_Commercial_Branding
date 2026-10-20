@@ -179,7 +179,7 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
   body{background:#fff; padding:0;}
   body > *:not(#print-root){display:none !important;}
   #print-root{display:block;}
-  .pp{page-break-after:always; break-after:page; padding:0;}
+  .pp{page-break-after:always; break-after:page; padding:14mm 16mm; box-sizing:border-box; -webkit-box-decoration-break:clone; box-decoration-break:clone;}
   .pp:last-child{page-break-after:auto; break-after:auto;}
   .pp-id{font-size:10.5pt; color:#555; border-bottom:1px solid #D8CFC6; padding-bottom:4pt; margin-bottom:8pt;}
   .pp-head{display:flex; gap:10pt; align-items:center; margin-bottom:6pt;}
@@ -194,6 +194,23 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
   .pp-box div{font-size:9.5pt; white-space:pre-wrap;}
   .pp-colh{font-family:Cambria,Georgia,serif; font-weight:bold; font-size:10pt; color:#7A3327;}
   .pp-foot{font-size:8.5pt; color:#6B6B6B; margin-top:6pt; font-style:italic;}
+  .pp-table{width:100%; border-collapse:collapse; margin-top:4pt; background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .pp-table th, .pp-table td{border:1px solid #D8CFC6; padding:3pt 5pt; font-size:9pt; text-align:left; vertical-align:top; white-space:pre-wrap;}
+  .pp-table thead th{background:#EFE7DE; color:#7A3327; font-size:8pt; letter-spacing:.2pt;}
+  .pp-table tbody th{color:#B85042; font-weight:bold; width:22%;}
+  .pp-table tr{break-inside:avoid;}
+  .pp-box.pp-tablebox{padding:5pt 7pt 7pt;}
+  .pp-cover .pc-course{font-size:10pt; color:#6B6B6B; letter-spacing:.4pt; text-transform:uppercase; margin-bottom:6pt;}
+  .pp-cover .pc-title{font-family:Cambria,Georgia,serif; font-weight:bold; font-size:26pt; color:#7A3327; margin-bottom:6pt;}
+  .pp-cover .pc-note{font-style:italic; color:#6B6B6B; font-size:10pt; margin:0 0 12pt;}
+  .pp-cover .pc-cols{display:grid; grid-template-columns:1fr 1fr; gap:10pt; margin-bottom:10pt;}
+  .pp-cover .pc-box{border:1px solid #D8CFC6; border-radius:5pt; padding:7pt 10pt; background:#F7F4F0; -webkit-print-color-adjust:exact; print-color-adjust:exact; break-inside:avoid;}
+  .pp-cover .pc-h{font-family:Cambria,Georgia,serif; font-weight:bold; font-size:11pt; color:#7A3327; margin-bottom:4pt;}
+  .pp-cover .pc-r{display:flex; gap:8pt; font-size:9.5pt; padding:1.5pt 0;}
+  .pp-cover .pc-k{flex:0 0 78pt; color:#B85042; font-weight:bold;}
+  .pp-cover .pc-k.pc-n{flex:0 0 14pt;}
+  .pp-cover .pc-v{flex:1; word-break:break-word;}
+  .pp-cover .pc-ai{font-size:8.5pt; font-style:italic; color:#6B6B6B; margin:6pt 0 0;}
 }
 
 /* Ringkas di layar kecil */
@@ -204,7 +221,7 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
   .actionbar .save{font-size:11px;}
   .pagehead h2{font-size:19px;}
 }
-@page{size:A4 landscape; margin:12mm;}
+@page{size:A4 landscape; margin:0;} /* margin dipegang .pp supaya tidak bergantung pada pilihan 'Margins' di dialog cetak */
 
 /* ---------- komponen tambahan (v0.2) ---------- */
 input.line{width:100%; padding:8px 9px; border:1px solid var(--line); border-radius:6px; background:var(--field); font-size:14.5px;}

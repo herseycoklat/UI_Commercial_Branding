@@ -298,11 +298,70 @@
     return function () { return fn(CB.data, built); };
   }
 
+  /* Halaman sampul cetak: memuat informasi yang ada di halaman utama (identitas, sesi, cara kerja). */
+  function buildCover(sessId, spec, built) {
+    var id = CB.data.identifier, cfg = CB.sessionCfg(sessId) || {};
+    var st = CB.data.sessions[sessId], last = st && st.versions && st.versions.length ? st.versions[st.versions.length - 1] : null;
+    var lead = (CB.data.leadership_log && CB.data.leadership_log.entries || []).filter(function (e) { return (e.text || "").trim(); }).length;
+    var c = U.el("div", { class: "pp pp-cover" });
+    c.appendChild(U.el("div", { class: "pc-course", text: (CB.config.course || "Capstone: Commercial Branding") + " · Workbook" }));
+    c.appendChild(U.el("div", { class: "pc-title", text: "Sesi " + spec.n + " · " + spec.title }));
+    if (spec.coverNote) c.appendChild(U.el("p", { class: "pc-note", text: spec.coverNote }));
+    var cols = U.el("div", { class: "pc-cols" });
+    function dl(head, pairs) {
+      var d = U.el("div", { class: "pc-box" });
+      d.appendChild(U.el("div", { class: "pc-h", text: head }));
+      pairs.forEach(function (p) {
+        var r = U.el("div", { class: "pc-r" });
+        r.appendChild(U.el("span", { class: "pc-k", text: p[0] })); r.appendChild(U.el("span", { class: "pc-v", text: p[1] || "—" }));
+        d.appendChild(r);
+      });
+      return d;
+    }
+    cols.appendChild(dl("Identitas", [["Nama", id.full_name], ["NIM", id.nim], ["Email", id.email], ["Proyek", id.group_id + " · " + id.project_name]]));
+    var sesPairs = [["Minggu", String(cfg.week || "—")],
+      ["Dibuka", cfg.release ? U.fmtDate(cfg.release) : "—"],
+      ["Tenggat file", cfg.due ? U.fmtDate(cfg.due) : "—"],
+      ["Status", last ? "Submitted " + U.fmtDate(last.submitted_at) + (st.versions.length > 1 ? " · versi " + st.versions.length : "") + (st.changed_since_submit ? " · ada perubahan belum di-submit" : "") : "Belum di-submit"],
+      ["Leadership Log", lead + " entri (ikut di setiap file)"]];
+    if (spec.coverExtra) { var tmp = U.el("div", null, CB.fill(spec.coverExtra, sessId)); sesPairs.push(["Catatan", tmp.textContent]); }
+    cols.appendChild(dl("Sesi", sesPairs));
+    c.appendChild(cols);
+    var cols2 = U.el("div", { class: "pc-cols" });
+    var toc = U.el("div", { class: "pc-box" });
+    toc.appendChild(U.el("div", { class: "pc-h", text: "Daftar isi: " + spec.title }));
+    spec.fillOrder.forEach(function (p, i) {
+      var pg = spec.pages.filter(function (x) { return x.p === p; })[0];
+      if (built.indexOf(p) < 0) return;
+      var r = U.el("div", { class: "pc-r" });
+      r.appendChild(U.el("span", { class: "pc-k pc-n", text: (i + 1) + "." })); r.appendChild(U.el("span", { class: "pc-v", text: "hlm. " + p + " · " + pg.title }));
+      toc.appendChild(r);
+    });
+    cols2.appendChild(toc);
+    var how = U.el("div", { class: "pc-box" });
+    how.appendChild(U.el("div", { class: "pc-h", text: "Cara kerja" }));
+    ["Buka sesi, isi halaman workbook-nya. Isianmu tersimpan otomatis di browser ini.",
+      "Tekan Submit di halaman sesi. App mengunduh satu file .json berisi semua sesi dan Leadership Log-mu.",
+      "Kumpulkan file TERBARU lewat Google Form" + (CB.config.form_url ? " (" + CB.config.form_url + ")" : "") + ", pilih minggunya.",
+      "Kalau pindah perangkat atau browser, tekan Lanjutkan dari file dan pilih file terakhirmu."
+    ].forEach(function (t, i) {
+      var r = U.el("div", { class: "pc-r" });
+      r.appendChild(U.el("span", { class: "pc-k pc-n", text: (i + 1) + "." })); r.appendChild(U.el("span", { class: "pc-v", text: t }));
+      how.appendChild(r);
+    });
+    how.appendChild(U.el("p", { class: "pc-ai", text: "Hasil kerjamu dibaca dan dinilai dengan bantuan AI. Dosen membaca ulang bila kamu meminta atau bila sistem menandai." }));
+    cols2.appendChild(how);
+    c.appendChild(cols2);
+    c.appendChild(U.el("div", { class: "pp-foot", text: "Dicetak dari Workbook App · " + U.fmtDate(new Date().toISOString()) + " · arsip pribadi, bukan file pengumpulan." }));
+    return c;
+  }
+
   function buildPrint(sessId, spec, built) {
     var root = document.getElementById("print-root");
     if (!root) { root = U.el("div", { id: "print-root" }); document.body.appendChild(root); }
     root.innerHTML = "";
     var id = CB.data.identifier;
+    root.appendChild(buildCover(sessId, spec, built));
     spec.pages.forEach(function (pg) {
       if (built.indexOf(pg.p) < 0) return;
       var pp = U.el("div", { class: "pp" });
@@ -313,10 +372,47 @@
       pp.appendChild(h);
       if (pg.sub) pp.appendChild(U.el("p", { class: "pp-sub", text: pg.sub }));
       var byId = byIdOf(pg);
+      function ptable(heads, rows) {
+        var t = U.el("table", { class: "pp-table" });
+        var tr = U.el("tr");
+        heads.forEach(function (h) { tr.appendChild(U.el("th", { text: h })); });
+        var th = U.el("thead"); th.appendChild(tr); t.appendChild(th);
+        var tb = U.el("tbody");
+        rows.forEach(function (r) {
+          var x = U.el("tr");
+          r.forEach(function (c, i) { x.appendChild(U.el(i === 0 && heads.length > 1 && r.label1 ? "th" : "td", { text: c || "—" })); });
+          tb.appendChild(x);
+        });
+        t.appendChild(tb); return t;
+      }
       function box(f) {
         var b = U.el("div", { class: "pp-box" + (f.output ? " output" : "") });
+        var v = CB.getField(sessId, f.id);
+        if (f.type === "table") {
+          // Tabel sungguhan: semua baris tetap tampil, yang kosong ditandai "—".
+          v = v || {};
+          var rows = (f.rows || []).map(function (r) {
+            var x = (v.rows || {})[r.k] || {};
+            var a = [r.label].concat(f.columns.map(function (c) { return x[c.k]; })); a.label1 = true; return a;
+          });
+          (v.extra || []).forEach(function (x) {
+            var a = [x.label || "(tanpa nama)"].concat(f.columns.map(function (c) { return x[c.k]; })); a.label1 = true; rows.push(a);
+          });
+          b.appendChild(U.el("b", { text: f.label || pg.title }));
+          b.appendChild(ptable([f.rowLabel || ""].concat(f.columns.map(function (c) { return c.label; })), rows));
+          b.classList.add("pp-tablebox");
+          return b;
+        }
+        if (f.type === "list" && f.itemFields) {
+          var items = (v && v.items) || [];
+          b.appendChild(U.el("b", { text: f.label || pg.title }));
+          b.appendChild(ptable(["#"].concat(f.itemFields.map(function (c) { return c.label || c.k; })),
+            items.length ? items.map(function (it, i) { return [String(i + 1)].concat(f.itemFields.map(function (c) { return it[c.k]; })); }) : [["—"]]));
+          b.classList.add("pp-tablebox");
+          return b;
+        }
         b.appendChild(U.el("b", { text: f.label || pg.title }));
-        b.appendChild(U.el("div", { text: CB.fields.printText(f, CB.getField(sessId, f.id), sessId) || "—" }));
+        b.appendChild(U.el("div", { text: CB.fields.printText(f, v, sessId) || "—" }));
         return b;
       }
       if (pg.layout === "canvas2" && pg.columns) {
