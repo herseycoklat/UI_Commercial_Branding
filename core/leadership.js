@@ -206,7 +206,7 @@
       var inner = U.el("div", { class: "inner" });
       inner.appendChild(U.el("a", { class: "btn ghost", href: "index.html", text: "← Halaman utama" }));
       var st = U.el("span", { class: "save", text: CB.storageOK ? "Tersimpan otomatis di browser ini. Ikut terunduh saat kamu Submit sesi." : "Browser ini memblokir penyimpanan. Unduh file lewat Submit sesi sebelum menutup tab." });
-      inner.appendChild(st); bar.appendChild(inner);
+      inner.appendChild(st); inner.appendChild(CB.leaveWarnToggle()); bar.appendChild(inner);
       CB.onSave(function (ok) { st.textContent = ok ? "Tersimpan di browser " + U.fmtDate(new Date().toISOString()) + ". Belum terkirim ke dosen." : "Gagal menyimpan di browser. Unduh file sekarang lewat Submit sesi."; });
     }).catch(function (e) { CB.showError(main, e.message); });
   };

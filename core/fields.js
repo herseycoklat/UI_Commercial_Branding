@@ -61,11 +61,12 @@
     var val = clone(CB.getField(sessId, f.id)); val.rows = val.rows || {}; val.extra = val.extra || [];
     function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
     var scroller = U.el("div", { class: "tscroll" });
-    var t = U.el("table", { class: "wbtable", "data-fid": f.id });
+    var t = U.el("table", { class: "wbtable" + (f.narrowHead ? " narrowhead" : ""), "data-fid": f.id });
+    var hasAct = !!(f.allowExtraRows || val.extra.length);
     var thead = U.el("thead"), hr = U.el("tr");
     hr.appendChild(U.el("th", { text: f.rowLabel || "" }));
     f.columns.forEach(function (c) { hr.appendChild(U.el("th", { text: c.label })); });
-    hr.appendChild(U.el("th", { class: "act", text: "" }));
+    if (hasAct) hr.appendChild(U.el("th", { class: "act", text: "" }));
     thead.appendChild(hr); t.appendChild(thead);
     var tb = U.el("tbody"); t.appendChild(tb);
     function cell(get, set, ph) {
@@ -84,7 +85,7 @@
         f.columns.forEach(function (c) {
           tr.appendChild(cell(function () { return val.rows[r.k][c.k]; }, function (v) { val.rows[r.k][c.k] = v; }));
         });
-        tr.appendChild(U.el("td", { class: "act" }));
+        if (hasAct) tr.appendChild(U.el("td", { class: "act" }));
         tb.appendChild(tr);
       });
       val.extra.forEach(function (row, i) {
@@ -299,7 +300,7 @@
     var val = clone(CB.getField(sessId, f.id)); val.items = val.items || [];
     if (!val.items.length) { val.items = [{ id: U.uuid() }, { id: U.uuid() }]; }
     function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
-    var sc = U.el("div", { class: "tscroll" }); var t = U.el("table", { class: "wbtable seg" });
+    var sc = U.el("div", { class: "tscroll" }); var t = U.el("table", { class: "wbtable seg" + (f.narrowHead ? " narrowhead" : "") });
     sc.appendChild(t); wrap.appendChild(sc);
     var bar = U.el("div", { class: "segbar" }); wrap.appendChild(bar);
     function draw() {
@@ -348,11 +349,12 @@
     function draw() {
       var val = clone(CB.getField(sessId, f.id));
       var segs = ((CB.getField(sessId, f.from) || {}).items || []);
-      var t = U.el("table", { class: "wbtable" });
-      var hr = U.el("tr"); hr.appendChild(U.el("th", { text: f.rowLabel || "SEGMENT" }));
+      var t = U.el("table", { class: "wbtable scoregrid" });
+      var thead = U.el("thead"), hr = U.el("tr"); hr.appendChild(U.el("th", { text: f.rowLabel || "SEGMENT" }));
       f.criteria.forEach(function (c) { hr.appendChild(U.el("th", { text: c.label })); });
       hr.appendChild(U.el("th", { text: "TOTAL" }));
-      t.appendChild(hr);
+      thead.appendChild(hr); t.appendChild(thead);
+      var tb = U.el("tbody"); t.appendChild(tb);
       var totals = [];
       segs.forEach(function (s) {
         var tr = U.el("tr");
@@ -362,19 +364,26 @@
         function sum() { var n = 0, all = true; f.criteria.forEach(function (c) { if (val[s.id][c.k]) n += val[s.id][c.k]; else all = false; }); return { n: n, all: all }; }
         f.criteria.forEach(function (c) {
           var td = U.el("td");
-          var sel = U.el("select", { class: "scoresel", "aria-label": c.label + " " + (s.name || "") });
-          sel.appendChild(U.el("option", { value: "", text: "—" }));
-          [1, 2, 3, 4, 5].forEach(function (n) { sel.appendChild(U.el("option", { value: String(n), text: String(n) })); });
-          sel.value = val[s.id][c.k] ? String(val[s.id][c.k]) : "";
-          sel.onchange = function () {
-            val[s.id][c.k] = sel.value ? parseInt(sel.value, 10) : null;
-            CB.setField(sessId, f.id, clone(val)); changed(f.id);
-            var r = sum(); tot.textContent = r.all ? String(r.n) : "—"; drawBest();
-          };
-          td.appendChild(sel); tr.appendChild(td);
+          /* Sel angka seperti tabel workbook: ketik 1–5. Nilai lain ditolak (tidak tersimpan). */
+          var inp = U.el("input", { type: "text", inputmode: "numeric", maxlength: "1", class: "scorecell", placeholder: "—", "aria-label": c.label + " " + (s.name || "") + " (1–5)" });
+          inp.value = val[s.id][c.k] ? String(val[s.id][c.k]) : "";
+          function paint(bad) { inp.className = "scorecell" + (bad ? " bad" : (val[s.id][c.k] && val[s.id][c.k] <= 2 ? " low" : "")); }
+          paint(false);
+          inp.addEventListener("input", function () {
+            var v = inp.value.trim(), ok = /^[1-5]$/.test(v);
+            if (v === "" || ok) {
+              val[s.id][c.k] = ok ? parseInt(v, 10) : null;
+              CB.setField(sessId, f.id, clone(val)); changed(f.id);
+              var r = sum(); tot.textContent = r.all ? String(r.n) : "—"; drawBest();
+            }
+            paint(v !== "" && !ok);
+          });
+          inp.addEventListener("blur", function () { if (inp.value.trim() !== "" && !/^[1-5]$/.test(inp.value.trim())) { inp.value = val[s.id][c.k] ? String(val[s.id][c.k]) : ""; paint(false); } });
+          inp.addEventListener("focus", function () { inp.select(); });
+          td.appendChild(inp); tr.appendChild(td);
         });
         var r0 = sum(); tot.textContent = r0.all ? String(r0.n) : "—";
-        tr.appendChild(tot); t.appendChild(tr);
+        tr.appendChild(tot); tb.appendChild(tr);
         totals.push({ s: s, sum: sum });
       });
       function drawBest() {

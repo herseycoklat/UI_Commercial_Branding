@@ -492,7 +492,7 @@
       var pr = U.el("button", { class: "btn", type: "button", text: "Cetak / Simpan PDF" });
       var sb = U.el("button", { class: "btn primary", type: "button", text: "Submit " + sessId + " (unduh file)" });
       var st = U.el("span", { class: "save", text: CB.storageOK ? "Tersimpan otomatis di browser ini." : "Browser ini memblokir penyimpanan. Unduh file sebelum menutup tab." });
-      inner.appendChild(back); inner.appendChild(pr); inner.appendChild(sb); inner.appendChild(st);
+      inner.appendChild(back); inner.appendChild(pr); inner.appendChild(sb); inner.appendChild(st); inner.appendChild(CB.leaveWarnToggle());
       bar.appendChild(inner);
       CB.onSave(function (ok) { st.textContent = ok ? "Tersimpan di browser " + U.fmtDate(new Date().toISOString()) + ". Belum terkirim ke dosen." : "Gagal menyimpan di browser. Unduh file sekarang."; });
       pr.onclick = function () { CB.saveNow(); buildPrint(sessId, spec, built); window.print(); };

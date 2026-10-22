@@ -20,7 +20,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.2.0";
+  var APP_VERSION = "0.2.1";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
@@ -371,8 +371,32 @@
     });
   };
 
-  /* ---------- peringatan tutup tab ---------- */
+  /* ---------- peringatan tutup tab ----------
+   * Pindah antarhalaman app (index, sN, Leadership Log) tidak pernah memicu peringatan:
+   * isian sudah tersimpan otomatis di browser, jadi tidak ada yang hilang.
+   * Peringatan hanya muncul saat tab ditutup / keluar dari app, dan bisa dimatikan
+   * lewat kotak centang di action bar (disimpan per browser). */
+  var KEY_NO_LEAVE_WARN = "cb_no_leave_warning";
+  var internalNavAt = 0;
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
+    try { if (new URL(a.href, location.href).origin === location.origin) internalNavAt = Date.now(); } catch (err) { }
+  }, true);
+  CB.leaveWarnOff = function () { return lsGet(KEY_NO_LEAVE_WARN) === "1"; };
+  CB.setLeaveWarnOff = function (off) { if (off) lsSet(KEY_NO_LEAVE_WARN, "1"); else lsDel(KEY_NO_LEAVE_WARN); };
+  CB.leaveWarnToggle = function () {
+    var lab = el("label", { class: "leavewarn small" });
+    var cb = el("input", { type: "checkbox" });
+    cb.checked = CB.leaveWarnOff();
+    cb.onchange = function () { CB.setLeaveWarnOff(cb.checked); };
+    lab.appendChild(cb);
+    lab.appendChild(document.createTextNode(" Jangan ingatkan lagi saat menutup tab"));
+    return lab;
+  };
   window.addEventListener("beforeunload", function (e) {
+    if (Date.now() - internalNavAt < 3000) return;
+    if (CB.leaveWarnOff()) return;
     if (CB.data && CB.hasUnexported()) { e.preventDefault(); e.returnValue = ""; }
   });
 

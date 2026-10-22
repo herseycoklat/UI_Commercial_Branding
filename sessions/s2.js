@@ -19,7 +19,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
     pages: [
       {
-        p: 2, title: "Evidence Review", layout: "grid", cols: 3,
+        p: 2, title: "Evidence Review", layout: "grid", cols: 1, // ditumpuk ke bawah (Fai, 22 Okt) supaya teks panjang terbaca
         sub: "Sort what you gathered since Session 1. Be brutal — most first drafts are mostly guesses.",
         footer: "Each claim goes into exactly ONE column — not the same claim walked across all three. A claim with no named source and no number is never a FACT, however confidently it was said out loud. An empty FACT column is honest: write 0 as a fact, e.g. “0 interviews so far.”",
         fields: [
@@ -45,7 +45,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
           { id: "s2.p3.category", type: "parts", label: "FIRST, NAME THE CATEGORY YOU ARE COMPETING IN", hint: "(decide this before the segments — it sets who counts as a competitor on page 6)",
             parts: [{ k: "compete_in", label: "We compete in", ph: "kategori yang dipilih audiens saat memutuskan" }, { k: "because", label: "because", ph: "alasannya" }],
             previewTpl: "We compete in {compete_in}, because {because}." },
-          { id: "s2.p3.segments", type: "segments", min: 2, max: 4,
+          { id: "s2.p3.segments", type: "segments", min: 2, max: 4, narrowHead: true,
             rows: [
               { k: "name", label: "SEGMENT NAME" }, { k: "who", label: "WHO THEY ARE" }, { k: "want", label: "WHAT THEY WANT" },
               { k: "where", label: "WHERE THEY ARE" }, { k: "pay", label: "DO THEY PAY?" }, { k: "evidence", label: "EVIDENCE WE HAVE" }
@@ -90,7 +90,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         sub: "Fill from evidence you can point at — name the real brand, their real page, poster, or pricing.",
         footer: "Row 1 is not optional: name the actual brand in every column. A column you cannot name is a category you have not researched. Write UNKNOWN where you have not checked — a blank cell reads as forgotten, UNKNOWN reads as honest.",
         fields: [
-          { id: "s2.p6.matrix", type: "table", rowLabel: "",
+          { id: "s2.p6.matrix", type: "table", rowLabel: "", narrowHead: true,
             columns: [{ k: "us", label: "US" }, { k: "direct", label: "DIRECT" }, { k: "indirect", label: "INDIRECT" }, { k: "substitute", label: "SUBSTITUTE" }, { k: "benchmark", label: "BENCHMARK" }],
             rows: [
               { k: "who", label: "Who exactly?" }, { k: "audience", label: "Audience" }, { k: "promise", label: "Promise" }, { k: "price", label: "Price" },
