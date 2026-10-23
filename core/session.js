@@ -399,7 +399,9 @@
             var a = [x.label || "(tanpa nama)"].concat(f.columns.map(function (c) { return x[c.k]; })); a.label1 = true; rows.push(a);
           });
           b.appendChild(U.el("b", { text: f.label || pg.title }));
-          b.appendChild(ptable([f.rowLabel || ""].concat(f.columns.map(function (c) { return c.label; })), rows));
+          var tt = ptable([f.rowLabel || ""].concat(f.columns.map(function (c) { return c.label; })), rows);
+          if (f.narrowHead) tt.classList.add("pp-narrow"); // kolom judul ramping, kolom isian sama lebar (sama dengan layar)
+          b.appendChild(tt);
           b.classList.add("pp-tablebox");
           return b;
         }

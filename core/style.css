@@ -201,6 +201,9 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
   .pp-table thead th{background:#EFE7DE; color:#7A3327; font-size:8pt; letter-spacing:.2pt;}
   .pp-table tbody th{color:#B85042; font-weight:bold; width:22%;}
   .pp-table tr{break-inside:avoid;}
+  .pp-table.pp-narrow{table-layout:fixed;}
+  .pp-table.pp-narrow thead th:first-child, .pp-table.pp-narrow tbody th{width:74pt;}
+  .pp-table.pp-narrow td{overflow-wrap:anywhere;}
   .pp-table.pp-score td{text-align:center; font-weight:bold; font-size:10.5pt;}
   .pp-table.pp-score td:last-child{color:#7A3327;}
   .pp-table.pp-score thead th{text-align:center;}
