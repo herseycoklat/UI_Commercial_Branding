@@ -194,7 +194,21 @@
     var list = U.el("div", { class: "sesslist" }); list.style.marginTop = "12px";
     var shown = 0;
     SESSION_IDS.forEach(function (sid) {
-      if (!CB.isReleased(sid) || LIVE_PAGES.indexOf(sid) < 0) return;
+      if (LIVE_PAGES.indexOf(sid) < 0) return;
+      if (!CB.isReleased(sid)) { // halaman sudah ada di repo tapi belum waktunya: tampil, terkunci
+        shown++;
+        var lc = CB.sessionCfg(sid) || {};
+        var lr = U.el("div", { class: "sessrow" });
+        var ll = U.el("div");
+        ll.appendChild(U.el("div", { class: "name", text: "Sesi " + sid.slice(1) + (lc.title ? " · " + lc.title : "") }));
+        var lm = U.el("div", { class: "meta" });
+        lm.innerHTML = '<span class="status-pill">terkunci</span>Dibuka ' + U.esc(U.fmtDate(lc.release)) + " · Minggu " + U.esc(lc.week) + ", tenggat " + U.esc(U.fmtDate(lc.due));
+        ll.appendChild(lm); lr.appendChild(ll);
+        var lb = U.el("button", { class: "btn", type: "button", text: "Terkunci" }); lb.disabled = true;
+        lr.appendChild(lb);
+        list.appendChild(lr);
+        return;
+      }
       shown++;
       var cfg = CB.sessionCfg(sid), st = sessionStatus(sid);
       var r = U.el("div", { class: "sessrow" });
