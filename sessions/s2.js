@@ -90,7 +90,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         sub: "Fill from evidence you can point at — name the real brand, their real page, poster, or pricing.",
         footer: "Row 1 is not optional: name the actual brand in every column. A column you cannot name is a category you have not researched. Write UNKNOWN where you have not checked — a blank cell reads as forgotten, UNKNOWN reads as honest.",
         fields: [
-          { id: "s2.p6.matrix", type: "table", rowLabel: "", narrowHead: true,
+          { id: "s2.p6.matrix", type: "table", rowLabel: "", narrowHead: true, wrapCells: true,
             columns: [{ k: "us", label: "US" }, { k: "direct", label: "DIRECT" }, { k: "indirect", label: "INDIRECT" }, { k: "substitute", label: "SUBSTITUTE" }, { k: "benchmark", label: "BENCHMARK" }],
             rows: [
               { k: "who", label: "Who exactly?" }, { k: "audience", label: "Audience" }, { k: "promise", label: "Promise" }, { k: "price", label: "Price" },

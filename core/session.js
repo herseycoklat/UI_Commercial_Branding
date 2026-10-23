@@ -403,6 +403,22 @@
           b.classList.add("pp-tablebox");
           return b;
         }
+        if (f.type === "segscore") {
+          // Tabel seperti workbook: SEGMENT · kriteria · TOTAL (TOTAL hanya bila semua skor terisi).
+          v = v || {};
+          var segs = ((CB.getField(sessId, f.from) || {}).items || []);
+          var srows = segs.map(function (s) {
+            var x = v[s.id] || {}, n = 0, all = true;
+            var a = [s.name || "(segmen tanpa nama)"].concat(f.criteria.map(function (c) { if (x[c.k]) n += x[c.k]; else all = false; return x[c.k] ? String(x[c.k]) : ""; }));
+            a.push(all ? String(n) : ""); a.label1 = true; return a;
+          });
+          b.appendChild(U.el("b", { text: f.label || pg.title }));
+          var st = ptable([f.rowLabel || "SEGMENT"].concat(f.criteria.map(function (c) { return c.label; }), ["TOTAL"]), srows.length ? srows : [["—"]]);
+          st.classList.add("pp-score");
+          b.appendChild(st);
+          b.classList.add("pp-tablebox");
+          return b;
+        }
         if (f.type === "list" && f.itemFields) {
           var items = (v && v.items) || [];
           b.appendChild(U.el("b", { text: f.label || pg.title }));

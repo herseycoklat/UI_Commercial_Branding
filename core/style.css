@@ -201,6 +201,10 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
   .pp-table thead th{background:#EFE7DE; color:#7A3327; font-size:8pt; letter-spacing:.2pt;}
   .pp-table tbody th{color:#B85042; font-weight:bold; width:22%;}
   .pp-table tr{break-inside:avoid;}
+  .pp-table.pp-score td{text-align:center; font-weight:bold; font-size:10.5pt;}
+  .pp-table.pp-score td:last-child{color:#7A3327;}
+  .pp-table.pp-score thead th{text-align:center;}
+  .pp-table.pp-score thead th:first-child{text-align:left;}
   .pp-box.pp-tablebox{padding:5pt 7pt 7pt;}
   .pp-cover .pc-course{font-size:10pt; color:#6B6B6B; letter-spacing:.4pt; text-transform:uppercase; margin-bottom:6pt;}
   .pp-cover .pc-title{font-family:Cambria,Georgia,serif; font-weight:bold; font-size:26pt; color:#7A3327; margin-bottom:6pt;}
@@ -306,21 +310,11 @@ table.wbtable select.scoresel{width:100%;}
 /* Kolom judul baris yang ramping (spec: narrowHead) — ruang lebih untuk isian.
    Dipakai S2 hlm. 3 (Segmentation Matrix) dan hlm. 6 (Competitor Benchmark Matrix). */
 table.wbtable.narrowhead{table-layout:fixed;}
-table.wbtable.narrowhead th[scope=row]{width:96px; white-space:normal; font-size:12px; line-height:1.3; padding:6px;}
-table.wbtable.narrowhead thead th:first-child{width:96px;}
+table.wbtable.narrowhead th[scope=row]{width:76px; white-space:normal; overflow-wrap:anywhere; font-size:11.5px; line-height:1.25; padding:6px 5px;}
+table.wbtable.narrowhead thead th:first-child, table.wbtable.narrowhead tr:first-child th:first-child{width:76px;}
 table.wbtable.narrowhead td{min-width:0;}
+table.wbtable textarea.cell.grow{resize:none; overflow:hidden; min-height:36px; line-height:1.4;}
 table.wbtable.narrowhead td.act, table.wbtable.narrowhead th.act{width:36px;}
-/* Audience Priority Score: sel angka seperti tabel workbook (ketik 1–5), bukan dropdown */
-table.wbtable.scoregrid{table-layout:fixed;}
-table.wbtable.scoregrid thead th{text-align:center;}
-table.wbtable.scoregrid thead th:first-child{text-align:left; width:30%;}
-table.wbtable.scoregrid td{min-width:0; padding:0; text-align:center; vertical-align:middle;}
-table.wbtable.scoregrid input.scorecell{width:100%; height:44px; border:0; background:var(--field); text-align:center; font-family:var(--serif); font-size:18px; font-weight:bold; color:var(--deep);}
-table.wbtable.scoregrid input.scorecell:focus{outline:2px solid var(--deep); outline-offset:-2px; background:#fff;}
-table.wbtable.scoregrid input.scorecell.bad{outline:2px solid var(--terra); outline-offset:-2px; background:#fff;}
-table.wbtable.scoregrid input.scorecell.low{background:var(--deep); color:#fff;}
-table.wbtable.scoregrid td.total{background:#fff;}
-table.wbtable.scoregrid tbody th{white-space:normal;}
 .maplayout{display:grid; grid-template-columns:minmax(0, 420px) 1fr; gap:16px; align-items:start; margin-top:8px;}
 @media (max-width:760px){.maplayout{grid-template-columns:1fr;}}
 svg.mapsvg{width:100%; max-width:420px; aspect-ratio:1/1; background:#fff; border:1px solid var(--line); border-radius:8px; touch-action:none; user-select:none;}
