@@ -93,15 +93,20 @@
     card.appendChild(g);
     var row = U.el("div"); row.style.cssText = "display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center";
     var go = U.el("button", { class: "btn primary", type: "button", text: "Simpan dan mulai" });
+    var goMsg = U.el("span", { class: "small", role: "alert" }); goMsg.style.color = "#a33";
     go.onclick = function () {
       var f = { nim1: n1.value, nim2: n2.value, full_name: nm.value, email: em.value, group_id: gp.value, project_custom: cp.input.value };
       var errs = CB.validateIdentity(f);
-      showErrs(errs, ["nim1", "nim2", "full_name", "email", "group_id", "project_custom"]);
-      if (Object.keys(errs).length) return;
+      var order = ["nim1", "nim2", "full_name", "email", "group_id", "project_custom"];
+      showErrs(errs, order);
+      var bad = order.filter(function (k) { return errs[k]; });
+      goMsg.textContent = bad.length ? "Belum bisa disimpan: " + bad.length + " isian perlu diperbaiki (lihat teks merah)." : "";
+      if (bad.length) { var t = document.getElementById(bad[0]); if (t) { t.focus(); if (t.scrollIntoView) t.scrollIntoView({ block: "center" }); } return; }
       var r = CB.startStudent(f);
       render(r.resumed ? "Data lama untuk NIM ini ditemukan di browser dan dilanjutkan." : null);
     };
     row.appendChild(go);
+    row.appendChild(goMsg);
     row.appendChild(U.el("span", { class: "muted small", text: "atau" }));
     row.appendChild(importButton());
     card.appendChild(row);
@@ -146,8 +151,16 @@
     sv.onclick = function () {
       var f = { nim1: id.nim, nim2: id.nim, full_name: nm.value, email: em.value, group_id: gp.value, project_custom: cp.input.value };
       var errs = CB.validateIdentity(f);
-      showErrs(errs, ["full_name", "email", "group_id", "project_custom"]);
-      if (Object.keys(errs).length) return;
+      var order = ["full_name", "email", "group_id", "project_custom"];
+      showErrs(errs, order);
+      var bad = order.filter(function (k) { return errs[k]; });
+      if (bad.length || errs.nim1 || errs.nim2) {
+        msg.style.color = "#a33";
+        msg.textContent = bad.length ? "Belum tersimpan: periksa teks merah di bawah isian." : "Belum tersimpan: " + (errs.nim1 || errs.nim2) + " Minta dosen membantu.";
+        if (bad.length) { var t = document.getElementById(bad[0]); if (t) t.focus(); }
+        return;
+      }
+      msg.style.color = "";
       CB.updateIdentity(f); msg.textContent = "Tersimpan."; CB.renderTopbar(document.getElementById("topbar"), "Halaman utama");
     };
     var out = U.el("button", { class: "btn ghost", type: "button", text: "Bukan kamu? Masuk sebagai mahasiswa lain" });
