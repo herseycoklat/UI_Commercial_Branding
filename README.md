@@ -47,6 +47,9 @@ tools/audit.py        audit parity spec ↔ ekstrak workbook
 3. Tambahkan `"SN"` ke `LIVE_PAGES` di `core/hub.js`.
 4. Jalankan audit, lalu `--lock` saat sesi dirilis.
 
+## Setiap kali deploy perubahan kode
+Naikkan nomor versi di `core/app.js` (`APP_VERSION`) dan di semua tag `?v=` pada file `*.html` (angkanya sama). Tanpa ini browser mahasiswa bisa memakai file JS/CSS lama dari cache sampai ±10 menit.
+
 ## Audit sebelum deploy
 
 ```
