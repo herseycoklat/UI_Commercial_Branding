@@ -34,6 +34,7 @@
   CB.content = CB.content || {};  // diisi content/sN.js
   CB.config = null;
   CB.projects = null;
+  CB.groupAliases = {}; // ID proyek lama -> ID baru (config/projects.json "aliases"), mis. proyek yang digabung
   CB.data = null;
 
   /* ---------- util ---------- */
@@ -150,6 +151,9 @@
     d.leadership_log.entries = d.leadership_log.entries || [];
     migrateLegacyLog(d);
     if (!d.student_id) d.student_id = uuid();
+    // Proyek yang digabung: file/data lama dengan group_id lama dipetakan ke ID baru.
+    var gid = d.identifier.group_id, to = CB.groupAliases && CB.groupAliases[gid];
+    if (to) { d.identifier.group_id = to; d.identifier.project_name = CB.projectName(to) || d.identifier.project_name; }
     d.app_version = APP_VERSION; // dicatat ulang saat disimpan oleh versi ini
     return d;
   }
@@ -251,7 +255,7 @@
       });
     }
     return Promise.all([get("config/course.json"), get("config/projects.json")]).then(function (r) {
-      CB.config = r[0]; CB.projects = r[1].projects || [];
+      CB.config = r[0]; CB.projects = r[1].projects || []; CB.groupAliases = r[1].aliases || {};
       return CB.config;
     });
   };

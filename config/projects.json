@@ -37,7 +37,7 @@
     },
     {
       "group_id": "G08",
-      "project_name": "Fashion Creative Deck untuk single kedua TINGZ \"Pelan-Pelan Baby\"",
+      "project_name": "Single Kedua Grup HipDut TINGZ! \"Pelan-Pelan Baby\"",
       "type": "group"
     },
     {
@@ -53,11 +53,6 @@
     {
       "group_id": "G11",
       "project_name": "Film Dokumenter \"Seen and Silenced: a Narcissistic Parenting Documentary\"",
-      "type": "group"
-    },
-    {
-      "group_id": "G12",
-      "project_name": "Song Product by TINGZ \"Pelan-Pelan Baby\"",
       "type": "group"
     },
     {
@@ -83,11 +78,6 @@
     {
       "group_id": "I03",
       "project_name": "Deck Workshop Event for Baimstorming On-site Copywriting Class",
-      "type": "individual"
-    },
-    {
-      "group_id": "I04",
-      "project_name": "Deck Digital Marketing Planning for TINGZ upcoming song \"Pelan-Pelan Baby\"",
       "type": "individual"
     },
     {
@@ -185,5 +175,9 @@
       "project_name": "Emosional Metadata framework Strategic prototype High fidelity - ADIS",
       "type": "individual"
     }
-  ]
+  ],
+  "aliases": {
+    "I04": "G08",
+    "G12": "G08"
+  }
 }
