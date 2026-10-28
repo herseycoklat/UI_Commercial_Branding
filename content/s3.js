@@ -7,11 +7,16 @@
  *    tanpa tanggal; tanggal tenggat diganti kalimat tanpa tanggal.
  *  - Tanggal kalender dihapus dari seluruh contoh (kontrak v3.2 butir 8).
  *  - Posisi slider: hanya sebagian yang tertulis sebagai angka di slide; sisanya estimasi (dicatat di ex.note hlm. 5).
+ *  - 28 Okt 2026 (brief claude/42, patch kontrak v3.5): Jumbo v2 (positioning, THE TEST, difference, promise, roof);
+ *    contoh mengisi semua kolom baru (jejak sumber, status janji, asal pilar, form penilai, rencana).
+ *    Penilai 1 = skor kartu worked example slide 7; Penilai 2 = ILUSTRASI, skornya dipilih supaya kriteria rendahnya
+ *    sama dengan worked example. Identitas penilai contoh jelas fiktif. Baris WHY yang tidak tertulis di slide ditandai.
  * Konten tidak boleh memuat tanggal kalender atau kata status Gate.
  */
 window.CB = window.CB || {}; CB.content = CB.content || {};
 (function () {
   var CAVEAT = "Contoh ini rekonstruksi ilustratif, bukan data bersumber. Tiru cara berpikirnya, bukan angkanya.";
+  var SUB2 = " Penilai 2 is an ILLUSTRATION (not data), chosen so the low criteria stay the same as the worked example. Reviewer names, NIMs and emails are fictitious.";
   var SLIDER_NOTE = "Posisi slider di contoh dibaca dari letak titik di slide; hanya sebagian yang tertulis sebagai angka, sisanya estimasi. 0 = kutub kiri, 100 = kutub kanan. Tiru alasannya, bukan angkanya.";
 
   CB.content.S3 = {
@@ -26,9 +31,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <ul>
 <li>Positioning selalu berbiaya. Sebuah kalimat yang tidak melepaskan apa pun belum memilih apa pun. Klaim yang bisa diucapkan semua pesaing tidak bernilai, karena nilainya ditentukan oleh apa yang <i>tidak bisa diucapkan lawan</i>.</li>
 <li>Tiga syarat, wajib terpenuhi <b>bersamaan</b>: <b>EMPTY</b> (belum diklaim pesaing), <b>WANTED</b> (audiens benar-benar peduli), <b>BELIEVABLE</b> (kamu kredibel mengklaimnya). Yang paling sering gagal adalah <b>wanted</b>, bukan empty: posisi kosong sering kosong justru karena tidak ada yang menginginkannya.</li>
-<li>Template satu kalimat: <i>For [segment] who [insight], [name] is the [category] that [benefit], because [proof].</i> Tiap blank harus datang dari Sesi 2.</li>
+<li>Template satu kalimat: <i>For [segment] who [insight], [name] is the [category] that [benefit], because [proof].</i> Tiap blank harus datang dari Sesi 2 atau dari halaman Sesi 3 yang sudah kamu isi. Tunjuk asalnya di kotak <b>JEJAK SUMBER TIAP BLANK</b>: itu yang dibaca Gate 2 Tes 2.</li>
 <li>Cara mengerjakan: <b>tiap anggota menulis drafnya sendiri dulu, tanpa diskusi</b>. Baru kemudian digabung jadi satu kalimat tim. Perbedaan antar-draf itulah yang mengasah kalimatnya.</li>
-<li>Uji pesaing setelah kalimat jadi: <i>"Could a competitor say this exact sentence?"</i> Kalau bisa, ia masih deskripsi kategori. Sebutkan satu hal di kalimatmu yang pesaing benar-benar <b>tidak bisa</b> klaim.</li>
+<li>Uji pesaing setelah kalimat jadi: <i>"Could a competitor say this exact sentence?"</i> Uji <b>per bagian</b>, bukan kalimat utuh sekaligus. Kalau semua bagian bisa ditiru, ia masih deskripsi kategori. Sebutkan satu hal di kalimatmu yang pesaing benar-benar <b>tidak bisa</b> klaim.</li>
 </ul>
 <p>Satu kalimat, satu gagasan. Kalau bukti yang kamu tulis belum ada, jangan disamarkan: tandai <b>PLANNED</b> atau <b>UNKNOWN</b> di dalam kalimat.</p>`
         },
@@ -46,11 +51,11 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <p>Naikkan POD di tangga, jangan naikkan POP. Pertanyaan pengeceknya: <i>"Kalau kami berhasil melakukan ini dengan sempurna, apakah seseorang benar-benar mengubah keputusannya?"</i> Jawaban "ya" di anak tangga 3 atau 4 biasanya langsung memunculkan positioning yang sesungguhnya.</p>
 <p>Contoh LEGO Technic: fitur = mekanisme yang bergerak; fungsional = bisa dibangun dan dijalankan; emosional = kepuasan menyelesaikan sesuatu yang benar-benar sulit; sosial = "saya paham cara kerja mesin". Harga premium dibayar di dua anak tangga atas.</p>`
         },
-        callout: "<b>Urutan kerja yang diajarkan di kelas:</b> kerjakan <b>hlm. 3</b> (kolom difference memasok blank [benefit]) dan kotak <b>PURPOSE</b> di hlm. 4 lebih dulu, baru kembali ke halaman ini. Nomor halaman bukan urutan pengerjaan.",
+        callout: "<b>Urutan kerja yang diajarkan di kelas:</b> kerjakan <b>hlm. 3</b> (kolom difference memasok blank [benefit]) dan kotak <b>PURPOSE</b> di hlm. 4 lebih dulu, baru kembali ke halaman ini. Nomor halaman bukan urutan pengerjaan.<br><b>Wawancara atau bukti baru minggu ini?</b> Tambahkan di Sesi 2 (hlm. 2 dan 9). Ikut terbaca saat Gate 2.",
         reverse: {
           title: "Cek terbalik sebelum lanjut",
           items: [
-            "Tiap blank bisa kamu tunjuk asalnya di Sesi 2 (primary audience, insight sentence, kategori, kolom difference)?",
+            "Tiap blank punya sumber di JEJAK SUMBER (primary audience, insight sentence, kategori, kolom difference, bukti)?",
             "Kalimat memuat satu gagasan, bukan dua yang saling berebut?",
             "Kalau pesaing terdekat mengucapkan kalimat yang sama persis, apakah ia bohong? Kalau tidak, kalimatmu belum memilih.",
             "Bukti yang belum ada sudah ditandai PLANNED atau UNKNOWN di dalam kalimat?",
@@ -61,38 +66,43 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           jumbo: {
             name: "Jumbo", sub: "Merged after solo drafts: the disagreement between drafts is what sharpened this.", caveat: CAVEAT,
             values: {
-              "s3.p2.draft": { label: "WHERE EACH BLANK CAME FROM", text: "Segment = Session 2's primary audience (families with young children). Insight = first half of Session 2's insight: “Indonesian parents want cinema outings that feel culturally theirs, BUT quality family films are almost all imported…” Category = Session 2's competitor-matrix frame. Proof = checkable: years of production at Visinema Studios." },
-              "s3.p2.final": "For Indonesian families who want cinema outings that feel culturally theirs, Jumbo is the animated family film that proves local stories can be told at world-class quality, because it has been in production for years at Visinema Studios.",
-              "s3.p2.test": "Could a competitor say this exact sentence? Imported studios can't claim 'our culture.' Local studios without the same production investment can't claim 'world-class quality' with equal credibility. Notice this blocks TWO different competitors for TWO different reasons — a sentence that only disqualifies one kind of rival usually just relocates the fight."
+              "s3.p2.draft": { label: "WHERE EACH BLANK CAME FROM", text: "Segment = Session 2's primary audience (families with young children, the highest total when three groups were scored). Insight = the BUT half of Session 2's insight: parents doubt a local film can be as good as an imported one. In Session 2 that BUT is still an ASSUMPTION (no parent interviewed yet), and it stays marked as one. Category = Session 2's category frame: animated family film. Benefit = page 3's combined difference. Proof = checkable: years of production at Visinema Studios." },
+              "s3.p2.sources": { label: "JEJAK SUMBER TIAP BLANK", cols: ["Blank", "Sumber", "Catatan"], rows: [["[segment]", "PRIMARY AUDIENCE (S2 hlm. 4)", "Families with young children."], ["[insight]", "INSIGHT SENTENCE (S2 hlm. 5)", "Only the BUT half. Still an ASSUMPTION in Session 2: no parent interviewed yet."], ["[category]", "KATEGORI (S2 hlm. 3)", "Animated family film, so the benchmark is Pixar."], ["[benefit]", "WHERE WE WIN (S3 hlm. 3)", "The combination: made by an Indonesian studio AND at Pixar-level quality."], ["[proof]", "REASONS TO BELIEVE (S3 hlm. 4)", "Years of production at Visinema Studios. Checkable, not yet shown publicly."]] },
+              "s3.p2.final": "For Indonesian families who doubt a local film can be as good as an imported one, Jumbo is the animated family film made by an Indonesian studio to world-class production standards, because it has been in production for years at Visinema Studios.",
+              "s3.p2.test": "Pixar can make a film feel culturally specific (Coco). It cannot claim 'made by an Indonesian studio'. Local studios can claim that, but are perceived as lower in production quality. Only the combination survives."
             },
-            note: "Every blank traces back to Session 2. A blank that cannot be traced means the earlier work was invented, not researched."
+            anno: { "s3.p2.final": "v2. The earlier sentence ('cinema outings that feel culturally theirs') failed the part-by-part test: Pixar can make a film feel local. What survives is narrower than what the team first wrote, and the insight it rests on is still an assumption." },
+            note: "Every blank traces back to your Session 2 workbook. A blank you can't trace means Session 2 needs more work."
           },
           gojek: {
             name: "Gojek / GoFood", sub: "Merged after solo drafts: the disagreement between drafts is what sharpened this.", caveat: CAVEAT,
             values: {
               "s3.p2.draft": { label: "WHERE EACH BLANK CAME FROM", text: "Segment + insight = Session 2's primary audience (existing GoRide riders) and their pain: not wanting to re-enter payment or address details. Category = 'food-ordering service', the frame diners already use. Proof = saved addresses, GoPay balance, live driver fleet — all real today, all verifiable." },
+              "s3.p2.sources": { label: "JEJAK SUMBER TIAP BLANK", cols: ["Blank", "Sumber", "Catatan"], rows: [["[segment]", "PRIMARY AUDIENCE (S2 hlm. 4)", "Existing GoRide riders."], ["[insight]", "CUSTOMER · PAINS (S2 hlm. 5)", "Not wanting to re-enter payment or address details."], ["[category]", "COMPETITOR BENCHMARK MATRIX (S2 hlm. 6)", "'Food-ordering service'. Session 2's category sentence is still empty in this case: a gap to fix, not a source."], ["[benefit]", "WHERE WE WIN (S3 hlm. 3)", "Zero new setup."], ["[proof]", "REASONS TO BELIEVE (S3 hlm. 4)", "Saved addresses, GoPay balance, live driver fleet. Proves delivery, not food."]] },
               "s3.p2.final": "For existing GoRide riders who want food to arrive with the same effort as booking a ride, GoFood is the food-ordering service that lives inside the app they already use, because their address, their payment method, and the drivers are already there today.",
               "s3.p2.test": "Could a competitor say this exact sentence? A dedicated food app cannot — it has to be downloaded and set up first. A warung cannot — no driver network. But another super-app COULD say a near-identical sentence tomorrow. The team wrote that down honestly instead of pretending otherwise."
             },
-            note: "Every blank traces back to Session 2. A blank that cannot be traced means the earlier work was invented, not researched."
+            note: "Every blank traces back to your Session 2 workbook. A blank you can't trace means Session 2 needs more work."
           },
           marvel: {
             name: "Disney/Marvel (Iron Man)", sub: "Watch what is deliberately LEFT OUT of the positioning sentence: the connected universe appears nowhere in it, on purpose.", caveat: CAVEAT,
             values: {
               "s3.p2.draft": { label: "WHERE EACH BLANK CAME FROM", text: "Segment + insight = Session 2's primary audience and their named pain: not wanting to feel they need to read comics first. Category = 'superhero film', the frame the audience will use whether the studio likes it or not. Proof = the script structure and the casting — both real decisions already made. The connected universe is deliberately excluded: naming it would create the exact homework fear the sentence exists to remove." },
+              "s3.p2.sources": { label: "JEJAK SUMBER TIAP BLANK", cols: ["Blank", "Sumber", "Catatan"], rows: [["[segment]", "PRIMARY AUDIENCE (S2 hlm. 4)", "Moviegoers who don't read comics."], ["[insight]", "CUSTOMER · PAINS (S2 hlm. 5)", "Not wanting to feel they must read comics first. Audience evidence still UNKNOWN in Session 2."], ["[category]", "COMPETITOR BENCHMARK MATRIX (S2 hlm. 6)", "'Superhero film'. Session 2's category sentence is still empty in this case: a gap to fix."], ["[benefit]", "WHERE WE WIN (S3 hlm. 3)", "Asks nothing of you before you sit down."], ["[proof]", "REASONS TO BELIEVE (S3 hlm. 4)", "Script structure and casting: real decisions, visible only after viewing."]] },
               "s3.p2.final": "For moviegoers who want a great blockbuster without homework, Iron Man is the superhero film that works completely on its own, because it is a self-contained origin story carried by a lead performance that assumes you know nothing.",
               "s3.p2.test": "Could a competitor say this exact sentence? An adaptation of a famous hero cannot claim 'assumes you know nothing' — its whole marketing rests on you already knowing. A sequel cannot. That is the block. The uncomfortable part: this sentence is a claim about an ABSENCE, which is much harder to put in a trailer than a presence."
             },
-            note: "Every blank traces back to Session 2. A blank that cannot be traced means the earlier work was invented, not researched."
+            note: "Every blank traces back to your Session 2 workbook. A blank you can't trace means Session 2 needs more work."
           },
           lego: {
             name: "LEGO Technic", sub: "The first version of this sentence packed two ideas and scored 2 on CLEAR from a peer team. This is the rewrite with one idea; v2 is not yet re-scored.", caveat: CAVEAT,
             values: {
               "s3.p2.draft": { label: "WHERE EACH BLANK CAME FROM", text: "Segment + insight = Session 2's primary audience and their named pain: scepticism that more expensive automatically means more worthwhile. Category = 'building set', not 'toy' — chosen deliberately. Proof = the pre-launch reviewer demo. NOTE: that demo is PLANNED, not done. It is a proof that does not exist yet, and the team labelled it that way instead of writing it as fact." },
+              "s3.p2.sources": { label: "JEJAK SUMBER TIAP BLANK", cols: ["Blank", "Sumber", "Catatan"], rows: [["[segment]", "PRIMARY AUDIENCE (S2 hlm. 4)", "Experienced Technic builders."], ["[insight]", "CUSTOMER · PAINS (S2 hlm. 5)", "Scepticism that a higher price means more real engineering."], ["[category]", "COMPETITOR BENCHMARK MATRIX (S2 hlm. 6)", "'Building set', not 'toy', chosen deliberately. Session 2's category sentence is still empty in this case: a gap to fix."], ["[benefit]", "WHERE WE WIN (S3 hlm. 3)", "Functions that genuinely work, shown before purchase."], ["[proof]", "PROMISE → PROOF hlm. 5 · Baris 2: It actually works", "The reviewer demo. PLANNED, not done."]] },
               "s3.p2.final": "For experienced Technic builders who doubt that a higher price means more real engineering, the Technic flagship is the building set where every added function can be watched working before you buy, because a pre-launch reviewer demo will show each mechanism moving (PLANNED — not yet held).",
               "s3.p2.test": "Could a competitor say this exact sentence? A scale-model kit cannot — it is detailed but static. A core LEGO set cannot — it is not priced on function. A specialist mechanical kit could claim the function but not the fit tolerance hobbyists take for granted. v1 scored 2 on Clear; rewritten to one idea."
             },
-            note: "Every blank traces back to Session 2. A blank that cannot be traced means the earlier work was invented, not researched."
+            note: "Every blank traces back to your Session 2 workbook. A blank you can't trace means Session 2 needs more work."
           }
         }
       },
@@ -139,9 +149,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             name: "Jumbo", sub: "Derived directly from Session 2's Competitor Benchmark Matrix.", caveat: CAVEAT,
             values: {
               "s3.p3.parity": "Professional animation quality matching global standards. A story that holds attention for the full runtime. Family-appropriate humour and pacing. Competent voice acting and sound design.",
-              "s3.p3.difference": "A distinctly Indonesian setting, characters, and cultural texture combined with genuinely global-standard production values — a combination no local or imported competitor has yet claimed."
+              "s3.p3.difference": "An animated family film made by an Indonesian studio, at production quality on par with Pixar — no single competitor has both."
             },
-            anno: { "s3.p3.difference": "Notice: the difference column only means something because the parity column is filled first. Difference without parity is just a curiosity." }
+            anno: { "s3.p3.difference": "v2, tested part by part: local studios can claim 'made in Indonesia' but are perceived as lower in production quality; Pixar can claim the quality but not 'made in Indonesia'. Only the combination survives. And it only means something because parity is filled first: Pixar-level quality has not been seen by the public yet." }
           },
           gojek: {
             name: "Gojek / GoFood", sub: "Derived directly from Session 2's Competitor Benchmark Matrix.", caveat: CAVEAT,
@@ -183,7 +193,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <li><b>JANJI</b> (promise, reasons to believe) — apa yang audiens dapat dan kenapa harus percaya. Satu-satunya pasangan wajib: satu klaim, satu bukti.</li>
 </ul>
 <p>Lima kotak pertama internal; promise, personality, dan reasons to believe menghadap ke luar. <b>Positioning ada di luar kedelapannya</b>: ia ditulis di hlm. 2, bukan kotak kesembilan.</p>
-<p><b>Uji penolakan untuk PURPOSE:</b> <i>"What does this purpose make you REFUSE to do?"</i> Kalau jawabannya "tidak ada", itu good copy, bukan purpose. Penolakan yang sah harus menutup opsi yang <b>tersedia</b>, <b>menguntungkan</b>, dan <b>berbiaya untuk dilepas</b>. "Kami menolak menipu pelanggan" bukan penolakan yang dicari. Tuliskan uji penolakannya di dalam kotak PURPOSE itu sendiri (workbook tidak punya kotak terpisah untuk itu).</p>
+<p><b>Uji penolakan untuk PURPOSE:</b> <i>"What does this purpose make you REFUSE to do?"</i> Kalau jawabannya "tidak ada", itu good copy, bukan purpose. Penolakan yang sah harus <b>menggoda</b>, <b>tersedia</b>, dan <b>menguntungkan</b>: opsi yang benar-benar bisa kalian ambil dan ada biayanya untuk dilepas. "Kami menolak menipu pelanggan" bukan penolakan yang dicari. <b>Tulis juga apa yang ditolak</b> di dalam kotak PURPOSE itu sendiri (workbook tidak punya kotak terpisah untuk itu).</p>
 <p>Setiap kotak 1–2 kalimat. Kalau butuh paragraf, belum disuling.</p>`
         },
         why: `<p><b class='k'>Kenapa halaman ini penting:</b> platform yang kuat bukan delapan ide di delapan kotak. Ia <b>satu ide yang dinyatakan delapan cara untuk delapan keperluan</b>. Ini yang diperiksa tes <b>Platform</b> di Gate 2: canvas koheren (dua kotak acak bisa dijelaskan hubungannya), Promise punya bukti bernama atau dipersempit.</p>
@@ -213,7 +223,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           title: "Cek terbalik sebelum lanjut",
           items: [
             "Pilih dua kotak secara acak. Bisakah timmu menjelaskan bagaimana keduanya membela gagasan yang sama?",
-            "PURPOSE menyebut satu hal yang ditolak, dan hal itu tersedia, menguntungkan, serta berbiaya untuk dilepas?",
+            "PURPOSE menyebut satu hal yang ditolak, dan hal itu menggoda, tersedia, dan menguntungkan?",
             "PURPOSE tidak sama dengan MISSION, VALUES tidak sama dengan PERSONALITY, REASONS TO BELIEVE bukan promise yang diulang?",
             "Tiap kotak 1–2 kalimat?",
             "REASONS TO BELIEVE bisa dicek orang di luar timmu? Bukti yang masih rencana sudah ditandai PLANNED atau UNKNOWN?"
@@ -228,11 +238,11 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s3.p4.mission": "Make one flagship film at uncompromising quality, told authentically from Indonesia, to prove the model works.",
               "s3.p4.values": "Craft over speed. Authenticity over imitation. Respect for the audience's intelligence, even in a family film.",
               "s3.p4.essence": "“Proudly ours.”",
-              "s3.p4.promise": "A film that feels unmistakably Indonesian, made at a quality that needs no apology.",
+              "s3.p4.promise": "A film made in Indonesia, at a quality that needs no apology.",
               "s3.p4.personality": "Warm, proud, quietly confident, never cynical.",
               "s3.p4.rtb": "Years of production (in development since April 2020). Made by Visinema Studios with Springboard Entertainment and Anami Films. Written by Ryan Adriandhy and Widya Arifianti. WEAK SPOT: all checkable, none shown to the public yet."
             },
-            note: "Coherence check: purpose (refuses dilution) → personality (never cynical) → promise (needs no apology). Same idea, three boxes."
+            note: "Coherence check: purpose (refuses dilution) → personality (never cynical) → promise (needs no apology). Same idea, three boxes. Random pair that caught a weak word: the purpose is about WHO makes the film, the old promise ('feels unmistakably Indonesian') was about how it FEELS, and a feeling can be copied by Pixar. The promise was sharpened to 'made in Indonesia' (v2). Promise → RTB is only half connected: the effort is proven, the quality has not been seen by the public."
           },
           gojek: {
             name: "Gojek / GoFood", sub: "Eight components, read together as one coherent idea, not eight separate answers.", caveat: CAVEAT,
@@ -290,9 +300,15 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <ul>
 <li>Aturan utama: <b>pilih posisi, jangan parkir di tengah</b>. Brand yang "agak playful, agak serius, agak hangat, agak dingin" tidak punya kepribadian; ia punya rata-rata.</li>
 <li>Slider yang belum kamu sentuh di app ditampilkan pucat dan dihitung <b>belum dipilih</b>. Pilih, jangan biarkan di tengah.</li>
-<li>Lalu tulis <b>kenapa</b> di kotak "WHY WE PLACED IT THERE", satu baris per slider, dikaitkan ke positioning statement di hlm. 2.</li>
+<li>Lalu tulis <b>kenapa</b> di kotak "WHY WE PLACED IT THERE", satu baris per slider, dikaitkan ke positioning statement di hlm. 2. Slider yang dekat tengah wajib punya baris yang menjelaskan kenapa belum diputuskan.</li>
 </ul>
-<p><b>2. Promise–Proof Matrix.</b> Daftar semua promise dari kotak PROMISE (hlm. 4), dan di sebelahnya bukti yang <b>nyata dan bernama</b> untuk tiap promise. <i>A promise with no proof isn't strategy — it's hope.</i> Promise tanpa bukti bernama <b>diperkecil sampai jadi benar</b>: bukan dihapus, dan bukan dibiarkan berdiri apa adanya.</p>`
+<p><b>2. Promise–Proof Matrix.</b> Daftar setiap janji dari platform-mu (kotak PROMISE, kalimat positioning, klaim lain di kanvas), dan di sebelahnya bukti yang <b>nyata dan bernama</b> untuk tiap janji. <i>A promise with no proof isn't strategy — it's hope.</i></p>
+<ul>
+<li>Bukti yang baik lolos tiga syarat: <b>verifiable</b> (orang asing bisa mengeceknya tanpa percaya pada kita), <b>specific</b> (angka, nama, dokumen, sesuatu yang bisa dicoba), <b>relevant</b> (kalau bukti ini benar, janjinya ikut benar).</li>
+<li>Setiap janji diberi satu <b>status</b>: <b>Nyata</b> (lolos tiga syarat hari ini), <b>PLANNED</b> (akan ada; wajib <i>owner</i> dan <i>deadline</i>, kalau tidak hanya niat), atau <b>UNKNOWN</b> (belum ada, belum ada rencana). Hati-hati bukti nyata yang hanya terlihat dari dalam: bagi audiens itu belum ada.</li>
+<li>Janji UNKNOWN <b>dikecilkan sampai jadi benar</b>, bukan dihapus dan bukan dibiarkan. Empat cara: <b>tempat</b> (di mana sudah benar?), <b>waktu</b> (kapan akan benar?), <b>siapa</b> (untuk siapa sudah benar?), <b>seberapa</b> (bagian mana yang sudah benar?).</li>
+<li>Setiap pilar Message House (hlm. 6) harus punya baris di tabel ini. Kalau belum ada, tambahkan barisnya.</li>
+</ul>`
         },
         why: `<p><b class='k'>Kenapa halaman ini penting:</b> Personality Spectrum tidak bisa diisi jujur sebelum kotak PERSONALITY di hlm. 4 ada, dan Promise–Proof Matrix secara harfiah butuh daftar promise dari hlm. 4 sebagai kolom kirinya. Keduanya adalah audit atas kanvas.</p>
 <p>Hasil slider menjadi bahan brief identitas Sesi 4. Matriks promise–proof langsung dibaca di tes <b>Platform</b> Gate 2: Promise yang tidak punya bukti bernama harus sudah diperkecil, bukan dibiarkan.</p>`,
@@ -316,7 +332,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "Tiap baris WHY WE PLACED IT THERE terkait ke kalimat positioning di hlm. 2?",
             "Setiap promise dari kotak PROMISE di hlm. 4 muncul di PROMISE → PROOF?",
             "Tiap bukti bernama (siapa, apa, di mana), bukan sekadar mengulang promise?",
-            "Promise yang belum punya bukti sudah diperkecil, bukan dihapus dan bukan dibiarkan?"
+            "Promise yang belum punya bukti sudah diperkecil, bukan dihapus dan bukan dibiarkan?",
+            "Setiap baris punya status; PLANNED punya owner dan deadline; UNKNOWN punya janji yang dikecilkan?"
           ]
         },
         examples: {
@@ -324,37 +341,37 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             name: "Jumbo", sub: "Committed positions on every slider — none of them parked in the middle.", caveat: CAVEAT,
             values: {
               "s3.p5.sliders": { label: "SLIDERS", items: ["Playful ↔ Serious: 30/100", "Mass ↔ Niche: 30/100 (angka dari slide)", "Warm ↔ Cool: 8/100", "Bold ↔ Safe: 15/100", "Modern ↔ Classic: 70/100"] },
-              "s3.p5.why_placed": "Mass at 0.30 is off-centre on purpose, and it is the placement worth studying: the team started with a passionate niche — families craving local pride — but aims the whole platform at eventually feeling mass-market natural. That is the RESULT of a decision, not an absence of one, which is what separates it from a slider parked in the middle. Playful-not-silly ties to the parity point on family humour. Bold ties directly to the purpose's ambitious claim, while Classic reflects deliberately conventional storytelling craft.",
-              "s3.p5.promise_proof": { items: ["‘World-class quality’ → years of production and the production companies' credits. Real, but not yet public.", "‘Authentically Indonesian’ → a story written for the film by Ryan Adriandhy and Widya Arifianti; whether it is wholly original: UNKNOWN.", "‘A story for the whole family’ → dual emotional layers designed for kids AND parents (Session 2 VPC)."] }
+              "s3.p5.why_placed": { label: "WHY WE PLACED IT THERE (satu baris per slider)", items: ["Playful – Serious: playful, not silly — ties to the parity point on family humour.", "Mass – Niche: off-centre on purpose. Starts with a passionate niche (families craving local pride) but aims the platform at eventually feeling natural for every family. The result of a decision, not an absence of one.", "Warm – Cool: " + "(not stated on the worked-example slide — a gap, not an answer to copy)" + " The PERSONALITY box says 'warm', so the line should say why.", "Bold – Safe: bold ties directly to the purpose's ambitious claim.", "Modern – Classic: classic reflects deliberately conventional storytelling craft."] },
+              "s3.p5.promise_proof": { label: "PROMISE → PROOF", cols: ["Promise", "Proof", "Status", "Owner · deadline / janji yang dikecilkan"], rows: [["World-class quality", "Years of production and the production companies' credits. Real, but only visible from the inside: not yet shown publicly.", "Nyata (bisa dicek orang luar hari ini)", "Fix: make it public (behind-the-scenes)."], ["Authentically Indonesian", "A story written for the film by Ryan Adriandhy and Widya Arifianti; whether it is wholly original: UNKNOWN.", "UNKNOWN (belum ada)", "Shrunk (seberapa): 'made in Indonesia' — the part that can be checked."], ["Made in Indonesia (v2)", "Visinema Studios, an Indonesian studio; Indonesian writers named in the credits.", "Nyata (bisa dicek orang luar hari ini)", "—"], ["A story for the whole family", "Two emotional layers, for children and for parents (Session 2 VPC). Design intent, not yet tested with an audience.", "UNKNOWN (belum ada)", "Shrunk (seberapa): 'designed with one layer for children and one for parents'. Row added for Pillar 2."]] }
             },
-            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written."
+            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written. WHY lines marked 'not stated' are honest gaps in the worked example."
           },
           gojek: {
             name: "Gojek / GoFood", sub: "Committed positions on every slider — none of them parked in the middle.", caveat: CAVEAT,
             values: {
               "s3.p5.sliders": { label: "SLIDERS", items: ["Playful ↔ Serious: 62/100 (estimasi)", "Mass ↔ Niche: 12/100 (angka dari slide)", "Warm ↔ Cool: 42/100 (estimasi)", "Bold ↔ Safe: 78/100 (angka dari slide)", "Modern ↔ Classic: 25/100 (estimasi)"] },
-              "s3.p5.why_placed": "Mass at 0.12 is the most committed placement on the page — the whole positioning depends on already having millions of riders. Safe at 0.78 is deliberate and is the opposite of the Marvel example: this brand wins by reusing what is proven, so 'bold' would contradict the purpose box. Warm sits near the middle for a reason the team named: functional-first, warm only where it costs nothing.",
-              "s3.p5.promise_proof": { items: ["‘One-tap ordering’ → saved addresses and GoPay, live in production today. Real proof.", "‘Drivers already nearby’ → existing GoRide fleet density in Jakarta. Real proof.", "‘Reliable food delivery’ → NO PROOF. Zero diner interviews (Session 2), 50 merchants in one district. The team shrank this promise to ‘reliable in the pilot district first’ rather than delete it."] }
+              "s3.p5.why_placed": { label: "WHY WE PLACED IT THERE (satu baris per slider)", items: ["Playful – Serious: " + "(not stated on the worked-example slide — a gap, not an answer to copy)", "Mass – Niche: the most committed placement on the page — the whole positioning depends on already having millions of riders.", "Warm – Cool: near the middle for a reason the team named: functional first, warm only where it costs nothing.", "Bold – Safe: safe on purpose, the opposite of the Marvel example. This brand wins by reusing what is proven, so 'bold' would contradict the purpose box.", "Modern – Classic: " + "(not stated on the worked-example slide — a gap, not an answer to copy)"] },
+              "s3.p5.promise_proof": { label: "PROMISE → PROOF", cols: ["Promise", "Proof", "Status", "Owner · deadline / janji yang dikecilkan"], rows: [["One-tap ordering", "Saved addresses and GoPay, live in production today.", "Nyata (bisa dicek orang luar hari ini)", "—"], ["Drivers already nearby", "Existing GoRide fleet density in the pilot district.", "Nyata (bisa dicek orang luar hari ini)", "—"], ["Reliable food delivery", "None for the food side: zero diner interviews (Session 2), 50 merchants in one district. The fleet proves the driver arrives, not that the food arrives right.", "UNKNOWN (belum ada)", "Shrunk (tempat): 'reliable in the pilot district first'."], ["We checked these places first", "The 50-merchant launch list, vetted before launch.", "Nyata (bisa dicek orang luar hari ini)", "Valid only while the list keeps growing after launch. Row added for Pillar 3."]] }
             },
-            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written."
+            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written. WHY lines marked 'not stated' are honest gaps in the worked example."
           },
           marvel: {
             name: "Disney/Marvel (Iron Man)", sub: "Committed positions on every slider — none of them parked in the middle.", caveat: CAVEAT,
             values: {
               "s3.p5.sliders": { label: "SLIDERS", items: ["Playful ↔ Serious: 32/100 (angka dari slide)", "Mass ↔ Niche: 8/100 (estimasi)", "Warm ↔ Cool: 55/100 (estimasi)", "Bold ↔ Safe: 5/100 (angka dari slide)", "Modern ↔ Classic: 28/100 (estimasi)"] },
-              "s3.p5.why_placed": "Bold at 0.05 is the most extreme placement across all four worked examples, and it is honest: Marvel's slate was financed through a $525 million non-recourse debt structure collateralised by film rights to ten characters. Playful at 0.32 is the tone decision that separates it from camp — witty, not silly. Warm slightly past the middle is the one genuinely uncertain placement, and the team flagged it rather than pretending it was decided.",
-              "s3.p5.promise_proof": { items: ["‘You can start here’ → the script itself: no prior film required to follow it. Real proof, but only after viewing.", "‘Worth your ticket’ → UNKNOWN. No general-audience test screening has happened (Session 2).", "‘More to come, if you want it’ → a post-credits tease designed to cost nothing to ignore. Real, and cheap to deliver."] }
+              "s3.p5.why_placed": { label: "WHY WE PLACED IT THERE (satu baris per slider)", items: ["Playful – Serious: the tone decision that separates it from camp — witty, not silly.", "Mass – Niche: " + "(not stated on the worked-example slide — a gap, not an answer to copy)", "Warm – Cool: slightly past the middle and NOT decided yet. The team flagged it instead of pretending.", "Bold – Safe: the most extreme placement across all four cases, and honest: the slate was financed through a $525 million non-recourse debt structure collateralised by film rights to ten characters.", "Modern – Classic: " + "(not stated on the worked-example slide — a gap, not an answer to copy)"] },
+              "s3.p5.promise_proof": { label: "PROMISE → PROOF", cols: ["Promise", "Proof", "Status", "Owner · deadline / janji yang dikecilkan"], rows: [["You can start here", "The script itself: no prior film required to follow it. Visible only after viewing.", "Nyata (bisa dicek orang luar hari ini)", "—"], ["Worth your ticket", "No general-audience test screening has happened (Session 2).", "UNKNOWN (belum ada)", "Shrunk (seberapa): 'you can enjoy it without having seen any other film'."], ["More to come, if you want it", "A post-credits tease designed to cost nothing to ignore.", "Nyata (bisa dicek orang luar hari ini)", "—"]] }
             },
-            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written."
+            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written. WHY lines marked 'not stated' are honest gaps in the worked example."
           },
           lego: {
             name: "LEGO Technic", sub: "Committed positions on every slider — none of them parked in the middle.", caveat: CAVEAT,
             values: {
               "s3.p5.sliders": { label: "SLIDERS", items: ["Playful ↔ Serious: 80/100 (angka dari slide)", "Mass ↔ Niche: 75/100 (angka dari slide)", "Warm ↔ Cool: 68/100 (estimasi)", "Bold ↔ Safe: 62/100 (angka dari slide)", "Modern ↔ Classic: 58/100 (estimasi)"] },
-              "s3.p5.why_placed": "Serious at 0.80 inside a toy company is the placement that needs defending, and the team defends it: this sub-line's buyer is an adult who resents being talked down to. Niche at 0.75 is a deliberate rejection of the teen segment scored higher on Attractive in Session 2. Safe at 0.62 is the post-2003 discipline showing up as a personality decision, not just a finance one.",
-              "s3.p5.promise_proof": { items: ["‘Price buys function’ → internal cost-to-function mapping. WEAK: the buyer cannot verify it.", "‘It actually works’ → pre-launch reviewer demo. PLANNED, not done — the strongest proof on the page is the one that does not exist yet.", "‘Still a LEGO set’ → decades of fit tolerance. Strongest real proof, and entirely inherited."] }
+              "s3.p5.why_placed": { label: "WHY WE PLACED IT THERE (satu baris per slider)", items: ["Playful – Serious: serious inside a toy company is the placement that needs defending: this buyer is an adult who resents being talked down to.", "Mass – Niche: a deliberate rejection of the teen segment that scored higher on Attractive in Session 2.", "Warm – Cool: " + "(not stated on the worked-example slide — a gap, not an answer to copy)", "Bold – Safe: the post-2003 discipline showing up as a personality decision, not just a finance one.", "Modern – Classic: " + "(not stated on the worked-example slide — a gap, not an answer to copy)"] },
+              "s3.p5.promise_proof": { label: "PROMISE → PROOF", cols: ["Promise", "Proof", "Status", "Owner · deadline / janji yang dikecilkan"], rows: [["Price buys function", "Internal cost-to-function mapping. Real, but only visible from the inside: the buyer cannot verify it.", "Nyata (bisa dicek orang luar hari ini)", "Weak: to the buyer this proof does not exist yet. Fix: publish the function-per-tier breakdown."], ["It actually works", "Pre-launch reviewer demo. The strongest proof on the page is the one that does not exist yet.", "PLANNED (akan ada)", "Owner: product lead · Deadline: before launch; date not set yet (UNKNOWN)."], ["Still a LEGO set", "Decades of fit tolerance. Strongest real proof, and entirely inherited.", "Nyata (bisa dicek orang luar hari ini)", "Inherited from the LEGO name, not earned by this set."]] }
             },
-            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written."
+            note: SLIDER_NOTE + " A promise with no named proof gets shrunk until it is true — not deleted, and not left standing as written. WHY lines marked 'not stated' are honest gaps in the worked example."
           }
         }
       },
@@ -371,10 +388,11 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <li><b>Tiga pilar</b> — pesan pendukung. Tiap pilar punya satu <b>proof point</b>, bukti untuk pilar itu.</li>
 <li><b>Pintu</b> — satu <b>call to action</b>: apa yang audiens harus lakukan berikutnya. Workbook hanya punya <b>satu</b> kotak CTA; tulis satu ajakan utama yang melayani atap.</li>
 </ul>
-<p><b>Aturan:</b> pilar bukan ide baru. Setiap pilar harus bisa <b>dilacak ke atas</b> ke atap, dan <b>dilacak balik</b> ke kotak yang spesifik di hlm. 4 (Brand Platform), kolom difference di hlm. 3, atau matriks di hlm. 5. Pilar yang tidak mendukung atap adalah gangguan, sebagus apa pun ia berdiri sendiri. Karena itu rumah ini dibangun dengan cara <b>memanen</b> tiga ide yang sudah ada, bukan mengarang pilar baru.</p>`
+<p><b>Aturan:</b> pilar bukan ide baru. Setiap pilar harus bisa <b>dilacak ke atas</b> ke atap, dan <b>dilacak balik</b> ke kotak yang spesifik di hlm. 4 (Brand Platform), kolom difference di hlm. 3, atau matriks di hlm. 5. Pilar yang tidak mendukung atap adalah gangguan, sebagus apa pun ia berdiri sendiri. Karena itu rumah ini dibangun dengan cara <b>memanen</b> tiga ide yang sudah ada, bukan mengarang pilar baru.</p>
+<p><b>Enam langkah:</b> (1) tulis atap, biasanya versi pendek kalimat positioning; (2) kumpulkan 5–7 kandidat pilar dari kotak WHERE WE WIN, Purpose, kotak lain di kanvas, dan kebutuhan audiens Sesi 2; (3) pilih tiga yang menjawab "kenapa atap ini benar" dan berbeda satu sama lain; (4) cari bukti tiap pilar di tabel janji dan bukti (hlm. 5); belum ada, tambah barisnya; (5) satu pintu; (6) cek dua arah di kotak <b>ASAL DAN BUKTI TIAP PILAR</b>: ke atas (kalau pilar dicabut, atap lebih lemah?) dan ke bawah (asal dan baris buktinya bisa ditunjuk?).</p>`
         },
         why: `<p><b class='k'>Kenapa halaman ini penting:</b> workbook sendiri menyebutnya: <i>"This becomes your entire Session 6 campaign — build it well now."</i> Rumah ini menjadi kerangka kampanye Sesi 6, dan menjadi bahan pesan di brief Sesi 4.</p>
-<p>Di Gate 2, tes <b>Platform</b> memeriksa apakah pilar message house bisa dilacak ke halaman 3–5. Panel di atas menampilkan PROMISE, REASONS TO BELIEVE, dan PROMISE → PROOF-mu, supaya kamu bisa menunjuk dari mana tiap pilar datang.</p>`,
+<p>Di Gate 2, tes <b>Platform</b> memeriksa apakah setiap pilar bisa ditunjuk <b>asal dan buktinya</b>. Panel di atas menampilkan PROMISE, REASONS TO BELIEVE, dan PROMISE → PROOF-mu; kotak di bawah Message House mencatat asal dan baris bukti tiap pilar.</p>`,
         deeper: {
           summary: "Deeper read — mengubah kelemahan jadi pesan: kapan sah, kapan jadi eufemisme",
           html: `
@@ -390,7 +408,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         reverse: {
           title: "Cek terbalik sebelum lanjut",
           items: [
-            "Tunjuk tiap pilar: ia datang dari halaman dan kotak mana (hlm. 3, 4, atau 5)? Kalau tidak bisa ditunjuk, itu ide baru yang menyelinap lewat pintu belakang.",
+            "Tiap pilar punya asal di kotak ASAL DAN BUKTI TIAP PILAR? Kalau tidak bisa ditunjuk, itu ide baru yang menyelinap lewat pintu belakang.",
+            "Tiap pilar punya baris di tabel janji dan bukti (hlm. 5), dan proof point-nya tidak mengklaim lebih dari baris itu?",
             "Kalau atap dihapus, apakah ketiga pilar masih menunjuk ke hal yang sama?",
             "Tiap proof point bisa dicek orang luar? Proof yang masih rencana sudah diberi tanda?",
             "Hanya ada satu ajakan utama di CTA, dan ia melayani atap?"
@@ -400,16 +419,18 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           jumbo: {
             name: "Jumbo", sub: "The roof and pillars that become Session 6's entire campaign skeleton.", caveat: CAVEAT,
             values: {
-              "s3.p6.roof": "“Proof that Indonesian stories can be told at world-class quality.”",
+              "s3.p6.roof": "“A family film made in Indonesia, at world-class quality.”",
               "s3.p6.pillar1": "Behind the craft — The years of work and the people who did it — from the reasons-to-believe box.",
               "s3.p6.pillar2": "A story for the family — One film that works for children and parents at the same time — straight from Session 2's VPC.",
               "s3.p6.pillar3": "Proudly ours — The cultural pride angle, aimed at Session 2's secondary audience — from the purpose box.",
               "s3.p6.proof1": "Years of production, named production companies, technical detail.",
               "s3.p6.proof2": "Dual-layered emotional storytelling designed for both audiences at once.",
-              "s3.p6.proof3": "Original Indonesian setting, story, and cultural specificity — not a localised adaptation.",
-              "s3.p6.cta": "Watch the making-of, then bring the whole family."
+              "s3.p6.proof3": "Made by Visinema Studios, an Indonesian studio, with Indonesian writers. Whether the story is wholly original: UNKNOWN.",
+              "s3.p6.cta": "Watch the making-of, then bring the whole family.",
+              "s3.p6.origins": { label: "ASAL DAN BUKTI TIAP PILAR", cols: ["Pilar", "Asal", "Baris bukti (hlm. 5)"], rows: [["PILLAR 1 · Behind the craft", "Kotak Reasons to Believe (hlm. 4)", "Baris 1: World-class quality — Nyata, not yet public"], ["PILLAR 2 · A story for the family", "Kebutuhan audiens: gains (Sesi 2 hlm. 5)", "Baris 4: A story for the whole family — UNKNOWN, still design intent"], ["PILLAR 3 · Proudly ours", "Kotak Purpose (hlm. 4)", "Baris 3: Made in Indonesia — Nyata"]] }
             },
-            note: "Notice how this house was built: not top-down, but by harvesting three ideas that already existed on earlier pages and checking they support the same roof. Each pillar traces to a different box — none were invented fresh for the campaign."
+            anno: { "s3.p6.roof": "Roof v2 (proposed), aligned with the v2 positioning. The earlier roof ('Proof that Indonesian stories can be told at world-class quality') leaned on 'Indonesian stories', which Pixar can also make feel local.", "s3.p6.proof3": "Changed with v2: the earlier proof point claimed an 'original' story, which page 5 marks UNKNOWN. A proof point cannot claim more than its row." },
+            note: "Notice how this house was built: not top-down, but by harvesting three ideas that already existed on earlier pages and checking they support the same roof. Each pillar traces to a different box — none were invented fresh for the campaign. Pillar 2's proof is still design intent: its row says so."
           },
           gojek: {
             name: "Gojek / GoFood", sub: "The roof and pillars that become Session 6's entire campaign skeleton.", caveat: CAVEAT,
@@ -421,7 +442,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s3.p6.proof1": "Saved address and GoPay balance already in the account — nothing to enter.",
               "s3.p6.proof2": "Existing GoRide fleet density in the pilot district.",
               "s3.p6.proof3": "Curated 50-merchant pilot. Honest weakness: 50 is small, and the team says so.",
-              "s3.p6.cta": "Try one order from the home screen."
+              "s3.p6.cta": "Try one order from the home screen.",
+              "s3.p6.origins": { label: "ASAL DAN BUKTI TIAP PILAR", cols: ["Pilar", "Asal", "Baris bukti (hlm. 5)"], rows: [["PILLAR 1 · No new app, no new setup", "Kotak WHERE WE WIN (hlm. 3)", "Baris 1: One-tap ordering — Nyata"], ["PILLAR 2 · The drivers are already outside", "Kotak Reasons to Believe (hlm. 4)", "Baris 2: Drivers already nearby — Nyata"], ["PILLAR 3 · We checked these places first", "Kotak WHAT WE MUST MATCH / parity (hlm. 3)", "Baris 4: We checked these places first — Nyata, added for this pillar"]] }
             },
             note: "Pillar 3 is the interesting one. It turns the weakest fact on the whole platform — a tiny merchant list — into a message, by reframing 'few' as 'checked'. That is legitimate. It stops being legitimate the moment the list stays small after launch."
           },
@@ -435,7 +457,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s3.p6.proof1": "The script's contained, single-location origin structure.",
               "s3.p6.proof2": "Casting choice and early footage reactions (industry only — flagged in Session 2).",
               "s3.p6.proof3": "A post-credits scene the audience can skip without losing anything.",
-              "s3.p6.cta": "Watch the trailer — it explains itself — then see it opening weekend."
+              "s3.p6.cta": "Watch the trailer — it explains itself — then see it opening weekend.",
+              "s3.p6.origins": { label: "ASAL DAN BUKTI TIAP PILAR", cols: ["Pilar", "Asal", "Baris bukti (hlm. 5)"], rows: [["PILLAR 1 · A man, not a myth", "Kotak Personality (hlm. 4)", "Baris 1: You can start here — Nyata, visible after viewing"], ["PILLAR 2 · Come for him", "Kotak Reasons to Believe (hlm. 4)", "Baris 2: Worth your ticket — UNKNOWN"], ["PILLAR 3 · There's more, if you want it", "Kotak Mission (hlm. 4)", "Baris 3: More to come, if you want it — Nyata"]] }
             },
             note: "Pillar 3 is doing something unusual: it markets an option, not a feature. It has to be worded so that a viewer who ignores it entirely still feels the film was complete. Written slightly wrong, this same pillar becomes the homework threat the whole platform was built to avoid."
           },
@@ -449,7 +472,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s3.p6.proof1": "Pre-launch demo to hobbyist reviewers. Planned for the build phase — not yet scheduled.",
               "s3.p6.proof2": "Published function-per-tier breakdown. Honest gap: buyers still take the costing on trust.",
               "s3.p6.proof3": "Decades of fit and durability standard — inherited, not earned here.",
-              "s3.p6.cta": "Watch the mechanism run, then compare the function list."
+              "s3.p6.cta": "Watch the mechanism run, then compare the function list.",
+              "s3.p6.origins": { label: "ASAL DAN BUKTI TIAP PILAR", cols: ["Pilar", "Asal", "Baris bukti (hlm. 5)"], rows: [["PILLAR 1 · Watch the mechanism", "Kotak WHERE WE WIN (hlm. 3)", "Baris 2: It actually works — PLANNED"], ["PILLAR 2 · Priced by function", "Kotak Promise (hlm. 4)", "Baris 1: Price buys function — Nyata, internal only"], ["PILLAR 3 · Still a LEGO set", "Kotak WHAT WE MUST MATCH / parity (hlm. 3)", "Baris 3: Still a LEGO set — Nyata, inherited"]] }
             },
             note: "All three pillars are variations of one claim: the price is honest. That is a coherent house, and it is also a narrow one. If a hobbyist decides the price is fair after five minutes, this house has nothing left to say to them — which is a real risk the team should carry into Session 6."
           }
@@ -460,25 +484,25 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
       7: {
         theory: {
           title: "Baca ini dulu",
-          src: "Silabus §13 (Gate 2) dan kartu lima kriteria playbook",
+          src: "Silabus §8 Sesi 3 (aktivitas Strategic critique) dan §13 (Gate 2)",
           html: `
-<p>Halaman 7 adalah <b>kartu umpan balik sejawat</b>, bukan halaman isian di app ini. Tim lain diberi platform-mu (hlm. 2–6) dan menilai 1–5 pada lima kriteria:</p>
+<p>Yang dinilai di halaman ini adalah <b>kalimat positioning</b> (hlm. 2). Minta <b>minimal dua teman dari kelompok lain</b> membacanya, lalu setiap teman mengisi <b>satu form</b> langsung di app ini: nama, NIM, email, skor 1–5 untuk lima kriteria, dan satu kalimat alasan per skor. Untuk CREDIBLE, penilai boleh melihat tabel janji dan bukti (hlm. 5).</p>
 <ul>
-<li><b>CLEAR</b> — mudah dipahami dalam satu kali baca?</li>
-<li><b>RELEVANT</b> — cocok dengan bukti Sesi 2-mu?</li>
-<li><b>DISTINCTIVE</b> — bisakah pesaing mengucapkannya?</li>
-<li><b>CREDIBLE</b> — bukti nyatanya ada?</li>
-<li><b>COMMERCIALLY USEFUL</b> — memberi instruksi jelas kepada desainer dan tim penjualan?</li>
+<li><b>CLEAR</b> — bisa dipahami dalam sekali baca?</li>
+<li><b>RELEVANT</b> — sesuai kebutuhan audiens yang sudah ditemukan tim?</li>
+<li><b>DISTINCTIVE</b> — bisakah pesaing mengucapkan kalimat ini?</li>
+<li><b>CREDIBLE</b> — apakah buktinya benar-benar ada?</li>
+<li><b>COMMERCIALLY USEFUL</b> — apakah kalimat ini memberi tahu desainer dan penjual apa yang harus dilakukan?</li>
 </ul>
-<p>Penilaian dilakukan di workbook tim yang kamu review, sesuai pairing yang diumumkan di chat kelas. App ini tidak menyimpan skor dan tidak menjalankan penilaian sejawat.</p>
-<p><b>Aturan kartu:</b> dua kriteria atau lebih bernilai 1–2 berarti tulis rencana singkat untuk kriteria itu: <b>apa, siapa, kapan</b>. Rencana itu menjadi bagian kondisi Gate 2, bukan hukuman.</p>`
+<p>Lima kriteria ini dari silabus (aktivitas <i>Strategic critique</i>), kata yang sama dipakai di rubrik akhir. Pembuat kalimat selalu merasa kalimatnya jelas karena tahu maksudnya; orang luar membaca apa yang benar-benar tertulis.</p>
+<p><b>Membaca hasil:</b> app menghitung rata-rata semua penilai per kriteria. <b>Rata-rata 2 atau lebih rendah = rendah.</b> Tidak ada kriteria rendah: catat masukannya. Satu kriteria rendah: sebaiknya diperbaiki. <b>Dua kriteria rendah atau lebih: wajib rencana untuk setiap kriteria itu</b> (apa, siapa, kapan). Rencana itu menjadi bagian kondisi Gate 2.</p>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> kartu ini <b>bukan Gate 2</b>. Gate 2 (silabus §13) adalah <i>"sufficient audience evidence and a defendable positioning"</i>, dan dibaca dari dokumenmu di luar kelas lewat tiga tes: <b>Evidence</b> (workbook Sesi 1–2 dan catatan wawancara mentah), <b>Positioning</b> (hlm. 2), dan <b>Platform</b> (hlm. 4–6). Kartu hanya petunjuk tambahan untuk tes Positioning.</p>
-<p>Ambang bukti sama untuk semua tim: menyentuh segmen primer, minimal dua jenis bukti dari daftar silabus §7, dan salah satunya dari audiens primer <b>di luar lingkar tim</b>. Skor kartu yang bagus tidak menutup kekurangan bukti.</p>`,
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> form ini <b>masukan, bukan Gate 2</b>. Gate 2 (silabus §13) adalah <i>"sufficient audience evidence and a defendable positioning"</i>, dan dibaca dari dokumenmu di luar kelas lewat tiga tes: <b>Evidence</b> (Sesi 2 dan catatan wawancara mentah), <b>Positioning</b> (hlm. 2, termasuk rencana untuk kriteria rendah dari form ini), dan <b>Platform</b> (hlm. 4–6).</p>
+<p>Skor rendah tidak membuat gagal; skor rendah <b>tanpa rencana</b> yang membuat gagal. Sebaliknya, form yang bagus tidak menutup kekurangan bukti: ambang Tes 1 sama untuk semua tim (minimal dua jenis bukti, minimal satu dari audiens utama di luar tim).</p>`,
         deeper: {
           summary: "Deeper read — kenapa kartu BUKAN Gate 2, dan skor rendah mana yang murah diperbaiki",
           html: `
-<p>Sebuah tim bisa lolos aturan kartu dan <b>tetap</b> punya celah di Gate 2 kalau bukti audiensnya belum cukup: kartu hanya menguji separuh syarat Gate. Sebaliknya, skor kartu yang rendah tidak otomatis berarti Gate gagal.</p>
+<p>Sebuah tim bisa lolos aturan form penilai dan <b>tetap</b> punya celah di Gate 2 kalau bukti audiensnya belum cukup: form penilai hanya menguji separuh syarat Gate. Sebaliknya, skor rendah tidak otomatis berarti Gate gagal.</p>
 <p><b>Pilah skor rendah jadi tiga jenis sebelum bertindak:</b></p>
 <ul>
 <li>Masalah <b>tulisan</b> (Clear, Relevant, Distinctive, Commercially useful rendah) — murah, bisa diperbaiki dalam satu rapat tim. Contoh LEGO Technic: sentence v1 memuat dua gagasan, ditulis ulang jadi satu.</li>
@@ -487,36 +511,48 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 </ul>
 <p>Kesalahan paling umum: menghabiskan seminggu menulis ulang kalimat, padahal yang gagal adalah ketiadaan bukti. Kalimat yang ditulis ulang tiba di Sesi 4 dengan skor yang sama persis.</p>`
         },
-        callout: "<b>Halaman ini tidak punya isian di app.</b> Kerjakan penilaian di workbook tim yang ditugaskan kepadamu, dan baca skor yang masuk ke platform-mu sebagai petunjuk, bukan keputusan Gate.",
+        callout: "<b>Cara mengisi:</b> penilai yang mengisi form, bukan pemilik file. Karena kelas online, serahkan perangkatmu ke penilai atau beri akses kendali layar saat ia mengisi. NIM penilai dicek saat Gate 2 dibaca: harus terdaftar dan dari kelompok lain. Teman satu kelompok tidak boleh menilai.",
         reverse: {
           title: "Cek terbalik sebelum lanjut",
           items: [
-            "Kamu bisa memilah tiap skor rendah: masalah tulisan, bukti, atau keputusan?",
-            "Untuk dua skor 1–2 atau lebih, ada rencana singkat: apa, siapa, kapan?",
-            "Kamu tidak memperlakukan skor kartu sebagai status Gate 2?",
-            "Hasil kartu sudah dipakai sebagai prioritas perbaikan sebelum Sesi 4?"
+            "Minimal dua penilai dari kelompok lain sudah mengisi form, masing-masing dengan alasan untuk setiap skor?",
+            "Kamu bisa memilah tiap kriteria rendah: masalah tulisan (Clear, Distinctive) atau masalah bukti (Credible, Relevant)?",
+            "Untuk dua kriteria rendah atau lebih, setiap kriteria punya rencana: apa, siapa, kapan?",
+            "Kamu tidak memperlakukan skor penilai sebagai status Gate 2?"
           ]
         },
         examples: {
           jumbo: {
-            name: "Jumbo", sub: "Scored by a peer team. Not a clean sweep of 5s: that is the honest part.", caveat: CAVEAT, values: {},
-            notice: "CLEAR 4 — Mostly clear: 'world-class quality' could be one notch more specific. RELEVANT 5 — Matches Session 2's evidence and chosen primary audience directly. DISTINCTIVE 4 — Strong, though 'quality' claims are common language; the proof is what separates it. CREDIBLE 3 — Proof EXISTS but nothing has been shown publicly yet: still genuinely unproven. COMMERCIALLY USEFUL 4 — Gives clear direction to design and marketing teams for Session 4. Card reading: no score at 1–2. Credible 3 = the proof exists but the world hasn't tested it; no rewrite fixes that.",
-            note: "Gate 2 dibaca dari dokumen, bukan dari kartu. TEST 1 · EVIDENCE: GAP. On file: comparable-film data (Frozen 2 held Indonesia's animated-film record until Jumbo) and the Session 2 benchmark. From parents OUTSIDE the team: UNKNOWN. Interview notes are not reproduced for a real brand. TEST 2 · POSITIONING: PASS. Every blank traces to Session 1–2. A competitor can't say ‘our culture’ or match the production claim. TEST 3 · PLATFORM: PASS. Purpose passes the refusal test; the three pillars trace to the RTB, VPC and Purpose boxes. RTB are real but not yet public. Next action: 5 parent interviews (Session 2 plan), past behaviour only. Owner: producer. Closing test: 3 or more of 5 say they skipped a local film on looks alone; if fewer, rewrite the BUT. Test 1 stays UNKNOWN by design: we do not invent interviews for a real brand. The threshold is the same for all four cases."
+            name: "Jumbo", sub: "Scored by two classmates from other groups. Not a clean sweep of 5s: that is the honest part." + SUB2, caveat: CAVEAT,
+            values: {
+              "s3.p7.reviews": { label: "FORM PENILAI", cols: ["Kriteria", "Penilai 1 (skor kartu worked example)", "Penilai 2 (ILUSTRASI, bukan data)", "Rata-rata"], rows: [["Identitas", "Penilai Contoh 1 · NIM 0000000001 · contoh1@example.com", "Penilai Contoh 2 (ILUSTRASI) · NIM 0000000002 · contoh2@example.com", "—"], ["CLEAR", "4 — Mostly clear: 'world-class production standards' could be one notch more specific.", "4 — Clear on first read; 'world-class' is still a little general.", "4"], ["RELEVANT", "5 — Matches Session 2's evidence and chosen primary audience directly.", "4 — Matches the families chosen in Session 2, but the doubt it answers is still an assumption.", "4,5"], ["DISTINCTIVE", "4 — 'Made by an Indonesian studio' is the part Pixar cannot claim.", "3 — That one part holds; the rest of the sentence any studio could say.", "3,5"], ["CREDIBLE", "3 — Proof EXISTS but nothing has been shown publicly yet: still genuinely unproven.", "3 — Years of production can be checked; the quality itself has not been seen.", "3"], ["COMMERCIALLY USEFUL", "4 — Gives clear direction to design and marketing teams for Session 4.", "4 — Tells design to show the studio and the craft; tells sales who to target.", "4"]] },
+              "s3.p7.plans": "No criterion averages 2 or lower, so no plan is required. Credible averages 3: the proof exists but the world hasn't tested it; no rewrite fixes that."
+            },
+            note: "Gate 2 dibaca dari dokumen, bukan dari form penilai. TEST 1 · EVIDENCE: GAP. Two kinds on file: comparable-film data (Frozen 2 held Indonesia's animated-film record until Jumbo) and competitor analysis (the Session 2 benchmark). From parents OUTSIDE the team: UNKNOWN. Interview notes are not reproduced for a real brand. TEST 2 · POSITIONING: PASS. Every blank traces to Session 1–2 (the insight is marked as an assumption). Pixar can't claim 'made by an Indonesian studio'. No two low criteria. TEST 3 · PLATFORM: PASS. Purpose passes the refusal test; each pillar has an origin and a row on page 5. RTB are real but not yet public. Next action: 5 parent interviews (Session 2 plan), past behaviour only. Owner: producer. Closing test: 3 or more of 5 say they skipped a local film on looks alone; if fewer, rewrite the BUT. Test 1 stays UNKNOWN by design: we do not invent interviews for a real brand. The threshold is the same for all four cases."
           },
           gojek: {
-            name: "Gojek / GoFood", sub: "Scored by a peer team. Two weak scores, both honest: each gets its own plan, owner and date.", caveat: CAVEAT, values: {},
-            notice: "CLEAR 5 — A rider understands it in one read. No jargon, no abstraction. RELEVANT 4 — Matches Session 2's primary audience and their stated pain exactly. DISTINCTIVE 2 — Another super-app could say a near-identical sentence. 'Convenience' is the most crowded claim in the category. CREDIBLE 2 — Proof exists for RIDES, not for FOOD, and the claim is about food. Still zero diner interviews. COMMERCIALLY USEFUL 4 — Tells a designer to keep the existing UI and a seller to target existing riders first. Card reading: two criteria scored 2, so each needs a plan. The two fixes differ in kind: Distinctive needs a rewritten sentence, Credible needs fieldwork nobody has done yet. Only one of those can be fixed in a room. The card is feedback, not the Gate.",
-            note: "Gate 2 dibaca dari dokumen, bukan dari kartu. TEST 1 · EVIDENCE: GAP. On file: public competitor data (GrabFood, GoFood and ShopeeFood all widely used — Snapcart 2021) and Session 2 GoRide usage data. From GoRide riders OUTSIDE the team on food ordering: UNKNOWN. TEST 2 · POSITIONING: PASS. Blanks trace to Session 2. Only another super-app could copy the sentence, and the team wrote that down. Card: two scores of 2 (Distinctive, Credible), each gets a plan. TEST 3 · PLATFORM: PASS. Canvas is coherent (refuse a separate app → reuse before rebuild → works like rides). RTB prove the delivery mechanism, not the food: flagged. ‘Reliable food’ already shrunk to the pilot district. Two fixes of different kind: a rewrite (cheap) and fieldwork (needs people outside the team). Fix shown, not hidden — draft v2 (one idea: the vetted list): “For GoRide riders in our pilot district who worry a first food order will go wrong, GoFood is the in-app food service that opens with only merchants we checked first, because the 50-merchant launch list was vetted before any rider saw it.” Not yet re-scored. Rider interviews: owner GoFood product lead; closing test: 3+ of 5 describe hesitating to order food after a bad delivery; if fewer, rewrite the BUT."
+            name: "Gojek / GoFood", sub: "Scored by two classmates from other groups. Two criteria average 2 or lower, so each gets its own plan." + SUB2, caveat: CAVEAT,
+            values: {
+              "s3.p7.reviews": { label: "FORM PENILAI", cols: ["Kriteria", "Penilai 1 (skor kartu worked example)", "Penilai 2 (ILUSTRASI, bukan data)", "Rata-rata"], rows: [["Identitas", "Penilai Contoh 1 · NIM 0000000001 · contoh1@example.com", "Penilai Contoh 2 (ILUSTRASI) · NIM 0000000002 · contoh2@example.com", "—"], ["CLEAR", "5 — A rider understands it in one read. No jargon, no abstraction.", "4 — Understandable in one read, slightly long.", "4,5"], ["RELEVANT", "4 — Matches Session 2's primary audience and their stated pain exactly.", "4 — Matches riders' pain about re-entering details.", "4"], ["DISTINCTIVE", "2 — Another super-app could say a near-identical sentence. 'Convenience' is the most crowded claim in the category.", "2 — GrabFood could say almost the same sentence inside the Grab app.", "2 · rendah"], ["CREDIBLE", "2 — Proof exists for RIDES, not for FOOD, and the claim is about food. Still zero diner interviews.", "1 — Nothing shows the food side works; no diner has been asked.", "1,5 · rendah"], ["COMMERCIALLY USEFUL", "4 — Tells a designer to keep the existing UI and a seller to target existing riders first.", "3 — Clear for design; sellers still don't know what to say about food quality.", "3,5"]] },
+              "s3.p7.plans": { label: "RENCANA UNTUK KRITERIA RENDAH", items: ["DISTINCTIVE (rata-rata 2) — Apa: rewrite the sentence around one idea only GoFood can claim (the vetted launch list) and ask both reviewers to re-score it. Siapa: brand lead. Kapan: before the Session 4 brief is written. A writing fix: cheap.", "CREDIBLE (rata-rata 1,5) — Apa: 5 interviews with GoRide riders outside the team about their last food order, past behaviour only. Siapa: GoFood product lead. Kapan: before Gate 2 is read again. An evidence fix: no rewrite can close it."] }
+            },
+            note: "Gate 2 dibaca dari dokumen, bukan dari form penilai. TEST 1 · EVIDENCE: GAP. On file: public competitor data (GrabFood, GoFood and ShopeeFood all widely used — Snapcart 2021) and Session 2 GoRide usage data. From GoRide riders OUTSIDE the team on food ordering: UNKNOWN. TEST 2 · POSITIONING: PASS. Blanks trace to Session 2 (the category sentence is still empty there: a gap). Only another super-app could copy the sentence, and the team wrote that down. Two criteria average 2 or lower (Distinctive, Credible), and each has a plan. Without the plans, Test 2 would fail. TEST 3 · PLATFORM: PASS. Canvas is coherent (refuse a separate app → reuse before rebuild → works like rides). RTB prove the delivery mechanism, not the food: flagged. ‘Reliable food’ already shrunk to the pilot district. Pillar 3 has its own row. Fix shown, not hidden — draft v2 (one idea: the vetted list): “For GoRide riders in our pilot district who worry a first food order will go wrong, GoFood is the in-app food service that opens with only merchants we checked first, because the 50-merchant launch list was vetted before any rider saw it.” Not yet re-scored. Closing test for the interviews: 3+ of 5 describe hesitating to order food after a bad delivery; if fewer, rewrite the BUT."
           },
           marvel: {
-            name: "Disney/Marvel (Iron Man)", sub: "Scored by a peer team. Not a clean sweep of 5s: that is the honest part.", caveat: CAVEAT, values: {},
-            notice: "CLEAR 4 — Understandable in one read, though 'without homework' is casual language for a strategy document. RELEVANT 3 — It matches the audience the team CHOSE, but Session 2 marked that audience's evidence as UNKNOWN, so relevance can't be checked against real data. DISTINCTIVE 5 — No other film in the category can claim it assumes zero prior knowledge. Genuinely uncopyable here. CREDIBLE 1 — No general-audience screening has happened. Every reason to believe is only visible after the ticket is bought. COMMERCIALLY USEFUL 4 — Gives marketing a clear instruction: sell the man, not the mythology. Card reading: only one criterion scored 1–2, so the card alone raises no plan. But the card is a tool, not the Gate: Gate 2 also asks for sufficient audience evidence.",
-            note: "Gate 2 dibaca dari dokumen, bukan dari kartu. TEST 1 · EVIDENCE: GAP. On file: two comparables, both secondary market data — Hellboy (2004) $99.8M worldwide on a $60M budget; Blade (1998) $131.2M on $45M. Same KIND twice. Moviegoers outside the team: UNKNOWN. TEST 2 · POSITIONING: PASS. Blanks trace to Session 2. ‘Assumes you know nothing’ can't be claimed by a famous-hero adaptation or a sequel. Card: only Credible is 1; Relevant is 3 because audience evidence is thin. TEST 3 · PLATFORM: PASS. Canvas coherent (character over fame → no homework → you can start here). RTB are visible only after purchase: flagged. Pillar 3 is worded as an option, not a requirement. The card passes, but Gate 2 asks for two KINDS of evidence, one from the primary audience outside the team. Only one kind is on file. Next action: 5 interviews or a screening with moviegoers who do NOT read comics (Session 2 plan). Owner: marketing lead. Closing test: 3+ of 5 can say what the film is about and would buy a ticket; if fewer, rewrite the BUT. Hellboy is a Dark Horse comic (Sony); Blade has Marvel Comics source material but was made by New Line — neither is a Marvel Studios film. Secondary data (The Numbers); gross vs budget ignores marketing."
+            name: "Disney/Marvel (Iron Man)", sub: "Scored by two classmates from other groups. Only one low criterion: the form raises no required plan, the Gate still can." + SUB2, caveat: CAVEAT,
+            values: {
+              "s3.p7.reviews": { label: "FORM PENILAI", cols: ["Kriteria", "Penilai 1 (skor kartu worked example)", "Penilai 2 (ILUSTRASI, bukan data)", "Rata-rata"], rows: [["Identitas", "Penilai Contoh 1 · NIM 0000000001 · contoh1@example.com", "Penilai Contoh 2 (ILUSTRASI) · NIM 0000000002 · contoh2@example.com", "—"], ["CLEAR", "4 — Understandable in one read, though 'without homework' is casual language for a strategy document.", "4 — Clear; 'without homework' is casual but understandable.", "4"], ["RELEVANT", "3 — Matches the audience the team CHOSE, but Session 2 marked that audience's evidence as UNKNOWN.", "3 — Fits the chosen audience; their evidence is still UNKNOWN.", "3"], ["DISTINCTIVE", "5 — No other film in the category can claim it assumes zero prior knowledge.", "4 — Hard for a sequel to claim; another first film of an unknown hero could get close.", "4,5"], ["CREDIBLE", "1 — No general-audience screening has happened. Every reason to believe is only visible after the ticket is bought.", "2 — Only the script supports it, and only after you have watched.", "1,5 · rendah"], ["COMMERCIALLY USEFUL", "4 — Gives marketing a clear instruction: sell the man, not the mythology.", "4 — Tells marketing to sell the man, not the mythology.", "4"]] },
+              "s3.p7.plans": "Only CREDIBLE averages 2 or lower (1,5), so a plan is advised, not required. But the form is a tool, not the Gate: Gate 2 also asks for sufficient audience evidence."
+            },
+            note: "Gate 2 dibaca dari dokumen, bukan dari form penilai. TEST 1 · EVIDENCE: GAP. On file: two comparables, both secondary market data — Hellboy (2004) $99.8M worldwide on a $60M budget; Blade (1998) $131.2M on $45M. Same KIND twice. Moviegoers outside the team: UNKNOWN. TEST 2 · POSITIONING: PASS. Blanks trace to Session 2. ‘Assumes you know nothing’ can't be claimed by a famous-hero adaptation or a sequel. Only Credible averages 2 or lower; Relevant averages 3 because audience evidence is thin. TEST 3 · PLATFORM: PASS. Canvas coherent (character over fame → no homework → you can start here). RTB are visible only after purchase: flagged. Pillar 2's row is UNKNOWN and shrunk. The form passes, but Gate 2 asks for two KINDS of evidence, one from the primary audience outside the team. Only one kind is on file. Next action: 5 interviews or a screening with moviegoers who do NOT read comics (Session 2 plan). Owner: marketing lead. Closing test: 3+ of 5 can say what the film is about and would buy a ticket; if fewer, rewrite the BUT. Hellboy is a Dark Horse comic (Sony); Blade has Marvel Comics source material but was made by New Line — neither is a Marvel Studios film. Secondary data (The Numbers); gross vs budget ignores marketing."
           },
           lego: {
-            name: "LEGO Technic", sub: "Scored by a peer team on v1 of the sentence. Note WHERE the low score sits: on CLEAR (the writing), not on CREDIBLE.", caveat: CAVEAT, values: {},
-            notice: "CLEAR 2 — Two ideas fighting in one sentence: the audience benefit and the pricing logic. Long, and needs a second read. RELEVANT 5 — Points straight at Session 2's riskiest assumption: willingness to pay for real added function. DISTINCTIVE 4 — No direct competitor claims price-set-by-function; scale-model kits can't, core LEGO doesn't. CREDIBLE 3 — The strongest proof, the reviewer demo, is planned, not done. Pricing sensitivity remains untested. COMMERCIALLY USEFUL 5 — Tells the design team what to build and the pricing team what it may not do. Card reading (scored on v1): one score of 2, so the card rule triggers no plan. The fix is cheap and is shown on page 2.",
-            note: "Gate 2 dibaca dari dokumen, bukan dari kartu. TEST 1 · EVIDENCE: PASS. Community feedback from Technic hobbyists outside the team (public Brickset reviews of existing sets) plus competitor analysis (Mould King, CaDA, Liebherr set). Price tolerance at the flagship price: UNKNOWN → Gate 4. TEST 2 · POSITIONING: PASS. Competitor test holds (scale kits are static, core LEGO is not priced on function). Card scored v1: one score of 2 (Clear). v2 keeps one idea; not yet re-scored. TEST 3 · PLATFORM: PASS. The most internally consistent canvas of the four. RTB: two of three real; the reviewer demo is PLANNED. The message house is narrow: one claim, ‘the price is honest’. All three tests pass; the two open items are next actions, not conditions: a peer re-score of v2 (owner: brand lead) and scheduling the pre-launch reviewer demo (owner: product lead, date UNKNOWN). Pricing test belongs to Gate 4. A pass still carries UNKNOWNs: it means the evidence and the sentence are good enough to build Session 4 on, not that the strategy is proven."
+            name: "LEGO Technic", sub: "Scored by two classmates from other groups on v1 of the sentence. Note WHERE the low score sits: on CLEAR (the writing), not on CREDIBLE." + SUB2, caveat: CAVEAT,
+            values: {
+              "s3.p7.reviews": { label: "FORM PENILAI", cols: ["Kriteria", "Penilai 1 (skor kartu worked example)", "Penilai 2 (ILUSTRASI, bukan data)", "Rata-rata"], rows: [["Identitas", "Penilai Contoh 1 · NIM 0000000001 · contoh1@example.com", "Penilai Contoh 2 (ILUSTRASI) · NIM 0000000002 · contoh2@example.com", "—"], ["CLEAR", "2 — Two ideas fighting in one sentence: the audience benefit and the pricing logic. Needs a second read.", "2 — I had to read it twice: benefit and price logic compete.", "2 · rendah"], ["RELEVANT", "5 — Points straight at Session 2's riskiest assumption: willingness to pay for real added function.", "4 — Speaks to the price scepticism named in Session 2.", "4,5"], ["DISTINCTIVE", "4 — No direct competitor claims price-set-by-function; scale-model kits can't, core LEGO doesn't.", "4 — Scale kits can't claim working function; mechanical kits can't claim LEGO fit.", "4"], ["CREDIBLE", "3 — The strongest proof, the reviewer demo, is planned, not done.", "3 — Fit tolerance is real; the demo is only planned.", "3"], ["COMMERCIALLY USEFUL", "5 — Tells the design team what to build and the pricing team what it may not do.", "4 — Design knows what to show; pricing knows its limit.", "4,5"]] },
+              "s3.p7.plans": "Only CLEAR averages 2 or lower (2), so no plan is required. The fix is cheap and is shown on page 2: one idea per sentence."
+            },
+            note: "Gate 2 dibaca dari dokumen, bukan dari form penilai. TEST 1 · EVIDENCE: PASS. Community feedback from Technic hobbyists outside the team (public Brickset reviews of existing sets) plus competitor analysis (Mould King, CaDA, Liebherr set). Price tolerance at the flagship price: UNKNOWN → Gate 4. TEST 2 · POSITIONING: PASS. Competitor test holds (scale kits are static, core LEGO is not priced on function). One low criterion on v1 (Clear). v2 keeps one idea; not yet re-scored. TEST 3 · PLATFORM: PASS. The most internally consistent canvas of the four. RTB: two of three real; the reviewer demo is PLANNED with an owner, its date not set yet. The message house is narrow: one claim, ‘the price is honest’. All three tests pass; the open items are next actions, not conditions: a peer re-score of v2 (owner: brand lead) and scheduling the pre-launch reviewer demo (owner: product lead, date UNKNOWN). Pricing test belongs to Gate 4. A pass still carries UNKNOWNs: it means the evidence and the sentence are good enough to build Session 4 on, not that the strategy is proven."
           }
         }
       }

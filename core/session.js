@@ -425,7 +425,10 @@
           var items = (v && v.items) || [];
           b.appendChild(U.el("b", { text: f.label || pg.title }));
           b.appendChild(ptable(["#"].concat(f.itemFields.map(function (c) { return c.label || c.k; })),
-            items.length ? items.map(function (it, i) { return [String(i + 1)].concat(f.itemFields.map(function (c) { return it[c.k]; })); }) : [["—"]]));
+            items.length ? items.map(function (it, i) { return [String(i + 1)].concat(f.itemFields.map(function (c) {
+              if (c.showIf && it[c.showIf.k] !== c.showIf.eq) return "";
+              return c.type === "select" ? CB.optLabel(c, it[c.k]) : it[c.k];
+            })); }) : [["—"]]));
           b.classList.add("pp-tablebox");
           return b;
         }
@@ -491,7 +494,7 @@
         a.innerHTML = '<span class="ord">' + (i + 1) + ".</span>hlm. " + p + " · " + U.esc(pg.title) + (ok ? "" : " (menyusul)");
         nav.appendChild(a);
       });
-      intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: Commercial Brand Audit" }));
+      intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: " + spec.title }));
       intro.appendChild(nav);
       main.appendChild(intro);
 

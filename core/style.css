@@ -177,6 +177,37 @@ footer.foot{font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5
 .carryval{margin-top:3px; padding:7px 10px; background:var(--field); border-radius:6px; white-space:pre-wrap; max-height:180px; overflow:auto;}
 .carryval.empty{font-style:italic; color:var(--muted);}
 
+/* ---- Sesi 3 Gate 2 (v0.3.0): status janji, jejak asal, form penilai, rencana ---- */
+.lguide{font-size:13.5px; background:var(--theory-bg); border-radius:6px; padding:8px 12px; margin:6px 0 10px;}
+.lguide p{margin:4px 0;}
+.litem .lfield.k_status select{max-width:100%;}
+.legacy{background:var(--nuance-bg); border-radius:6px; padding:7px 10px; margin:6px 0 10px; white-space:pre-wrap;}
+.lineitem{margin:8px 0;}
+.lineitem label{display:block; font-size:14px; margin-bottom:3px; font-weight:normal;}
+.srcrow{background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin:8px 0;}
+.srchead{margin-bottom:6px;}
+.srcsel select, .origcol select{width:100%; margin:3px 0;}
+.srcsnip{margin:4px 0 6px; padding:6px 9px; background:var(--field); border-radius:6px; white-space:pre-wrap;}
+.srcsnip.warn, .rvwarn, .plmsg.warn, .rvcount.warn{color:var(--warn);}
+.rvcount.ok{color:var(--ok);}
+.origgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+.origcol{background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:3px;}
+.origcol .addbtn{margin-top:6px; align-self:flex-start;}
+.rvcard{background:#fff; border:1px solid var(--line); border-left:4px solid var(--terra); border-radius:8px; padding:12px 14px; margin:10px 0;}
+.rvhead{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+.rvid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:8px;}
+.rvcrit{display:grid; grid-template-columns:minmax(200px,1.2fr) auto minmax(200px,1.5fr); gap:10px; align-items:center; padding:7px 0; border-top:1px dashed var(--line);}
+.rvscore{display:flex; gap:6px;}
+.rvscore .chk{display:inline-flex; align-items:center; gap:3px; margin:0;}
+.rvwarn{margin-top:8px; padding:6px 9px; background:#FFF6E5; border-radius:6px;}
+.pltable td.avg{font-weight:bold;}
+.pltable tr.low th, .pltable tr.low td{background:#FBE9E5; color:var(--bad);}
+.plmsg{margin:8px 0;}
+.plbox{background:#fff; border:1px solid var(--bad); border-radius:8px; padding:10px 12px; margin:8px 0;}
+@media (max-width:760px){
+  .origgrid, .rvid{grid-template-columns:1fr;}
+  .rvcrit{grid-template-columns:1fr;}
+}
 @media print{
   body{background:#fff; padding:0;}
   body > *:not(#print-root){display:none !important;}
