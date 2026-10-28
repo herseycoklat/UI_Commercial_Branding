@@ -202,7 +202,7 @@
         var ll = U.el("div");
         ll.appendChild(U.el("div", { class: "name", text: "Sesi " + sid.slice(1) + (lc.title ? " · " + lc.title : "") }));
         var lm = U.el("div", { class: "meta" });
-        lm.innerHTML = '<span class="status-pill">terkunci</span>Dibuka ' + U.esc(U.fmtDate(lc.release)) + " · Minggu " + U.esc(lc.week) + ", tenggat " + U.esc(U.fmtDate(lc.due));
+        lm.innerHTML = '<span class="status-pill">terkunci</span>Dibuka ' + U.esc(U.fmtDate(lc.release)) + " · Minggu " + U.esc(lc.week) + (lc.no_upload_deadline ? ", tanpa batas unggah (hari baca diumumkan di chat kelas)" : ", tenggat " + U.esc(U.fmtDate(lc.due)));
         ll.appendChild(lm); lr.appendChild(ll);
         var lb = U.el("button", { class: "btn", type: "button", text: "Terkunci" }); lb.disabled = true;
         lr.appendChild(lb);
@@ -215,7 +215,7 @@
       var l = U.el("div");
       l.appendChild(U.el("div", { class: "name", text: "Sesi " + sid.slice(1) + (cfg.title ? " · " + cfg.title : "") }));
       var meta = U.el("div", { class: "meta" });
-      meta.innerHTML = '<span class="status-pill ' + st.cls + '">' + U.esc(st.pill) + "</span>" + U.esc(st.text) + " · Minggu " + U.esc(cfg.week) + ", tenggat " + U.esc(U.fmtDate(cfg.due));
+      meta.innerHTML = '<span class="status-pill ' + st.cls + '">' + U.esc(st.pill) + "</span>" + U.esc(st.text) + " · Minggu " + U.esc(cfg.week) + (cfg.no_upload_deadline ? ", tanpa batas unggah (hari baca diumumkan di chat kelas)" : ", tenggat " + U.esc(U.fmtDate(cfg.due)));
       l.appendChild(meta); r.appendChild(l);
       r.appendChild(U.el("a", { class: "btn", href: sid.toLowerCase() + ".html", text: "Buka" }));
       list.appendChild(r);

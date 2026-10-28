@@ -1,5 +1,5 @@
 /* sessions/s3.js — SPEC Sesi 3 (struktur halaman dan ID field).
- * Sumber: WORKBOOK_S3-team-workbook-v2.pptx (teks slide 1–7; lihat tools/extracts/S3.md).
+ * Sumber: WORKBOOK_S3-team-workbook-v3.pptx (28 Okt 2026; teks slide 1–7 diekstrak dengan python-pptx, lihat tools/extracts/S3.md).
  * Label, hint, subjudul, footer disalin persis dari workbook. Tanggal tercetak tidak dipakai di app.
  * Keputusan desain Sesi 3:
  *  - pg.carry = panel "bawaan dari sesi sebelumnya": nilai ditampilkan, tidak pernah disalin diam-diam.
@@ -8,7 +8,8 @@
  *    hlm. 7 = form penilai teman (s3.p7.reviews) + rencana kriteria rendah (s3.p7.plans), menggantikan kontrak V17;
  *    status janji di s3.p5.promise_proof (status/owner/deadline/shrunk); jejak asal s3.p2.sources dan s3.p6.origins;
  *    s3.p5.why_placed = satu baris per slider (tipe "lines"; isian lama satu kotak disimpan di _legacy oleh migrate()).
- *  - pg.appText = teks halaman yang sudah mendahului workbook pptx (audit: peringatan, bukan gagal) sampai workbook diperbarui.
+ *  - fillOrder mengikuti urutan kelas (skrip v3 slide 9): hlm. 3 → (kotak Purpose hlm. 4) → hlm. 2 → hlm. 4 → 5 → 6 → 7.
+ *  - Tidak ada batas unggah (config noUploadDeadline): app tidak menampilkan tenggat untuk S3.
  * ID FIELD DIKUNCI SETELAH S3 DIRILIS: boleh menambah, tidak boleh mengganti nama/menghapus.
  */
 window.CB = window.CB || {}; CB.specs = CB.specs || {};
@@ -18,12 +19,13 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     title: "Brand Strategy Platform",
     wbCover: "SESSION 3 TEAM WORKBOOK",
     coverNote: "Fill this together as a team, outside class. Every blank must trace back to Session 2. A promise with no proof isn't strategy — it's hope.",
-    coverExtra: "Wawancara atau bukti baru minggu ini? Tambahkan di <b>Sesi 2</b> (hlm. 2 dan 9). Ikut terbaca saat Gate 2.",
-    fillOrder: [2, 3, 4, 5, 6, 7],
+    hideDue: true,
+    coverExtra: "Isi di HTML tool ini, lalu kumpulkan file JSON lewat Form yang sama seperti minggu lalu. <b>Tidak ada batas waktu unggah</b>; hari baca diumumkan di chat kelas, dan unggahan terakhir yang dibaca. Wawancara atau bukti baru minggu ini? Tambahkan di <b>Sesi 2</b> (hlm. 2 dan 9). Ikut terbaca saat Gate 2.",
+    fillOrder: [3, 2, 4, 5, 6, 7],
     pages: [
       {
         p: 2, title: "Brand Positioning Statement",
-        sub: "Draft ALONE first, no discussion. Then merge as a team.",
+        sub: "Draft ALONE first; note where each blank comes from. Then merge — with evidence, not votes.",
         carry: { title: "Bawaan dari Sesi 2 (hanya tampil, tidak disalin)", items: [
           { id: "s2.p4.primary", label: "PRIMARY AUDIENCE" },
           { id: "s2.p5.insight", label: "INSIGHT SENTENCE" },
@@ -89,11 +91,11 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
               { k: "bold_safe", left: "Bold", right: "Safe" }, { k: "modern_classic", left: "Modern", right: "Classic" }] },
           { id: "s3.p5.why_placed", type: "lines", pairsFrom: "s3.p5.sliders", label: "WHY WE PLACED IT THERE", hint: "One line per slider — tie it to your positioning statement." },
           { id: "s3.p5.promise_proof", type: "list", label: "PROMISE → PROOF", addText: "+ Tambah promise",
-            hint: "List every promise from your platform, and the real, named proof for each. No proof named = shrink the promise.",
-            guide: "<p><b>Bukti yang baik:</b> <i>verifiable</i> (bisa dicek orang luar tanpa harus percaya pada kita), <i>specific</i> (angka, nama, dokumen, sesuatu yang bisa dicoba), <i>relevant</i> (membuktikan janji yang sama, bukan janji lain).</p><p><b>Status:</b> <b>Nyata</b> = lolos tiga syarat hari ini. <b>PLANNED</b> = akan ada; tulis <i>owner</i> dan <i>deadline</i>. <b>UNKNOWN</b> = belum ada; janji dikecilkan, bukan dihapus. Empat cara mengecilkan janji: <b>tempat, waktu, siapa, seberapa</b>.</p><p>Setiap pilar Message House (hlm. 6) harus punya baris di tabel ini. Belum ada? Tambahkan barisnya dulu.</p>",
+            hint: "List every promise from your platform and its real, named proof. Mark each: REAL · PLANNED (owner + deadline) · UNKNOWN → shrink it until it is true (place · time · who · how much). Never delete it, never leave it standing.",
+            guide: "<p><b>Bukti yang baik:</b> <i>verifiable</i> (bisa dicek orang luar tanpa harus percaya pada kita), <i>specific</i> (angka, nama, dokumen, sesuatu yang bisa dicoba), <i>relevant</i> (membuktikan janji yang sama, bukan janji lain).</p><p><b>Status:</b> <b>REAL (nyata)</b> = lolos tiga syarat hari ini. <b>PLANNED</b> = akan ada; tulis <i>owner</i> dan <i>deadline</i>. <b>UNKNOWN</b> = belum ada; janji dikecilkan, bukan dihapus. Empat cara mengecilkan janji: <b>tempat, waktu, siapa, seberapa</b>.</p><p>Setiap pilar Message House (hlm. 6) harus punya baris di tabel ini. Belum ada? Tambahkan barisnya dulu.</p>",
             emptyText: "Belum ada promise. Mulai dari kotak PROMISE di hlm. 4.",
             itemFields: [{ k: "promise", label: "Promise", type: "text" }, { k: "proof", label: "Proof (nyata, bernama)", type: "longtext" },
-              { k: "status", label: "Status bukti", type: "select", empty: "— belum dipilih —", options: [{ v: "nyata", label: "Nyata (bisa dicek orang luar hari ini)" }, { v: "planned", label: "PLANNED (akan ada)" }, { v: "unknown", label: "UNKNOWN (belum ada)" }] },
+              { k: "status", label: "Status bukti", type: "select", empty: "— belum dipilih —", options: [{ v: "nyata", label: "REAL · nyata (bisa dicek orang luar hari ini)" }, { v: "planned", label: "PLANNED · akan ada (owner + deadline)" }, { v: "unknown", label: "UNKNOWN · belum ada (kecilkan janjinya)" }] },
               { k: "owner", label: "Owner (siapa yang mengerjakan bukti)", type: "text", showIf: { k: "status", eq: "planned" } },
               { k: "deadline", label: "Deadline (kapan)", type: "text", ph: "tulis sendiri", showIf: { k: "status", eq: "planned" } },
               { k: "shrunk", label: "Janji setelah dikecilkan (tempat, waktu, siapa, seberapa)", type: "longtext", showIf: { k: "status", eq: "unknown" } }] }
@@ -116,15 +118,15 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ],
         fields: [
           { id: "s3.p6.roof", type: "longtext", label: "MASTER MESSAGE (the roof)", output: true },
-          { id: "s3.p6.pillar1", type: "longtext", label: "PILLAR 1", hint: "Supporting message — must trace back to the roof" },
-          { id: "s3.p6.pillar2", type: "longtext", label: "PILLAR 2", hint: "Supporting message — must trace back to the roof" },
-          { id: "s3.p6.pillar3", type: "longtext", label: "PILLAR 3", hint: "Supporting message — must trace back to the roof" },
-          { id: "s3.p6.proof1", type: "longtext", label: "PROOF POINT", hint: "— the evidence for this pillar —" },
-          { id: "s3.p6.proof2", type: "longtext", label: "PROOF POINT", hint: "— the evidence for this pillar —" },
-          { id: "s3.p6.proof3", type: "longtext", label: "PROOF POINT", hint: "— the evidence for this pillar —" },
+          { id: "s3.p6.pillar1", type: "longtext", label: "PILLAR 1", hint: "Why the roof is true — taken from WHERE WE WIN, Purpose, the canvas or audience needs" },
+          { id: "s3.p6.pillar2", type: "longtext", label: "PILLAR 2", hint: "Why the roof is true — taken from WHERE WE WIN, Purpose, the canvas or audience needs" },
+          { id: "s3.p6.pillar3", type: "longtext", label: "PILLAR 3", hint: "Why the roof is true — taken from WHERE WE WIN, Purpose, the canvas or audience needs" },
+          { id: "s3.p6.proof1", type: "longtext", label: "PROOF POINT", hint: "Copy it from your Promise → Proof table. Not there yet? Add the row first." },
+          { id: "s3.p6.proof2", type: "longtext", label: "PROOF POINT", hint: "Copy it from your Promise → Proof table. Not there yet? Add the row first." },
+          { id: "s3.p6.proof3", type: "longtext", label: "PROOF POINT", hint: "Copy it from your Promise → Proof table. Not there yet? Add the row first." },
           { id: "s3.p6.cta", type: "longtext", label: "CALL TO ACTION (the door)", hint: "what should the audience do next?" },
           { id: "s3.p6.origins", type: "origins", appOnly: true, label: "ASAL DAN BUKTI TIAP PILAR (tambahan app)", rows: "s3.p5.promise_proof",
-            hint: "Cek dua arah. Ke bawah: tiap pilar datang dari kotak mana, dan baris mana di tabel janji dan bukti yang membuktikannya? Copy this from your Promise → Proof table. Not there yet? Add the row first.",
+            hint: "Cek dua arah. Ke atas: kalau pilar ini dicabut, apakah atap lebih lemah? Ke bawah: tiap pilar datang dari kotak mana, dan baris mana di tabel janji dan bukti yang membuktikannya? Belum ada barisnya? Tambahkan dulu.",
             pillars: [{ k: "pillar1", id: "s3.p6.pillar1" }, { k: "pillar2", id: "s3.p6.pillar2" }, { k: "pillar3", id: "s3.p6.pillar3" }],
             opts: [{ id: "s3.p3.difference", label: "Kotak WHERE WE WIN (hlm. 3)" }, { id: "s3.p3.parity", label: "Kotak WHAT WE MUST MATCH / parity (hlm. 3)" },
               { id: "s3.p4.purpose", label: "Kotak Purpose (hlm. 4)" }, { id: "s3.p4.mission", label: "Kotak Mission (hlm. 4)" }, { id: "s3.p4.values", label: "Kotak Values (hlm. 4)" },
@@ -134,9 +136,8 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
       },
       {
         p: 7, title: "Strategic Critique — Gate 2 Check",
-        appText: ["sub", "footer"],
-        sub: "Ask at least 2 classmates from OTHER groups to read your positioning statement and fill one form each. Add more forms if you ask more people.",
-        footer: "This card is feedback, not the Gate. Any criterion averaging 2 or lower is 'low'. Two or more low criteria: write a plan for each (what, who, by when). It becomes part of your Gate 2 condition.",
+        sub: "2+ classmates from OTHER groups score your positioning statement (page 2) — one form each, in the HTML tool.",
+        footer: "GATE 2 CHECK:  This card is feedback, not the Gate. Each reviewer writes name, NIM, email and one reason per score; teammates can't review. Any criterion averaging 2 or lower is low. Two or more low criteria → write a plan for each (what, who, by when). It becomes part of your Gate 2 condition.",
         carry: { title: "Yang dinilai (tampil saja)", items: [
           { id: "s3.p2.final", label: "POSITIONING STATEMENT (hlm. 2)" },
           { id: "s3.p5.promise_proof", label: "PROMISE → PROOF (hlm. 5), boleh dilihat untuk CREDIBLE" }
