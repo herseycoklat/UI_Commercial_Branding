@@ -197,8 +197,11 @@
   /* ---------- list (daftar item, tiap item bisa punya beberapa isian) ----------
    * f.itemFields: [{k, label, type: "text"|"longtext"|"select"|"date", options:[...], ph}]
    * nilai: { items: [ { id, <k>: ... } ] } */
-  function itemInput(it, spec, onChange) {
-    var w = U.el("div", { class: "lfield " + (spec.type || "text") });
+  function optV(o) { return typeof o === "string" ? o : o.v; }
+  function optL(o) { return typeof o === "string" ? o : o.label; }
+  CB.optLabel = function (spec, v) { var o = (spec.options || []).filter(function (x) { return optV(x) === v; })[0]; return o ? optL(o) : (v || ""); };
+  function itemInput(it, spec, onChange, onSelect) {
+    var w = U.el("div", { class: "lfield " + (spec.type || "text") + " k_" + spec.k });
     var id = "li_" + it.id + "_" + spec.k;
     w.appendChild(U.el("label", { for: id, text: spec.label }));
     var el;
@@ -206,10 +209,10 @@
       el = textarea(id, it[spec.k], function (v) { it[spec.k] = v; onChange(); }, 56);
     } else if (spec.type === "select") {
       el = U.el("select", { id: id });
-      el.appendChild(U.el("option", { value: "", text: "—" }));
-      spec.options.forEach(function (o) { el.appendChild(U.el("option", { value: o, text: o })); });
+      el.appendChild(U.el("option", { value: "", text: spec.empty || "—" }));
+      spec.options.forEach(function (o) { el.appendChild(U.el("option", { value: optV(o), text: optL(o) })); });
       el.value = it[spec.k] || "";
-      el.onchange = function () { it[spec.k] = el.value; onChange(); };
+      el.onchange = function () { it[spec.k] = el.value; onChange(); if (onSelect) onSelect(); };
     } else {
       el = U.el("input", { id: id, type: spec.type === "date" ? "date" : "text", class: "line", placeholder: spec.ph || "" });
       el.value = it[spec.k] || "";
@@ -219,19 +222,26 @@
     w.appendChild(el);
     return w;
   }
+  /* list.itemFields[].showIf = { k, eq } : isian hanya tampil bila item[k] === eq (nilainya tetap disimpan bila disembunyikan).
+   * list.guide = HTML petunjuk tambahan app (di bawah hint workbook). */
   F.list = function (sessId, f) {
     var box = U.el("div", { class: "box listbox" + (f.output ? " output" : ""), "data-fid": f.id });
     if (f.label) box.appendChild(U.el("label", { text: f.label }));
     if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    if (f.guide) box.appendChild(U.el("div", { class: "lguide" }, f.guide));
     var val = clone(CB.getField(sessId, f.id)); val.items = val.items || [];
-    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    var mine = false;
+    function commit() { mine = true; CB.setField(sessId, f.id, clone(val)); changed(f.id); mine = false; }
     var list = U.el("div", { class: "litems" });
     function draw() {
       list.innerHTML = "";
       if (!val.items.length) list.appendChild(U.el("div", { class: "small muted", text: f.emptyText || "Belum ada isian." }));
       val.items.forEach(function (it, i) {
-        var row = U.el("div", { class: "litem" + ((f.itemFields || []).length > 1 ? " multi" : "") });
-        (f.itemFields || [{ k: "text", label: "", type: "text" }]).forEach(function (spec) { row.appendChild(itemInput(it, spec, commit)); });
+        var row = U.el("div", { class: "litem" + ((f.itemFields || []).length > 1 ? " multi" : ""), "data-iid": it.id });
+        (f.itemFields || [{ k: "text", label: "", type: "text" }]).forEach(function (spec) {
+          if (spec.showIf && it[spec.showIf.k] !== spec.showIf.eq) return;
+          row.appendChild(itemInput(it, spec, commit, draw));
+        });
         var del = U.el("button", { type: "button", class: "iconbtn", text: "✕", title: "Hapus", "aria-label": "Hapus item " + (i + 1) });
         del.onclick = function () { val.items.splice(i, 1); commit(); draw(); };
         row.appendChild(del);
@@ -239,6 +249,8 @@
       });
     }
     draw(); box.appendChild(list);
+    // Item bisa ditambah dari halaman lain (mis. tombol di hlm. 6): muat ulang supaya tidak tertimpa.
+    CB.on("change", function (id) { if (id === f.id && !mine) { val = clone(CB.getField(sessId, f.id)); val.items = val.items || []; draw(); } });
     if (!f.max || val.items.length < f.max) {
       var add = U.el("button", { type: "button", class: "addbtn", text: f.addText || "+ Tambah" });
       add.onclick = function () {
@@ -531,6 +543,351 @@
     return box;
   };
 
+  /* ====================== Tipe Sesi 3 untuk Gate 2 (patch kontrak v3.5) ====================== */
+  function snip(t, n) { t = (t || "").replace(/\s+/g, " ").trim(); n = n || 160; return t.length > n ? t.slice(0, n) + "…" : t; }
+  function sidOf(id) { var m = /^s(\d+)\./.exec(id); return m ? "S" + m[1] : null; }
+  /* Isi sumber untuk ditampilkan: "sN.pM.x" atau "s3.p5.promise_proof#<itemId>". */
+  function sourceText(ref) {
+    if (!ref) return "";
+    var parts = ref.split("#"), id = parts[0], sid = sidOf(id), f = CB.findField(id);
+    if (!sid || !f) return "";
+    var v = CB.getField(sid, id);
+    if (parts[1]) {
+      var it = ((v || {}).items || []).filter(function (x) { return x.id === parts[1]; })[0];
+      if (!it) return "";
+      return (it.promise || "(tanpa janji)") + " → " + (it.proof || "(bukti belum ditulis)") + (it.status ? " [" + CB.optLabel(ppStatusSpec(), it.status) + "]" : "");
+    }
+    return F.printText(f, v, sid);
+  }
+  CB.sourceText = sourceText;
+  function ppStatusSpec() {
+    var f = CB.findField("s3.p5.promise_proof");
+    return ((f && f.itemFields) || []).filter(function (x) { return x.k === "status"; })[0] || { options: [] };
+  }
+  function ppItems() { return ((CB.getField("S3", "s3.p5.promise_proof") || {}).items || []); }
+  function ppLabel(it, i) { return "Baris " + (i + 1) + ": " + snip(it.promise || "(janji belum ditulis)", 70); }
+  function sel(id, options, value, onChange) {
+    var s = U.el("select", { id: id });
+    options.forEach(function (o) { s.appendChild(U.el("option", { value: o.v, text: o.label })); });
+    s.value = value || "";
+    if (s.value !== (value || "")) { s.appendChild(U.el("option", { value: value, text: "(sumber lama tidak ditemukan)" })); s.value = value; }
+    s.onchange = function () { onChange(s.value); };
+    return s;
+  }
+  function lineInput(id, value, ph, onInput) {
+    var i = U.el("input", { id: id, type: "text", class: "line", placeholder: ph || "" });
+    i.value = value || "";
+    i.addEventListener("input", function () { onInput(i.value); });
+    return i;
+  }
+
+  /* ---------- lines: satu baris per pasangan slider ----------
+   * f.pairsFrom = ID field sliders · nilai: { <pairKey>: "teks", _legacy?: "isian lama satu kotak" } */
+  F.lines = function (sessId, f) {
+    var box = U.el("div", { class: "box linesbox", "data-fid": f.id });
+    if (f.label) box.appendChild(U.el("label", { text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var raw = CB.getField(sessId, f.id);
+    var val = typeof raw === "string" ? { _legacy: raw } : clone(raw);
+    if (val._legacy) box.appendChild(U.el("div", { class: "legacy small", text: "Isian lama (satu kotak), tetap disimpan: " + val._legacy }));
+    var src = CB.findField(f.pairsFrom) || { pairs: [] };
+    var marks = {};
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    src.pairs.forEach(function (pr) {
+      var row = U.el("div", { class: "lineitem" });
+      var id = fid(f) + "_" + pr.k;
+      var lab = U.el("label", { for: id });
+      lab.appendChild(U.el("b", { text: pr.left + " – " + pr.right }));
+      marks[pr.k] = U.el("span", { class: "small muted" });
+      lab.appendChild(marks[pr.k]);
+      row.appendChild(lab);
+      row.appendChild(lineInput(id, val[pr.k], "kenapa di posisi ini? kaitkan ke kalimat positioning", function (v) { val[pr.k] = v; commit(); }));
+      box.appendChild(row);
+    });
+    function paint() {
+      var sv = CB.getField(sessId, f.pairsFrom) || {};
+      src.pairs.forEach(function (pr) {
+        var x = sv[pr.k];
+        marks[pr.k].textContent = typeof x === "number" ? " · posisi " + Math.round(x * 100) + "/100" + (x >= 0.45 && x <= 0.55 ? " (dekat tengah: tulis kenapa belum diputuskan)" : "") : " · slider belum dipilih";
+      });
+    }
+    paint(); CB.on("change", function (id) { if (id === f.pairsFrom) paint(); });
+    return box;
+  };
+
+  /* ---------- sources: sumber tiap blank kalimat positioning ----------
+   * f.blanks: [{k, label, opts:[{id, label}], rows?: "<list id>"}] · f.from = ID field parts
+   * nilai: { <k>: { src: "<id>" | "<listId>#<itemId>" | "other", note: "teks" } } */
+  F.sources = function (sessId, f) {
+    var box = U.el("div", { class: "box sourcesbox", "data-fid": f.id });
+    if (f.label) box.appendChild(U.el("label", { text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var val = clone(CB.getField(sessId, f.id));
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    var body = U.el("div"); box.appendChild(body);
+    var dyn = {};
+    f.blanks.forEach(function (b) {
+      var row = U.el("div", { class: "srcrow" });
+      var head = U.el("div", { class: "srchead" });
+      head.appendChild(U.el("b", { text: b.label }));
+      var cur = U.el("span", { class: "small muted" }); head.appendChild(cur);
+      row.appendChild(head);
+      var selWrap = U.el("div", { class: "srcsel" }); row.appendChild(selWrap);
+      var snipEl = U.el("div", { class: "srcsnip small" }); row.appendChild(snipEl);
+      var v = val[b.k] = val[b.k] || {};
+      var note = lineInput(fid(f) + "_" + b.k + "_note", v.note, "catatan: bagian mana yang dipakai, atau sumber lain", function (t) { v.note = t; commit(); });
+      row.appendChild(note);
+      dyn[b.k] = { cur: cur, selWrap: selWrap, snip: snipEl, b: b };
+      body.appendChild(row);
+    });
+    function draw() {
+      var d = CB.getField(sessId, f.from) || {};
+      f.blanks.forEach(function (b) {
+        var o = dyn[b.k], v = val[b.k];
+        o.cur.textContent = d[b.k] ? " · isianmu: " + snip(d[b.k], 90) : " · blank ini belum diisi di draf";
+        var opts = [{ v: "", label: "— pilih sumber —" }].concat(b.opts.map(function (x) { return { v: x.id, label: x.label }; }));
+        if (b.rows) ppItems().forEach(function (it, i) { opts.push({ v: b.rows + "#" + it.id, label: "PROMISE → PROOF hlm. 5 · " + ppLabel(it, i) }); });
+        opts.push({ v: "other", label: "Sumber lain (tulis di catatan)" });
+        o.selWrap.innerHTML = "";
+        o.selWrap.appendChild(sel(fid(f) + "_" + b.k, opts, v.src, function (x) { v.src = x; commit(); paintSnip(b.k); }));
+        paintSnip(b.k);
+      });
+    }
+    function paintSnip(k) {
+      var v = val[k], o = dyn[k];
+      if (!v.src) { o.snip.textContent = ""; o.snip.className = "srcsnip small"; return; }
+      if (v.src === "other") { o.snip.textContent = v.note ? "" : "Tulis sumbernya di catatan."; o.snip.className = "srcsnip small warn"; return; }
+      var t = sourceText(v.src);
+      o.snip.textContent = t ? "Isi sumber: " + snip(t, 200) : "Sumber ini masih kosong. Isi dulu di " + CB.pageLabel(v.src) + ".";
+      o.snip.className = "srcsnip small" + (t ? "" : " warn");
+    }
+    draw();
+    CB.on("change", function (id) { if (id && id !== f.id && (id === f.from || id === "s3.p5.promise_proof" || /^s2\./.test(id) || /^s3\.p[34]\./.test(id))) draw(); });
+    return box;
+  };
+
+  /* ---------- origins: asal dan baris bukti tiap pilar Message House ----------
+   * f.pillars: [{k, id}] · f.opts: [{id, label}] · f.rows = ID list janji→bukti
+   * nilai: { <k>: { source: "<id>", proof_ref: "<itemId>" } } */
+  F.origins = function (sessId, f) {
+    var box = U.el("div", { class: "box originsbox", "data-fid": f.id });
+    if (f.label) box.appendChild(U.el("label", { text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var val = clone(CB.getField(sessId, f.id));
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    var body = U.el("div", { class: "origgrid" }); box.appendChild(body);
+    function draw() {
+      body.innerHTML = "";
+      var items = ppItems();
+      f.pillars.forEach(function (p, pi) {
+        var v = val[p.k] = val[p.k] || {};
+        var col = U.el("div", { class: "origcol" });
+        col.appendChild(U.el("b", { text: "PILLAR " + (pi + 1) }));
+        col.appendChild(U.el("div", { class: "small muted", text: snip(CB.getField(sessId, p.id), 90) || "(pilar belum ditulis)" }));
+        var l1 = U.el("label", { class: "small", for: fid(f) + "_" + p.k + "_src", text: "Asal pilar" }); col.appendChild(l1);
+        col.appendChild(sel(fid(f) + "_" + p.k + "_src", [{ v: "", label: "— pilih kotak asal —" }].concat(f.opts.map(function (o) { return { v: o.id, label: o.label }; })), v.source, function (x) { v.source = x; commit(); draw(); }));
+        if (v.source) col.appendChild(U.el("div", { class: "srcsnip small", text: snip(sourceText(v.source), 140) || "Kotak asal ini masih kosong." }));
+        var l2 = U.el("label", { class: "small", for: fid(f) + "_" + p.k + "_ref", text: "Baris bukti di PROMISE → PROOF (hlm. 5)" }); col.appendChild(l2);
+        col.appendChild(sel(fid(f) + "_" + p.k + "_ref", [{ v: "", label: items.length ? "— pilih baris —" : "— tabel janji dan bukti masih kosong —" }].concat(items.map(function (it, i) { return { v: it.id, label: ppLabel(it, i) }; })), v.proof_ref, function (x) { v.proof_ref = x; commit(); draw(); }));
+        var row = items.filter(function (it) { return it.id === v.proof_ref; })[0];
+        if (row) {
+          var miss = [];
+          if (!row.status) miss.push("status belum dipilih");
+          if (!(row.proof || "").trim()) miss.push("bukti belum ditulis");
+          col.appendChild(U.el("div", { class: "srcsnip small" + (miss.length ? " warn" : ""), text: sourceText(f.rows + "#" + row.id) + (miss.length ? " · " + miss.join(", ") : "") }));
+        } else if (v.proof_ref) {
+          col.appendChild(U.el("div", { class: "srcsnip small warn", text: "Baris yang dipilih sudah dihapus dari tabel. Pilih lagi." }));
+        }
+        var add = U.el("button", { type: "button", class: "addbtn small", text: "+ Tambah baris di tabel janji dan bukti" });
+        add.onclick = function () {
+          var pv = clone(CB.getField(sessId, f.rows)); pv.items = pv.items || [];
+          var it = { id: U.uuid(), promise: (CB.getField(sessId, p.id) || "").trim() };
+          pv.items.push(it);
+          CB.setField(sessId, f.rows, pv); changed(f.rows);
+          v.proof_ref = it.id; commit(); draw();
+        };
+        col.appendChild(add);
+        body.appendChild(col);
+      });
+    }
+    draw();
+    CB.on("change", function (id) { if (id && id !== f.id && (id === f.rows || /^s3\.p6\.pillar/.test(id) || /^s3\.p[34]\./.test(id) || /^s2\.p5\./.test(id))) draw(); });
+    return box;
+  };
+
+  /* ---------- reviews: form penilai teman (satu form = satu penilai) ----------
+   * f.criteria: [{k, label, q, id}] · nilai: { items: [ { id, name, nim, email, scores:{<k>:1–5}, reasons:{<k>:"teks"} } ] } */
+  CB.peerSummary = function (val, criteria) {
+    var items = ((val || {}).items || []).filter(function (it) {
+      return Object.keys(it.scores || {}).some(function (k) { return it.scores[k] >= 1; });
+    });
+    var avg = {}, low = [];
+    criteria.forEach(function (c) {
+      var xs = items.map(function (it) { return (it.scores || {})[c.k]; }).filter(function (x) { return typeof x === "number" && x >= 1 && x <= 5; });
+      avg[c.k] = xs.length ? xs.reduce(function (a, b) { return a + b; }, 0) / xs.length : null;
+      if (avg[c.k] != null && avg[c.k] <= 2) low.push(c.k);
+    });
+    return { n: items.length, items: items, avg: avg, low: low };
+  };
+  CB.reviewIssues = function (it, criteria, ownNim) {
+    var out = [], sc = it.scores || {}, rs = it.reasons || {};
+    if (!(it.name || "").trim()) out.push("nama penilai kosong");
+    var nim = (it.nim || "").trim();
+    if (!nim) out.push("NIM penilai kosong");
+    else if (!/^\d+$/.test(nim)) out.push("NIM hanya angka");
+    else if (ownNim && nim === String(ownNim)) out.push("NIM penilai sama dengan NIM pemilik file: penilai harus orang lain");
+    if (!(it.email || "").trim()) out.push("email penilai kosong");
+    else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(it.email.trim())) out.push("format email belum benar");
+    var miss = criteria.filter(function (c) { return !sc[c.k]; }).length;
+    if (miss) out.push(miss + " skor belum dipilih");
+    var noReason = criteria.filter(function (c) { return sc[c.k] && !(rs[c.k] || "").trim(); }).length;
+    if (noReason) out.push(noReason + " skor tanpa alasan");
+    if (criteria.every(function (c) { return sc[c.k] === 5; })) out.push("kelima skor 5: jangan beri 5 untuk semua; tulis kelemahan yang paling mungkin");
+    return out;
+  };
+  F.reviews = function (sessId, f) {
+    var box = U.el("div", { class: "box reviewsbox", "data-fid": f.id });
+    if (f.label) box.appendChild(U.el("label", { text: f.label }));
+    if (f.guide) box.appendChild(U.el("div", { class: "lguide" }, f.guide));
+    var val = clone(CB.getField(sessId, f.id)); val.items = val.items || [];
+    if (!val.items.length) val.items.push({ id: U.uuid() }); // form default 1 (disimpan saat mulai diisi)
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    var list = U.el("div", { class: "rvlist" }); box.appendChild(list);
+    var countEl = U.el("div", { class: "rvcount small" });
+    function own() { return CB.data && CB.data.identifier && CB.data.identifier.nim; }
+    function paintCount() {
+      var n = CB.peerSummary(val, f.criteria).n;
+      countEl.textContent = n < 2 ? "Baru " + n + " penilai yang memberi skor. Minimal 2 penilai dari kelompok lain." : n + " penilai sudah memberi skor.";
+      countEl.className = "rvcount small " + (n < 2 ? "warn" : "ok");
+    }
+    function draw() {
+      list.innerHTML = "";
+      val.items.forEach(function (it, i) {
+        it.scores = it.scores || {}; it.reasons = it.reasons || {};
+        var card = U.el("div", { class: "rvcard", "data-iid": it.id });
+        var hd = U.el("div", { class: "rvhead" });
+        hd.appendChild(U.el("b", { text: "Penilai " + (i + 1) }));
+        if (val.items.length > 1) {
+          var del = U.el("button", { type: "button", class: "iconbtn rvdel", text: "Hapus form", "aria-label": "Hapus form penilai " + (i + 1) });
+          del.onclick = function () {
+            CB.modal({ title: "Hapus form Penilai " + (i + 1) + "?", paras: ["Skor dan alasan dari penilai ini ikut terhapus."], buttons: [{ label: "Batal", value: false, cls: "ghost" }, { label: "Hapus", value: true, cls: "primary" }] })
+              .then(function (go) { if (!go) return; val.items.splice(i, 1); commit(); draw(); paintCount(); });
+          };
+          hd.appendChild(del);
+        }
+        card.appendChild(hd);
+        var idg = U.el("div", { class: "rvid" });
+        var warn = U.el("div", { class: "rvwarn small" });
+        function paintWarn() {
+          var started = it.name || it.nim || it.email || Object.keys(it.scores).length;
+          var iss = started ? CB.reviewIssues(it, f.criteria, own()) : [];
+          warn.textContent = iss.length ? "Perlu dicek: " + iss.join(" · ") : "";
+          warn.style.display = iss.length ? "" : "none";
+        }
+        function upd() { commit(); paintWarn(); paintCount(); }
+        [["name", "Nama penilai", "nama lengkap"], ["nim", "NIM penilai", "angka saja"], ["email", "Email penilai", "email kampus"]].forEach(function (x) {
+          var w = U.el("div", { class: "lfield" });
+          var id = "rv_" + it.id + "_" + x[0];
+          w.appendChild(U.el("label", { for: id, text: x[1] }));
+          var inp = lineInput(id, it[x[0]], x[2], function (v) { it[x[0]] = v; upd(); });
+          if (x[0] === "nim") inp.setAttribute("inputmode", "numeric");
+          if (x[0] === "email") inp.setAttribute("type", "email");
+          w.appendChild(inp); idg.appendChild(w);
+        });
+        card.appendChild(idg);
+        f.criteria.forEach(function (c) {
+          var r = U.el("div", { class: "rvcrit" });
+          var t = U.el("div", { class: "rvq" });
+          t.appendChild(U.el("b", { text: c.label }));
+          t.appendChild(U.el("span", { class: "small", text: " " + c.q }));
+          t.appendChild(U.el("div", { class: "small muted", text: c.id }));
+          r.appendChild(t);
+          var g = U.el("div", { class: "rvscore", role: "radiogroup", "aria-label": c.label + " skor 1–5" });
+          [1, 2, 3, 4, 5].forEach(function (n) {
+            var lb = U.el("label", { class: "chk" });
+            var rd = U.el("input", { type: "radio", name: "rv_" + it.id + "_" + c.k, value: String(n) });
+            rd.checked = it.scores[c.k] === n;
+            rd.onchange = function () { it.scores[c.k] = n; upd(); };
+            lb.appendChild(rd); lb.appendChild(U.el("span", { text: String(n) }));
+            g.appendChild(lb);
+          });
+          r.appendChild(g);
+          r.appendChild(lineInput("rv_" + it.id + "_" + c.k + "_why", it.reasons[c.k], "satu kalimat alasan untuk skor ini", function (v) { it.reasons[c.k] = v; upd(); }));
+          card.appendChild(r);
+        });
+        card.appendChild(warn); paintWarn();
+        list.appendChild(card);
+      });
+    }
+    draw();
+    var add = U.el("button", { type: "button", class: "addbtn", text: "+ Tambah penilai" });
+    add.onclick = function () { val.items.push({ id: U.uuid() }); commit(); draw(); paintCount(); var c = list.lastElementChild; if (c) { var t = c.querySelector("input"); if (t) t.focus(); } };
+    box.appendChild(add);
+    box.appendChild(countEl); paintCount();
+    return box;
+  };
+
+  /* ---------- plans: ringkasan rata-rata + rencana per kriteria rendah ----------
+   * f.from = ID field reviews · nilai: { <k>: { what, who, when } } (when = teks bebas, bukan pemilih tanggal) */
+  F.plans = function (sessId, f) {
+    var box = U.el("div", { class: "box plansbox", "data-fid": f.id });
+    if (f.label) box.appendChild(U.el("label", { text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var src = CB.findField(f.from) || { criteria: [] };
+    var val = clone(CB.getField(sessId, f.id));
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    var sumEl = U.el("div", { class: "plsum" }); box.appendChild(sumEl);
+    var msg = U.el("div", { class: "plmsg small" }); box.appendChild(msg);
+    var boxes = U.el("div", { class: "plboxes" }); box.appendChild(boxes);
+    var lastLow = null;
+    function fmt(x) { return x == null ? "—" : (Math.round(x * 10) / 10).toString().replace(".", ","); }
+    function draw() {
+      var s = CB.peerSummary(CB.getField(sessId, f.from), src.criteria);
+      sumEl.innerHTML = "";
+      var sc = U.el("div", { class: "tscroll" }); var t = U.el("table", { class: "wbtable pltable" });
+      var hr = U.el("tr"); hr.appendChild(U.el("th", { text: "Kriteria" }));
+      s.items.forEach(function (it, i) { hr.appendChild(U.el("th", { text: "Penilai " + (i + 1) })); });
+      hr.appendChild(U.el("th", { text: "Rata-rata" })); t.appendChild(hr);
+      src.criteria.forEach(function (c) {
+        var tr = U.el("tr", { class: s.low.indexOf(c.k) >= 0 ? "low" : "" });
+        tr.appendChild(U.el("th", { text: c.label }));
+        s.items.forEach(function (it) { tr.appendChild(U.el("td", { text: (it.scores || {})[c.k] ? String(it.scores[c.k]) : "—" })); });
+        tr.appendChild(U.el("td", { class: "avg", text: fmt(s.avg[c.k]) + (s.low.indexOf(c.k) >= 0 ? " · rendah" : "") }));
+        t.appendChild(tr);
+      });
+      sc.appendChild(t); sumEl.appendChild(sc);
+      var lowNames = s.low.map(function (k) { return src.criteria.filter(function (c) { return c.k === k; })[0].label; });
+      var m = "";
+      if (!s.n) m = "Ringkasan muncul setelah penilai pertama memberi skor.";
+      else if (!s.low.length) m = "Tidak ada kriteria dengan rata-rata 2 atau lebih rendah. Catat masukannya.";
+      else if (s.low.length === 1) m = "Satu kriteria rendah (" + lowNames[0] + "): sebaiknya diperbaiki. Rencana tidak wajib.";
+      else m = s.low.length + " kriteria rendah (" + lowNames.join(", ") + "). Tulis rencana untuk masing-masing: apa, siapa, kapan. Rencana ini menjadi bagian kondisi Gate 2.";
+      if (s.n && s.n < 2) m += " Hasil masih sementara: baru " + s.n + " penilai.";
+      msg.textContent = m;
+      msg.className = "plmsg small " + (s.low.length >= 2 ? "warn" : "");
+      var key = s.low.length >= 2 ? s.low.join(",") : "";
+      if (key === lastLow) return; // jangan gambar ulang kotak saat sedang mengetik
+      lastLow = key; boxes.innerHTML = "";
+      if (!key) return;
+      s.low.forEach(function (k) {
+        var c = src.criteria.filter(function (x) { return x.k === k; })[0];
+        var v = val[k] = val[k] || {};
+        var b = U.el("div", { class: "plbox", "data-crit": k });
+        b.appendChild(U.el("b", { text: "Rencana untuk " + c.label + " (rata-rata " + fmt(s.avg[k]) + ")" }));
+        [["what", "Apa yang dikerjakan", "mis. tulis ulang kalimat jadi satu gagasan, lalu minta dinilai ulang"], ["who", "Siapa (nama atau peran di tim)", "mis. brand lead"], ["when", "Kapan", "tulis sendiri, mis. sebelum brief Sesi 4"]].forEach(function (x) {
+          var w = U.el("div", { class: "lfield" });
+          var id = fid(f) + "_" + k + "_" + x[0];
+          w.appendChild(U.el("label", { for: id, text: x[1] }));
+          w.appendChild(x[0] === "what" ? textarea(id, v[x[0]], function (t) { v[x[0]] = t; commit(); }, 44) : lineInput(id, v[x[0]], x[2], function (t) { v[x[0]] = t; commit(); }));
+          b.appendChild(w);
+        });
+        boxes.appendChild(b);
+      });
+    }
+    draw(); CB.on("change", function (id) { if (id === f.from) draw(); });
+    return box;
+  };
+
   /* ---------- teks cetak per tipe ---------- */
   F.printText = function (f, v, sessId) {
     if (v == null || v === "") return "";
@@ -552,7 +909,44 @@
     }
     if (f.type === "list") {
       return (v.items || []).map(function (it, i) {
-        return (i + 1) + ". " + (f.itemFields || [{ k: "text" }]).map(function (s) { return it[s.k] ? (s.label ? s.label + ": " : "") + it[s.k] : ""; }).filter(Boolean).join(" · ");
+        return (i + 1) + ". " + (f.itemFields || [{ k: "text" }]).map(function (s) {
+          if (s.showIf && it[s.showIf.k] !== s.showIf.eq) return "";
+          var x = s.type === "select" ? CB.optLabel(s, it[s.k]) : it[s.k];
+          return x ? (s.label ? s.label + ": " : "") + x : "";
+        }).filter(Boolean).join(" · ");
+      }).join("\n");
+    }
+    if (f.type === "lines") {
+      var lp = (CB.findField(f.pairsFrom) || { pairs: [] }).pairs;
+      return (v._legacy ? "(isian lama) " + v._legacy + "\n" : "") + lp.map(function (pr) { return pr.left + " – " + pr.right + ": " + (v[pr.k] || "—"); }).join("\n");
+    }
+    if (f.type === "sources") {
+      return f.blanks.map(function (b) {
+        var x = v[b.k] || {}, lab = x.src === "other" ? "sumber lain" : x.src ? (x.src.indexOf("#") > 0 ? "PROMISE → PROOF hlm. 5" : CB.pageLabel(x.src) + " " + ((CB.findField(x.src) || {}).label || x.src)) : "—";
+        return b.label + " ← " + lab + (x.note ? " (" + x.note + ")" : "");
+      }).join("\n");
+    }
+    if (f.type === "origins") {
+      var items = ppItems();
+      return f.pillars.map(function (p, i) {
+        var x = v[p.k] || {}, o = (f.opts || []).filter(function (q) { return q.id === x.source; })[0];
+        var ri = -1; items.forEach(function (it, j) { if (it.id === x.proof_ref) ri = j; });
+        return "PILLAR " + (i + 1) + ": asal " + (o ? o.label : "—") + " · bukti " + (ri >= 0 ? ppLabel(items[ri], ri) : "—");
+      }).join("\n");
+    }
+    if (f.type === "reviews") {
+      return (v.items || []).map(function (it, i) {
+        return "Penilai " + (i + 1) + ": " + (it.name || "—") + " · NIM " + (it.nim || "—") + "\n" + f.criteria.map(function (c) {
+          return "  " + c.label + " " + ((it.scores || {})[c.k] || "—") + ((it.reasons || {})[c.k] ? " — " + it.reasons[c.k] : "");
+        }).join("\n");
+      }).join("\n");
+    }
+    if (f.type === "plans") {
+      var cr = (CB.findField(f.from) || { criteria: [] }).criteria;
+      var low = CB.peerSummary(CB.getField(sessId, f.from), cr).low;
+      return low.length < 2 ? "" : low.map(function (k) {
+        var x = v[k] || {}, c = cr.filter(function (q) { return q.k === k; })[0];
+        return c.label + ": apa " + (x.what || "—") + " · siapa " + (x.who || "—") + " · kapan " + (x.when || "—");
       }).join("\n");
     }
     if (f.type === "parts") {

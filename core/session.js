@@ -321,7 +321,7 @@
     cols.appendChild(dl("Identitas", [["Nama", id.full_name], ["NIM", id.nim], ["Email", id.email], ["Proyek", id.group_id + " · " + id.project_name]]));
     var sesPairs = [["Minggu", String(cfg.week || "—")],
       ["Dibuka", cfg.release ? U.fmtDate(cfg.release) : "—"],
-      ["Tenggat file", cfg.due ? U.fmtDate(cfg.due) : "—"],
+      ["Tenggat file", (spec.hideDue || cfg.no_upload_deadline) ? "Tanpa batas unggah" : (cfg.due ? U.fmtDate(cfg.due) : "—")],
       ["Status", last ? "Submitted " + U.fmtDate(last.submitted_at) + (st.versions.length > 1 ? " · versi " + st.versions.length : "") + (st.changed_since_submit ? " · ada perubahan belum di-submit" : "") : "Belum di-submit"],
       ["Leadership Log", lead + " entri (ikut di setiap file)"]];
     if (spec.coverExtra) { var tmp = U.el("div", null, CB.fill(spec.coverExtra, sessId)); sesPairs.push(["Catatan", tmp.textContent]); }
@@ -425,7 +425,10 @@
           var items = (v && v.items) || [];
           b.appendChild(U.el("b", { text: f.label || pg.title }));
           b.appendChild(ptable(["#"].concat(f.itemFields.map(function (c) { return c.label || c.k; })),
-            items.length ? items.map(function (it, i) { return [String(i + 1)].concat(f.itemFields.map(function (c) { return it[c.k]; })); }) : [["—"]]));
+            items.length ? items.map(function (it, i) { return [String(i + 1)].concat(f.itemFields.map(function (c) {
+              if (c.showIf && it[c.showIf.k] !== c.showIf.eq) return "";
+              return c.type === "select" ? CB.optLabel(c, it[c.k]) : it[c.k];
+            })); }) : [["—"]]));
           b.classList.add("pp-tablebox");
           return b;
         }
@@ -491,7 +494,7 @@
         a.innerHTML = '<span class="ord">' + (i + 1) + ".</span>hlm. " + p + " · " + U.esc(pg.title) + (ok ? "" : " (menyusul)");
         nav.appendChild(a);
       });
-      intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: Commercial Brand Audit" }));
+      intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: " + spec.title }));
       intro.appendChild(nav);
       main.appendChild(intro);
 

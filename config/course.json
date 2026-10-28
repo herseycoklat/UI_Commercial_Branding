@@ -21,7 +21,8 @@
       "title": "Brand Strategy Platform",
       "week": 2,
       "release": "2026-10-29T00:00:00+07:00",
-      "due": "2026-11-03T23:59:00+07:00"
+      "due": "2026-11-03T23:59:00+07:00",
+      "no_upload_deadline": true
     },
     "S4": {
       "title": "",

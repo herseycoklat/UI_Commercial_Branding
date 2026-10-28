@@ -13,6 +13,7 @@ Yang diperiksa:
   7. Contoh di content/ hanya memakai ID yang ada di halaman itu.
   8. Konten tidak memuat kata status Gate (APPROVED / REVISION DUE) dan tidak memuat tanggal kalender.
   9. fillOrder memuat semua halaman kerja tepat sekali.
+ pg.appText = ["sub", "footer"]: teks halaman yang sudah mendahului workbook pptx → peringatan, bukan gagal.
 --lock menulis ulang file lock dengan ID saat ini (hanya dipakai saat sesi dirilis).
 """
 import json
@@ -75,6 +76,12 @@ def main():
             pat = re.sub(r"\\\{\\\{\w+\\\}\\\}", ".+?", pat)
             return re.search(pat, txt) is not None
         for key in ("sub", "footer"):
+            if pg.get(key) and key in pg.get("appText", []):
+                if present(pg[key]):
+                    warns.append(f"hlm. {p}: {key} ditandai appText tapi sudah sama dengan workbook — hapus tanda appText")
+                else:
+                    warns.append(f"hlm. {p}: {key} mendahului workbook pptx (appText, diputuskan Fai) — perbarui workbook lalu ekstrak ulang")
+                continue
             if pg.get(key):
                 check(present(pg[key]), f"hlm. {p}: {key} tidak persis sama dengan workbook: {pg[key]!r}")
         for col in [g for g in pg.get("columns", []) + pg.get("groups", []) if not g.get("appOnly")]:

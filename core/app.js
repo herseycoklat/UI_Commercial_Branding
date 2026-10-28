@@ -20,7 +20,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.2.5";
+  var APP_VERSION = "0.3.0";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
@@ -150,6 +150,10 @@
     d.leadership_log.field_id = "leadership_log";
     d.leadership_log.entries = d.leadership_log.entries || [];
     migrateLegacyLog(d);
+    // v0.3.0 (kontrak v3.5): WHY WE PLACED IT THERE dari satu kotak teks menjadi satu baris per slider.
+    // Isian lama tidak dibuang: disimpan di _legacy dan ditampilkan di atas lima isian.
+    var s3 = d.sessions.S3 && d.sessions.S3.current;
+    if (s3 && typeof s3["s3.p5.why_placed"] === "string") s3["s3.p5.why_placed"] = s3["s3.p5.why_placed"].trim() ? { _legacy: s3["s3.p5.why_placed"] } : {};
     if (!d.student_id) d.student_id = uuid();
     // Proyek yang digabung: file/data lama dengan group_id lama dipetakan ke ID baru.
     var gid = d.identifier.group_id, to = CB.groupAliases && CB.groupAliases[gid];
