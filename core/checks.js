@@ -191,7 +191,7 @@
   var REFUSE = /\b(refuse|refuses|refusal|menolak|tolak|penolakan|tidak akan|won't|will not|never)\b/i;
 
   CB.checkIntro = CB.checkIntro || {};
-  CB.checkIntro.S3 = "Gate 2 dibaca dari dokumenmu lewat <b>tiga tes</b>: Evidence, Positioning, Platform. Daftar di bawah mengikuti tiga tes itu. App hanya memeriksa apa yang bisa diperiksa mesin (terisi, berjejak, bukti bernama, berstatus); isi dan kekuatannya dibaca penilai. Form penilai hlm. 7 ikut dihitung di Tes 2: jumlah penilai, kriteria rendah (rata-rata 2 atau lebih rendah), dan rencana untuk kriteria rendah.";
+  CB.checkIntro.S3 = "Gate 2 dibaca dari dokumenmu lewat <b>tiga tes</b>: Evidence, Positioning, Platform. Daftar di bawah mengikuti tiga tes itu. App hanya memeriksa apa yang bisa diperiksa mesin (terisi, berjejak, bukti bernama, berstatus); isi dan kekuatannya dibaca penilai. Form penilai hlm. 7 ikut dihitung di Tes 2: jumlah penilai, kriteria rendah (rata-rata 2 atau lebih rendah), dan rencana untuk kriteria rendah. Gate 2 dibaca <b>per file</b>: versimu sendiri sah dikumpulkan walau belum sempat sync dengan tim.";
   CB.checkGroups = CB.checkGroups || {};
   CB.checkGroups.S3 = {
     e: { title: "Tes 1 · Evidence (dibawa dari Sesi 2, informasi)", help: "Gate 2 meminta minimal dua jenis bukti dari daftar silabus §7 (lima wawancara = satu jenis), dan minimal satu bukti dari audiens utama di luar tim. Angka di bawah dibaca dari halaman Sesi 2-mu; app tidak menilainya. Bukti baru? Tambahkan di Sesi 2." },
@@ -233,7 +233,7 @@
     var traced = ["segment", "insight", "category", "benefit", "proof"];
     var noSrc = traced.filter(function (k) { var x = src[k] || {}; return !x.src || (x.src === "other" && !txt(x.note)); });
     out.push({ group: "p", key: "p7", label: noSrc.length ? "Jejak sumber: " + noSrc.length + " dari 5 blank belum punya sumber (" + noSrc.map(function (k) { return "[" + k + "]"; }).join(", ") + ")." : "Kelima blank punya sumber yang ditunjuk.", where: "S3 · hlm. 2", state: noSrc.length ? "warn" : "ok" });
-    out.push({ group: "p", key: "p2", label: "OUR FINAL MERGED STATEMENT (satu kalimat tim) ditulis", where: "S3 · hlm. 2", state: txt(c["s3.p2.final"]) ? "ok" : "no" });
+    out.push({ group: "p", key: "p2", label: "OUR STATEMENT (YOUR VERSION → SYNCED) ditulis (versimu, atau kalimat tim setelah sync)", where: "S3 · hlm. 2", state: txt(c["s3.p2.final"]) ? "ok" : "no" });
     out.push({ group: "p", key: "p3", label: "THE TEST dijawab: satu hal di kalimatmu yang pesaing tidak bisa klaim", where: "S3 · hlm. 2", state: txt(c["s3.p2.test"]) ? "ok" : "no" });
     var fin = txt(c["s3.p2.final"]);
     var marked = /PLANNED|UNKNOWN/.test(fin + " " + (d.proof || ""));
