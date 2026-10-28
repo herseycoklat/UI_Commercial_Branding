@@ -321,7 +321,7 @@
     cols.appendChild(dl("Identitas", [["Nama", id.full_name], ["NIM", id.nim], ["Email", id.email], ["Proyek", id.group_id + " · " + id.project_name]]));
     var sesPairs = [["Minggu", String(cfg.week || "—")],
       ["Dibuka", cfg.release ? U.fmtDate(cfg.release) : "—"],
-      ["Tenggat file", (spec.hideDue || cfg.no_upload_deadline) ? "Tanpa batas unggah" : (cfg.due ? U.fmtDate(cfg.due) : "—")],
+      (spec.hideDue || cfg.no_upload_deadline) ? ["Batas unggah", "Tanpa batas unggah (hari baca diumumkan di chat kelas)"] : ["Tenggat file", cfg.due ? U.fmtDate(cfg.due) : "—"],
       ["Status", last ? "Submitted " + U.fmtDate(last.submitted_at) + (st.versions.length > 1 ? " · versi " + st.versions.length : "") + (st.changed_since_submit ? " · ada perubahan belum di-submit" : "") : "Belum di-submit"],
       ["Leadership Log", lead + " entri (ikut di setiap file)"]];
     if (spec.coverExtra) { var tmp = U.el("div", null, CB.fill(spec.coverExtra, sessId)); sesPairs.push(["Catatan", tmp.textContent]); }

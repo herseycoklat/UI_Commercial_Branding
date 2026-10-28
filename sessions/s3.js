@@ -18,14 +18,14 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     id: "S3", n: 3,
     title: "Brand Strategy Platform",
     wbCover: "SESSION 3 TEAM WORKBOOK",
-    coverNote: "Fill this together as a team, outside class. Every blank must trace back to Session 2. A promise with no proof isn't strategy — it's hope.",
+    coverNote: "Each of you fills your own version in the HTML tool first, then syncs with your team. Every blank must trace back to Session 2. A promise with no proof isn't strategy — it's hope.",
     hideDue: true,
-    coverExtra: "Isi di HTML tool ini, lalu kumpulkan file JSON lewat Form yang sama seperti minggu lalu. <b>Tidak ada batas waktu unggah</b>; hari baca diumumkan di chat kelas, dan unggahan terakhir yang dibaca. Wawancara atau bukti baru minggu ini? Tambahkan di <b>Sesi 2</b> (hlm. 2 dan 9). Ikut terbaca saat Gate 2.",
+    coverExtra: "Isi <b>versimu sendiri</b> dulu di HTML tool ini, lalu sync dengan tim (dengan bukti, bukan suara terbanyak). Belum sempat sync saat submit? Kumpulkan versi sendiri; Gate 2 dibaca per file. Kirim file JSON lewat Form yang sama seperti minggu lalu. <b>Tidak ada batas waktu unggah</b>; hari baca diumumkan di chat kelas, dan unggahan terakhir yang dibaca. Wawancara atau bukti baru minggu ini? Tambahkan di <b>Sesi 2</b> (hlm. 2 dan 9). Ikut terbaca saat Gate 2.",
     fillOrder: [3, 2, 4, 5, 6, 7],
     pages: [
       {
         p: 2, title: "Brand Positioning Statement",
-        sub: "Draft ALONE first; note where each blank comes from. Then merge — with evidence, not votes.",
+        sub: "Draft ALONE first; note where each blank comes from. Then sync with your team — with evidence, not votes.",
         carry: { title: "Bawaan dari Sesi 2 (hanya tampil, tidak disalin)", items: [
           { id: "s2.p4.primary", label: "PRIMARY AUDIENCE" },
           { id: "s2.p5.insight", label: "INSIGHT SENTENCE" },
@@ -46,7 +46,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
               { k: "benefit", label: "[benefit]", opts: [{ id: "s3.p3.difference", label: "WHERE WE WIN (S3 hlm. 3)" }] },
               { k: "proof", label: "[proof]", rows: "s3.p5.promise_proof", opts: [{ id: "s3.p4.rtb", label: "REASONS TO BELIEVE (S3 hlm. 4)" }] }
             ] },
-          { id: "s3.p2.final", type: "longtext", label: "OUR FINAL MERGED STATEMENT", hint: "— write your team's one sentence here —", output: true },
+          { id: "s3.p2.final", type: "longtext", label: "OUR STATEMENT (YOUR VERSION → SYNCED)", hint: "— your version first; after syncing, the team's one sentence —", output: true },
           { id: "s3.p2.test", type: "longtext", label: "THE TEST", hint: "Could a competitor say this exact sentence? If yes, keep revising. Name one thing in your sentence a competitor genuinely could NOT claim." }
         ]
       },
@@ -66,7 +66,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
       {
         p: 4, title: "Brand Platform Canvas", layout: "grid", cols: 2,
         sub: "Eight boxes. Each 1–2 sentences — if it needs a paragraph, it isn't distilled yet.",
-        footer: "Coherence check: pick any two boxes at random — can your team explain how they connect?",
+        footer: "Coherence check: pick any two boxes at random — can you explain how they connect?",
         carry: { title: "Bawaan dari halaman sebelumnya (hanya tampil, tidak disalin)", items: [
           { id: "s3.p2.final", label: "POSITIONING STATEMENT (hlm. 2)" },
           { id: "s2.p5.pains", label: "CUSTOMER PAINS (S2)" }
@@ -126,9 +126,9 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
           { id: "s3.p6.proof3", type: "longtext", label: "PROOF POINT", hint: "Copy it from your Promise → Proof table. Not there yet? Add the row first." },
           { id: "s3.p6.cta", type: "longtext", label: "CALL TO ACTION (the door)", hint: "what should the audience do next?" },
           { id: "s3.p6.origins", type: "origins", appOnly: true, label: "ASAL DAN BUKTI TIAP PILAR (tambahan app)", rows: "s3.p5.promise_proof",
-            hint: "Cek dua arah. Ke atas: kalau pilar ini dicabut, apakah atap lebih lemah? Ke bawah: tiap pilar datang dari kotak mana, dan baris mana di tabel janji dan bukti yang membuktikannya? Belum ada barisnya? Tambahkan dulu.",
+            hint: "Asal pilar biasanya salah satu dari empat tempat: WHERE WE WIN, Purpose, kotak canvas lain, atau kebutuhan audiens (Sesi 2). Pengecualian: kelemahan di kotak parity yang dibingkai ulang (contoh Gojek pilar 3), sah selama faktanya tetap benar. Cek dua arah. Ke atas: kalau pilar ini dicabut, apakah atap lebih lemah? Ke bawah: tiap pilar datang dari kotak mana, dan baris mana di tabel janji dan bukti yang membuktikannya? Belum ada barisnya? Tambahkan dulu.",
             pillars: [{ k: "pillar1", id: "s3.p6.pillar1" }, { k: "pillar2", id: "s3.p6.pillar2" }, { k: "pillar3", id: "s3.p6.pillar3" }],
-            opts: [{ id: "s3.p3.difference", label: "Kotak WHERE WE WIN (hlm. 3)" }, { id: "s3.p3.parity", label: "Kotak WHAT WE MUST MATCH / parity (hlm. 3)" },
+            opts: [{ id: "s3.p3.difference", label: "Kotak WHERE WE WIN (hlm. 3)" }, { id: "s3.p3.parity", label: "Kotak WHAT WE MUST MATCH / parity (hlm. 3) — pengecualian: kelemahan dibingkai ulang" },
               { id: "s3.p4.purpose", label: "Kotak Purpose (hlm. 4)" }, { id: "s3.p4.mission", label: "Kotak Mission (hlm. 4)" }, { id: "s3.p4.values", label: "Kotak Values (hlm. 4)" },
               { id: "s3.p4.promise", label: "Kotak Promise (hlm. 4)" }, { id: "s3.p4.personality", label: "Kotak Personality (hlm. 4)" }, { id: "s3.p4.rtb", label: "Kotak Reasons to Believe (hlm. 4)" },
               { id: "s2.p5.pains", label: "Kebutuhan audiens: pains (Sesi 2 hlm. 5)" }, { id: "s2.p5.gains", label: "Kebutuhan audiens: gains (Sesi 2 hlm. 5)" }] }
