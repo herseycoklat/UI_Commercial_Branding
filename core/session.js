@@ -125,6 +125,25 @@
     host.appendChild(box);
   }
 
+  /* Field tabel di panel bawaan tampil sebagai tabel baca-saja, sama bentuknya dengan halaman asalnya. */
+  function carryTable(f, v) {
+    v = v || {}; var rows = v.rows || {}, extra = v.extra || [];
+    var sc = U.el("div", { class: "tscroll carrytable" });
+    var t = U.el("table", { class: "wbtable ro" + (f.narrowHead ? " narrowhead" : "") });
+    var hr = U.el("tr"); hr.appendChild(U.el("th", { text: f.rowLabel || "" }));
+    f.columns.forEach(function (c) { hr.appendChild(U.el("th", { text: c.label })); });
+    var th = U.el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = U.el("tbody"); t.appendChild(tb);
+    function tr(label, get) {
+      var r = U.el("tr"); r.appendChild(U.el("th", { scope: "row", text: label }));
+      f.columns.forEach(function (c) { var x = String(get(c.k) || "").trim(); r.appendChild(U.el("td", { class: x ? "" : "empty", text: x || "—" })); });
+      tb.appendChild(r);
+    }
+    f.rows.forEach(function (r) { tr(r.label, function (k) { return (rows[r.k] || {})[k]; }); });
+    extra.forEach(function (r) { tr(r.label || "(baris tambahan)", function (k) { return r[k]; }); });
+    sc.appendChild(t); return sc;
+  }
+
   /* Panel bawaan: nilai dari sesi/halaman sebelumnya ditampilkan, TIDAK disalin diam-diam. */
   function renderCarry(sessId, pg, host) {
     var c = pg.carry; if (!c) return;
@@ -140,7 +159,8 @@
         var row = U.el("div", { class: "carryrow" });
         row.appendChild(U.el("b", { text: it.label }));
         row.appendChild(U.el("span", { class: "small muted", text: " · " + CB.pageLabel(it.id) }));
-        var val = U.el("div", { class: "carryval" + (txt ? "" : " empty"), text: txt || "Belum diisi di " + CB.pageLabel(it.id) + ". Kembali dan isi dulu; halaman ini harus bisa ditelusuri ke sana." });
+        var val = (txt && f && f.type === "table") ? carryTable(f, v)
+          : U.el("div", { class: "carryval" + (txt ? "" : " empty"), text: txt || "Belum diisi di " + CB.pageLabel(it.id) + ". Kembali dan isi dulu; halaman ini harus bisa ditelusuri ke sana." });
         row.appendChild(val); body.appendChild(row);
       });
     }
