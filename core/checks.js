@@ -292,3 +292,91 @@
     return out;
   };
 })();
+
+/* ---------- S4: cek kelengkapan mengikuti TIGA TES Gate 3 (silabus §13; Bedah S4 v2, Mekanisme Gate 3); bukan penilaian, bukan status ---------- */
+(function () {
+  "use strict";
+  var CB = window.CB;
+  function txt(v) { return typeof v === "string" ? v.trim() : ""; }
+  var SRC = { djki: "DJKI DATABASE", web: "GOOGLE & WEB", appstores: "APP STORES", handles: "SOCIAL HANDLES & DOMAIN", languages: "MEANING IN OTHER LANGUAGES" };
+  var DIMS = [["meaningful", "MEANINGFUL"], ["distinctive", "DISTINCTIVE & FINDABLE"], ["pronounceable", "PRONOUNCEABLE"], ["protectable", "PROTECTABLE"], ["growth", "ROOM TO GROW"]];
+  var CHANNELS = [["visual", "VISUAL"], ["verbal", "VERBAL"], ["sonic", "SONIC"], ["motion", "MOTION"], ["spatial", "SPATIAL"], ["interactive", "INTERACTIVE"]];
+
+  CB.checkIntro = CB.checkIntro || {};
+  CB.checkIntro.S4 = "Gate 3 dibaca dari dokumenmu lewat <b>tiga tes</b>: Brand architecture (hlm. 2), Naming direction (hlm. 3–4), Identity brief (hlm. 5–9). Daftar di bawah mengikuti tiga tes itu. App hanya memeriksa apa yang bisa diperiksa mesin (terisi, berpemilik, berstatus, berjumlah); koherensi dan isinya dibaca penilai. UNKNOWN yang punya owner, waktu, dan uji penutupan tidak menggagalkan tes. Kondisi Gate 2 yang masih terbuka ikut terbawa ke Gate 3; app tidak bisa melihatnya.";
+  CB.checkGroups = CB.checkGroups || {};
+  CB.checkGroups.S4 = {
+    a: { title: "Tes 1 · Brand architecture (hlm. 2)", help: "Lolos kalau model ditulis dalam satu kalimat, garis punya alasan kepercayaan atau kerusakan, dan sisi OUT menyebut nama yang konkret." },
+    n: { title: "Tes 2 · Naming direction (hlm. 3–4)", help: "Lolos kalau lima kriteria dinilai dengan alasan, setiap skor 1–2 punya mitigasi yang bisa dianggarkan, kelas yang dicek disebut, dan setiap UNKNOWN atau TAKEN punya owner, waktu, dan uji penutupan." },
+    b: { title: "Tes 3 · Identity brief (hlm. 5–9)", help: "Lolos kalau delapan bagian brief terisi dengan satu baris ditolak dan ditulis ulang, kode maksimal lima dengan pemilik, enam kanal terisi atau beralasan, minimal satu touchpoint dibuat orang luar, dan 5–7 kriteria biner." }
+  };
+
+  CB.checks.S4 = function (data) {
+    var c = (((data.sessions || {}).S4) || {}).current || {};
+    var out = [];
+
+    /* Tes 1 · Architecture */
+    var basic = ["parent", "product", "subnames"].filter(function (k) { return txt(c["s4.p2." + k]); }).length;
+    out.push({ group: "a", key: "a1", label: "Parent, product, dan sub-nama terisi (" + basic + "/3). Sub-nama yang belum diputuskan ditulis UNKNOWN.", where: "S4 · hlm. 2", state: basic === 3 ? "ok" : "no" });
+    var mw = c["s4.p2.model_why"] || {};
+    out.push({ group: "a", key: "a2", label: c["s4.p2.model"] ? "Model dipilih" + (txt(mw.because) ? " dan kalimat \"because\" ditulis." : "; kalimat \"We are a … because …\" belum ditulis.") : "Model belum dipilih.", where: "S4 · hlm. 2", state: c["s4.p2.model"] && txt(mw.because) ? "ok" : "no" });
+    var fl = c["s4.p2.flows"] || {};
+    out.push({ group: "a", key: "a3", label: "WHAT FLOWS IN / OUT: IN " + (txt(fl.in) ? "terisi" : "kosong") + ", OUT " + (txt(fl.out) ? "terisi" : "kosong") + ". Cek sendiri: apakah OUT menyebut nama konkret yang ikut rusak?", where: "S4 · hlm. 2", state: txt(fl.in) && txt(fl.out) ? "warn" : "no" });
+
+    /* Tes 2 · Naming */
+    var scored = DIMS.filter(function (d) { var v = c["s4.p3." + d[0]] || {}; return v.score; });
+    var noWhy = scored.filter(function (d) { return !txt((c["s4.p3." + d[0]] || {}).justification); });
+    out.push({ group: "n", key: "n1", label: "Skor terisi " + scored.length + "/5" + (noWhy.length ? "; " + noWhy.length + " tanpa alasan (" + noWhy.map(function (d) { return d[1]; }).join(", ") + ")." : (scored.length ? ", semuanya beralasan." : ".")), where: "S4 · hlm. 3", state: scored.length === 5 && !noWhy.length ? "ok" : "no" });
+    var low = scored.filter(function (d) { return (c["s4.p3." + d[0]] || {}).score <= 2; });
+    var mit = txt(c["s4.p3.mitigation"]);
+    out.push({ group: "n", key: "n2", label: !scored.length ? "Skor rendah dan mitigasi: menunggu skor." :
+      low.length ? low.length + " skor 1–2 (" + low.map(function (d) { return d[1]; }).join(", ") + "). " + (mit ? "Kotak mitigasi terisi; cek sendiri bahwa setiap skor rendah punya tindakan yang bisa dianggarkan." : "Kotak mitigasi masih kosong.") :
+      "Tidak ada skor 1–2. Kalau semua skormu 4–5, bandingkan dengan satu nama pesaing: kamu menilai atau membela?",
+      where: "S4 · hlm. 3", state: !scored.length ? "pending" : low.length ? (mit ? "warn" : "no") : "info" });
+    var st = Object.keys(SRC).map(function (k) { return [k, (c["s4.p4." + k] || {}).status]; });
+    var noSt = st.filter(function (x) { return !x[1]; });
+    out.push({ group: "n", key: "n3", label: noSt.length ? noSt.length + " dari 5 sumber trademark belum diberi status (" + noSt.map(function (x) { return SRC[x[0]]; }).join(", ") + ")." : "Kelima sumber trademark punya status CLEAR, TAKEN, atau UNKNOWN.", where: "S4 · hlm. 4", state: noSt.length ? "no" : "ok" });
+    var djn = txt((c["s4.p4.djki"] || {}).note);
+    out.push({ group: "n", key: "n4", label: djn ? (/\b(class|kelas)\b|\b\d{1,2}\b/i.test(djn) ? "Catatan DJKI menyebut kelas yang dicek." : "Catatan DJKI belum menyebut kelas yang dicek. CLEAR di satu kelas bukan pernyataan global.") : "Catatan DJKI masih kosong: tulis apa yang dicari, di kelas apa, dan hasilnya.", where: "S4 · hlm. 4", state: djn && /\b(class|kelas)\b|\b\d{1,2}\b/i.test(djn) ? "ok" : "warn" });
+    var acts = ((c["s4.p4.actions"] || {}).items || []);
+    var open = st.filter(function (x) { return x[1] === "taken" || x[1] === "unknown"; });
+    var noAct = open.filter(function (x) { return !acts.some(function (a) { return a.source === x[0] && txt(a.action); }); });
+    var incomplete = acts.filter(function (a) { return txt(a.action) && !(txt(a.owner) && txt(a.when) && txt(a.closed)); }).length;
+    out.push({ group: "n", key: "n5", label: !open.length ? "Tidak ada sumber TAKEN atau UNKNOWN, jadi tidak ada tindakan wajib." :
+      open.length + " sumber TAKEN/UNKNOWN. " + (noAct.length ? noAct.length + " belum punya baris tindakan (" + noAct.map(function (x) { return SRC[x[0]]; }).join(", ") + ")." : "Semuanya punya baris tindakan.") + (incomplete ? " " + incomplete + " tindakan belum lengkap (owner, kapan, uji penutupan)." : ""),
+      where: "S4 · hlm. 4", state: !open.length ? (noSt.length ? "pending" : "info") : (noAct.length || incomplete ? "no" : "ok") });
+
+    /* Tes 3 · Identity brief */
+    var bk = ["objective", "audience", "positioning", "tone", "mandatory", "prohibited", "accessibility"];
+    var bn = bk.filter(function (k) { return txt(c["s4.p5." + k]); }).length;
+    var rj = c["s4.p5.rejected"] || {};
+    var rjOk = txt(rj.rejected) && txt(rj.rewritten);
+    out.push({ group: "b", key: "b1", label: "Brief: " + (bn + (rjOk ? 1 : 0)) + "/8 bagian terisi" + (rjOk ? "" : "; REJECTED → REWROTE butuh kedua sisi (versi yang ditolak dan versi persyaratannya)") + ".", where: "S4 · hlm. 5", state: bn === 7 && rjOk ? "ok" : "no" });
+    var s3pos = txt((((data.sessions || {}).S3) || {}).current && data.sessions.S3.current["s3.p2.final"]);
+    var pos = txt(c["s4.p5.positioning"]);
+    out.push({ group: "b", key: "b2", label: !pos ? "POSITIONING TO EXPRESS masih kosong." : (s3pos && pos.indexOf(s3pos) >= 0 ? "POSITIONING TO EXPRESS memuat kalimat Sesi 3 persis." : "POSITIONING TO EXPRESS tidak memuat kalimat Sesi 3 persis. Kutip, jangan parafrase (atau perbarui kalimat Sesi 3 bila memang sudah berubah)."), where: "S4 · hlm. 5", state: !pos ? "no" : (s3pos && pos.indexOf(s3pos) >= 0 ? "ok" : "warn") });
+    var cd = ["have", "need", "owners", "nologo"].filter(function (k) { return txt(c["s4.p6." + k]); }).length;
+    out.push({ group: "b", key: "b3", label: "Brand Codes Inventory: " + cd + "/4 kotak terisi. Cek sendiri: paling banyak lima kode, masing-masing dengan pemilik.", where: "S4 · hlm. 6", state: cd === 4 ? "warn" : "no" });
+    var chBad = [], chNone = [];
+    CHANNELS.forEach(function (x) {
+      var v = c["s4.p7." + x[0]] || {};
+      if (!v.status) { chNone.push(x[1]); return; }
+      if (v.status === "not_needed" ? !txt(v.note) : !txt(v.who)) chBad.push(x[1]);
+    });
+    out.push({ group: "b", key: "b4", label: (chNone.length ? chNone.length + " kanal belum dipilih (" + chNone.join(", ") + "). " : "Keenam kanal dipilih. ") + (chBad.length ? chBad.length + " belum lengkap: kanal yang dibutuhkan butuh \"who\", kanal \"not needed\" butuh alasan (" + chBad.join(", ") + ")." : ""), where: "S4 · hlm. 7", state: chNone.length || chBad.length ? "no" : "ok" });
+    var mx = c["s4.p8.matrix"] || {}, rows = mx.rows || {};
+    var tp = ["product", "campaign", "platform", "event", "packaging", "community"];
+    var tpFull = tp.filter(function (k) { var r = rows[k] || {}; return txt(r.how) && txt(r.who); }).length;
+    out.push({ group: "b", key: "b5", label: "Touchpoint Consistency Matrix: " + tpFull + "/6 baris punya isi dan penanggung jawab. Cek sendiri: minimal satu baris dibuat belakangan oleh orang di luar tim.", where: "S4 · hlm. 8", state: tpFull === 6 ? "warn" : "no" });
+    var cr = ((c["s4.p9.criteria"] || {}).items || []).filter(function (x) { return txt(x.q); });
+    var crBad = cr.filter(function (x) { return !x.test || !x.answer || !x.pass_on; }).length;
+    var tests = {}; cr.forEach(function (x) { if (x.test) tests[x.test] = 1; });
+    out.push({ group: "b", key: "b6", label: cr.length + " kriteria ditulis (5–7)" + (crBad ? "; " + crBad + " belum lengkap (tes, jawaban yang lolos, atau jawaban hari ini)." : "."), where: "S4 · hlm. 9", state: cr.length >= 5 && cr.length <= 7 && !crBad ? "ok" : "no" });
+    if (cr.length) {
+      var allPass = cr.every(function (x) { return x.answer && x.answer === x.pass_on; });
+      out.push({ group: "b", key: "b7", label: allPass ? "Semua kriteria terjawab lolos. Checklist yang semuanya lolos biasanya ditulis setelah karyanya jadi: yang belum bisa dicek tulis UNKNOWN." : "Ada kriteria yang belum lolos atau masih UNKNOWN (jujur, bukan kekurangan).", where: "S4 · hlm. 9", state: allPass ? "warn" : "info" });
+      out.push({ group: "b", key: "b8", label: "Tes yang diuji kriteria: " + (Object.keys(tests).join(", ") || "belum ada") + "." + (tests.architecture ? "" : " Belum ada kriteria arsitektur; satu kriteria arsitektur membuat Tes 1 bisa diperiksa."), where: "S4 · hlm. 9", state: "info" });
+    }
+    return out;
+  };
+})();
