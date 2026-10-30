@@ -121,7 +121,10 @@
     var val = clone(CB.getField(sessId, f.id));
     function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
     var id = fid(f);
-    row.appendChild(U.el("label", { for: id, class: "dim", text: f.label }));
+    var lab = U.el("label", { for: id, class: "dim", text: f.label });
+    /* f.hint (dipakai S4 hlm. 3): pertanyaan kriteria di bawah nama kriteria. S1 tidak punya hint, jadi tidak berubah. */
+    if (f.hint) lab.appendChild(U.el("span", { class: "dimhint", text: f.hint }));
+    row.appendChild(lab);
     var sel = U.el("select", { id: id, "aria-label": "Skor " + f.label });
     sel.appendChild(U.el("option", { value: "", text: "—" }));
     [1, 2, 3, 4, 5].forEach(function (n) { sel.appendChild(U.el("option", { value: String(n), text: String(n) })); });
@@ -535,7 +538,8 @@
     var box = F.longtext(sessId, f);
     var b = U.el("button", { type: "button", class: "addbtn", text: f.copyLabel || "Salin dari sumber" });
     b.onclick = function () {
-      var src = CB.getField(sessId, f.copyFrom) || "";
+      /* sumber boleh dari sesi lain (S4 menyalin s3.p2.final): baca dari sesi pemilik ID */
+      var m = /^s(\d+)\./.exec(f.copyFrom || ""), src = CB.getField(m ? "S" + m[1] : sessId, f.copyFrom) || "";
       var ta = box.querySelector("textarea");
       ta.value = src; CB.setField(sessId, f.id, src); changed(f.id); autosize(ta);
     };
@@ -888,6 +892,49 @@
     return box;
   };
 
+  /* ---------- status (S4): pilih satu status + catatan + isian tambahan ----------
+   * f.options [{v,label}] · f.extras [{k,label,ph}] · f.noteLabel/notePh
+   * nilai: { status: "<v>", note: "teks", <extra k>: "teks" } */
+  F.status = function (sessId, f) {
+    var box = U.el("div", { class: "box statusbox", "data-fid": f.id });
+    box.appendChild(U.el("label", { text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var val = clone(CB.getField(sessId, f.id));
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    var row = U.el("div", { class: "statusrow", role: "radiogroup", "aria-label": f.label });
+    f.options.forEach(function (o) {
+      var lb = U.el("label", { class: "stchip" + (val.status === o.v ? " on" : "") });
+      var r = U.el("input", { type: "radio", name: fid(f), value: o.v });
+      r.checked = val.status === o.v;
+      r.onchange = function () {
+        val.status = o.v; commit();
+        row.querySelectorAll(".stchip").forEach(function (x) { x.classList.remove("on"); });
+        lb.classList.add("on");
+      };
+      lb.appendChild(r); lb.appendChild(U.el("span", { text: o.label }));
+      row.appendChild(lb);
+    });
+    box.appendChild(row);
+    var nid = fid(f) + "_note";
+    var nw = U.el("div", { class: "lfield" });
+    nw.appendChild(U.el("label", { for: nid, class: "sub", text: f.noteLabel || "Catatan" }));
+    var ta = textarea(nid, val.note, function (v) { val.note = v; commit(); }, 44);
+    if (f.notePh) ta.setAttribute("placeholder", f.notePh);
+    nw.appendChild(ta); box.appendChild(nw);
+    if (f.extras && f.extras.length) {
+      var ex = U.el("div", { class: "statusextras" });
+      f.extras.forEach(function (x) {
+        var xid = fid(f) + "_" + x.k;
+        var w = U.el("div", { class: "lfield" });
+        w.appendChild(U.el("label", { for: xid, class: "sub", text: x.label }));
+        w.appendChild(lineInput(xid, val[x.k], x.ph, function (t) { val[x.k] = t; commit(); }));
+        ex.appendChild(w);
+      });
+      box.appendChild(ex);
+    }
+    return box;
+  };
+
   /* ---------- teks cetak per tipe ---------- */
   F.printText = function (f, v, sessId) {
     if (v == null || v === "") return "";
@@ -952,6 +999,13 @@
     if (f.type === "parts") {
       if (f.previewTpl) return f.previewTpl.replace(/\{(\w+)\}/g, function (_, k) { return v[k] || "____"; });
       return f.parts.map(function (p) { return p.label + ": " + (v[p.k] || "—"); }).join("\n");
+    }
+    if (f.type === "status") {
+      var so = (f.options || []).filter(function (x) { return x.v === v.status; })[0];
+      var bits = [so ? so.label : "(status belum dipilih)"];
+      if (v.note) bits.push(v.note);
+      (f.extras || []).forEach(function (x) { if (v[x.k]) bits.push(x.label + " " + v[x.k]); });
+      return bits.join(" — ");
     }
     if (f.type === "enum") { var o = (f.options || []).filter(function (x) { return x.v === v; })[0]; return o ? o.label : v; }
     if (f.type === "segments") {

@@ -398,3 +398,12 @@ ul.exlist li{margin-bottom:3px;}
 .tabs a{font-size:14px; text-decoration:none; color:var(--muted); padding:8px 16px; border:1px solid transparent; border-bottom:none; border-radius:8px 8px 0 0; margin-bottom:-1px;}
 .tabs a.on{color:var(--ink); background:#fff; border-color:var(--line); font-weight:600;}
 .tabs a:hover{color:var(--ink);}
+
+/* ---- S4: hint kriteria di baris skor, komponen status ---- */
+.scorerow .dimhint{display:block; font-weight:normal; font-style:italic; color:var(--muted); font-size:12px; margin-top:2px;}
+.statusrow{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 8px;}
+.stchip{display:inline-flex; align-items:center; gap:5px; border:1px solid var(--line); border-radius:999px; padding:4px 11px; font-size:13px; cursor:pointer; background:#fff;}
+.stchip.on{border-color:var(--terra); background:#fbf1ea; font-weight:bold;}
+.stchip input{margin:0 2px 0 0;}
+.statusbox .lfield label.sub{font-size:12.5px; font-weight:normal; color:var(--muted); display:block; margin:4px 0 2px; text-transform:none; letter-spacing:0;}
+.statusextras{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
