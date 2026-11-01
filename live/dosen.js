@@ -13,8 +13,9 @@ const INIT_STATE = { active: '', open: false, revealed: false };
 
 const S = {
   user: null, state: null, sel: SCREENS[0].id, answers: {}, hidden: {}, spot: null,
-  online: 0, peak: 0, roster: null, tab: 'kelas', att: null, attBusy: false, confirmEnd: false, openHidden: false, err: '',
+  online: 0, peak: 0, lat: [], roster: null, tab: 'kelas', att: null, attBusy: false, confirmEnd: false, openHidden: false, err: '',
 };
+const pct = (arr, q) => { const a = [...arr].sort((x, y) => x - y); return a[Math.max(0, Math.ceil(q * a.length) - 1)]; };
 let started = false;
 let watchedId = null;
 let offAnswers = null;
@@ -63,7 +64,20 @@ function watchSelected() {
   offAnswers?.(); offHidden?.();
   watchedId = S.sel;
   S.answers = {}; S.hidden = {};
-  offAnswers = B.watchAnswers(S.sel, (a) => { S.answers = a; draw(); });
+  S.seenT = null;
+  offAnswers = B.watchAnswers(S.sel, (a) => {
+    // Latensi jawaban -> layar dosen: waktu server saat jawaban ditulis (t) vs jam layar ini saat jawaban tiba.
+    const ts = Object.values(a).map((x) => x?.t || 0);
+    if (S.seenT != null) {
+      for (const t of ts) {
+        const d = Date.now() - t;
+        if (t > S.seenT && d > -3000 && d < 60000) { S.lat.push(Math.max(0, d)); if (S.lat.length > 300) S.lat.shift(); }
+      }
+    }
+    S.seenT = Math.max(S.seenT ?? 0, ...ts, 0);
+    S.answers = a;
+    draw();
+  });
   offHidden = B.watchHidden(S.sel, (x) => { S.hidden = x; draw(); });
 }
 
@@ -99,6 +113,8 @@ function topbar() {
     h('strong', {}, 'Kelas Live · Dosen'),
     h('span', { class: cls, id: 'conn', title: 'Batas paket gratis: 100 koneksi bersamaan' },
       `Terhubung ${S.online} · puncak ${S.peak}`, S.online >= 90 ? ' — mendekati batas 100' : ''),
+    S.lat.length >= 5 ? h('span', { class: 'pill', id: 'lat', title: 'Dari jawaban ditulis di server sampai tiba di layar ini (perkiraan; tergantung jam perangkat)' },
+      `Latensi p95 ${(pct(S.lat, 0.95) / 1000).toFixed(1)} dtk · median ${(pct(S.lat, 0.5) / 1000).toFixed(1)} (n=${S.lat.length})`) : null,
     h('nav', {},
       h('button', { class: 'tab' + (S.tab === 'kelas' ? ' on' : ''), type: 'button', onclick: () => { S.tab = 'kelas'; draw(); } }, 'Layar'),
       h('button', { class: 'tab' + (S.tab === 'hadir' ? ' on' : ''), type: 'button', onclick: () => { S.tab = 'hadir'; draw(); } }, 'Kehadiran'),

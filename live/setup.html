@@ -15,6 +15,7 @@
     <input id="uid" class="txt" autocomplete="off" spellcheck="false">
     <label for="nims">Daftar NIM, satu per baris (boleh tempel dari Sheets)</label>
     <textarea id="nims" class="txt" spellcheck="false"></textarea>
+    <label style="font-weight:400"><input id="tests" type="checkbox"> Tambahkan 60 NIM uji (TEST0001 sampai TEST0060) untuk load test. Hapus lagi dengan membuat berkas ulang tanpa centang ini sebelum kelas.</label>
     <p id="info" class="note"></p>
     <div class="actions"><button id="go" class="primary" type="button">Buat berkas JSON</button></div>
     <p class="note">Impor ini menimpa seluruh isi database (termasuk jawaban). Pakai hanya sebelum kelas. Untuk menambah satu NIM setelah itu, tambahkan manual di node <code>roster</code> (nama = NIM, nilai = true).</p>
@@ -33,6 +34,7 @@
       if (!/^[A-Za-z0-9_-]{10,}$/.test(uid)) return ($('info').textContent = 'UID dosen belum benar.');
       if (!lines.length) return ($('info').textContent = 'Daftar NIM masih kosong.');
       if (bad.length) return ($('info').textContent = `Baris tidak valid (hanya huruf/angka, 4–20 karakter): ${bad.slice(0, 5).join(', ')}`);
+      if ($('tests').checked) for (let i = 1; i <= 60; i++) lines.push('TEST' + String(i).padStart(4, '0'));
       const data = { dosen: { [uid]: true }, roster: Object.fromEntries(lines.map((n) => [n, true])), live: { state: { active: '', open: false, revealed: false } } };
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' }));
