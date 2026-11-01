@@ -263,7 +263,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           gojek: {
             name: "Gojek / GoFood", sub: "A first-pass check, honestly recorded. Every UNKNOWN and TAKEN has one action: owner, date, closing test.", caveat: CAVEAT,
             values: {
-              "s4.p4.djki": "UNKNOWN — Assumed, not verified: the “Go” family marks sit under the parent’s registrations — for legal counsel to confirm. The combined “GoFood” mark and logo form are not searched here. Illustrative reconstruction.",
+              "s4.p4.djki": "UNKNOWN — Assumed, not verified: “Go” family marks sit under the parent’s registrations; legal counsel confirms. “GoFood” mark and logo form: not searched. Illustrative reconstruction.",
               "s4.p4.web": "TAKEN — “Go food” is made of plain words, so generic results are expected; only brand-qualified searches can find us. The word “Food” alone cannot be protected.",
               "s4.p4.appstores": "CLEAR — Scoped CLEAR: GoFood launches inside the Gojek app, so no separate store listing exists to clear. If a standalone app is ever proposed, this row reopens.",
               "s4.p4.handles": "CLEAR — Scoped CLEAR: no separate GoFood handle is planned; the parent’s official accounts carry it. A food-specific handle would be a Session 6 decision.",
@@ -289,7 +289,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           lego: {
             name: "LEGO Technic", sub: "A first-pass check, honestly recorded. Every UNKNOWN and TAKEN has one action: owner, date, closing test.", caveat: CAVEAT,
             values: {
-              "s4.p4.djki": "UNKNOWN — The line name is assumed to sit under the parent’s registrations — for the parent’s legal team to confirm, not this team. No tier name yet, so nothing to search. Illustrative reconstruction of a team check.",
+              "s4.p4.djki": "UNKNOWN — Assumed to sit under the parent’s registrations — the parent’s legal team confirms, not this team. No tier name yet, so nothing to search. Illustrative reconstruction.",
               "s4.p4.web": "TAKEN — “Technic” reads as an ordinary word, and an audio brand called Technics is spelled almost the same. The LEGO prefix resolves search; the bare word does not.",
               "s4.p4.appstores": "UNKNOWN — Not checked. Only relevant if the flagship’s motorised functions need a control app — a product decision that is still open.",
               "s4.p4.handles": "CLEAR — No separate Technic handle is planned: the parent’s official accounts carry the line (teaching assumption). A tier handle would be a Session 6 decision.",
