@@ -3,12 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/logic.test.js",
+    "test": "node --test test/logic.test.js test/validate.test.js",
     "test:rules": "firebase emulators:exec --only database --project demo-kelas-live \"node --test test/rules.test.js\"",
-    "test:rules:jar": "bash scripts/rules-test-jar.sh"
+    "test:rules:jar": "bash scripts/rules-test-jar.sh",
+    "build:vendor": "esbuild vendor-src/entry.js --bundle --format=esm --minify --legal-comments=none --outfile=vendor/firebase.js",
+    "test:e2e": "bash scripts/e2e.sh"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.2",
+    "esbuild": "^0.28.2",
     "firebase": "^12.19.0",
     "firebase-tools": "^15.34.2"
   }

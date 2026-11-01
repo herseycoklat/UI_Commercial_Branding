@@ -17,11 +17,27 @@ export function cell(s, sep = SEP) {
   return new RegExp(`["\\r\\n${sep}]`).test(t) ? `"${t.replace(/"/g, '""')}"` : t;
 }
 
-export function toCsv(rows, { sep = SEP, bom = true } = {}) {
-  const lines = [COLUMNS.join(sep)];
-  for (const r of rows) lines.push(COLUMNS.map((c) => cell(r[c], sep)).join(sep));
+export function toCsvTable(columns, rows, { sep = SEP, bom = true } = {}) {
+  const lines = [columns.join(sep)];
+  for (const r of rows) lines.push(columns.map((c) => cell(r[c], sep)).join(sep));
   return (bom ? BOM : '') + lines.join('\r\n') + '\r\n';
 }
+
+export const toCsv = (rows, opts) => toCsvTable(COLUMNS, rows, opts);
+
+// Laporan kehadiran per NIM: semua layar dihitung sama, tanpa ambang "aktif".
+export function attendanceRows(roster, answersByScreen, screenIds) {
+  return [...roster].sort().map((nim) => {
+    const per = {};
+    let n = 0;
+    for (const id of screenIds) {
+      per[id] = answersByScreen?.[id]?.[nim] ? 1 : 0;
+      n += per[id];
+    }
+    return { nim, dijawab: n, dari: screenIds.length, ...per };
+  });
+}
+export const attendanceColumns = (screenIds) => ['nim', 'dijawab', 'dari', ...screenIds];
 
 const optText = (f, v) => f.options?.find((o) => o.v === v)?.t ?? String(v);
 

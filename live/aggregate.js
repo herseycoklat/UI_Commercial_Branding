@@ -1,3 +1,5 @@
+import { NONE } from './validate.js';
+
 // Agregator hasil per layar. Fungsi murni: tidak menyentuh DOM atau Firebase.
 // Bentuk jawaban: answers = { [nim]: { values: { [fieldId]: nilai }, t: epochMs } }
 // hidden  = { [nim]: true } -> jawaban yang disembunyikan dosen (dikeluarkan dari semua tampilan)
@@ -29,6 +31,7 @@ export function tallyMulti(field, list) {
     if (!Array.isArray(arr)) continue;
     total += 1; // responden, bukan jumlah centang
     for (const v of new Set(arr)) {
+      if (v === NONE) continue; // "tidak satu pun" sah, tetap dihitung sebagai responden
       if (!(v in counts)) counts[v] = 0;
       counts[v] += 1;
     }

@@ -49,7 +49,7 @@ export function markField(field, value) {
   }
   if (field.type === 'multi') {
     if (!Array.isArray(value)) return { ok: false };
-    return { ok: sameSet([...new Set(value)], field.key) };
+    return { ok: sameSet([...new Set(value)].filter((x) => x !== '_none'), field.key) };
   }
   if (field.type === 'grid') {
     const rows = Object.keys(field.key);
