@@ -202,7 +202,7 @@
         var ll = U.el("div");
         ll.appendChild(U.el("div", { class: "name", text: "Sesi " + sid.slice(1) + (lc.title ? " · " + lc.title : "") }));
         var lm = U.el("div", { class: "meta" });
-        lm.innerHTML = '<span class="status-pill">terkunci</span>Dibuka ' + U.esc(U.fmtDate(lc.release)) + " · Minggu " + U.esc(lc.week) + ", " + U.esc(CB.deadlineText(lc));
+        lm.innerHTML = '<span class="status-pill">terkunci</span>' + (lc.hide_release_date ? "" : "Dibuka " + U.esc(U.fmtDate(lc.release)) + " · ") + "Minggu " + U.esc(lc.week) + ", " + U.esc(CB.deadlineText(lc));
         ll.appendChild(lm); lr.appendChild(ll);
         var lb = U.el("button", { class: "btn", type: "button", text: "Terkunci" }); lb.disabled = true;
         lr.appendChild(lb);

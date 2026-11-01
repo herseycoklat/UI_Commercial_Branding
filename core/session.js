@@ -542,11 +542,12 @@
       return d;
     }
     cols.appendChild(dl("Identitas", [["Nama", id.full_name], ["NIM", id.nim], ["Email", id.email], ["Proyek", id.group_id + " · " + id.project_name]]));
-    var sesPairs = [["Minggu", String(cfg.week || "—")],
-      ["Dibuka", cfg.release ? U.fmtDate(cfg.release) : "—"],
+    var sesPairs = [["Minggu", String(cfg.week || "—")]];
+    if (!cfg.hide_release_date) sesPairs.push(["Dibuka", cfg.release ? U.fmtDate(cfg.release) : "—"]);
+    sesPairs = sesPairs.concat([
       (spec.hideDue || cfg.no_upload_deadline) ? ["Batas unggah", (cfg.deadline_note ? cfg.deadline_note : "tanpa batas unggah (hari baca diumumkan di chat kelas)").replace(/^./, function (m) { return m.toUpperCase(); })] : ["Tenggat file", cfg.due ? U.fmtDate(cfg.due) : "—"],
       ["Status", last ? "Submitted " + U.fmtDate(last.submitted_at) + (st.versions.length > 1 ? " · versi " + st.versions.length : "") + (st.changed_since_submit ? " · ada perubahan belum di-submit" : "") : "Belum di-submit"],
-      ["Leadership Log", lead + " entri (ikut di setiap file)"]];
+      ["Leadership Log", lead + " entri (ikut di setiap file)"]]);
     if (spec.coverExtra) { var tmp = U.el("div", null, CB.fill(spec.coverExtra, sessId)); sesPairs.push(["Catatan", tmp.textContent]); }
     cols.appendChild(dl("Sesi", sesPairs));
     c.appendChild(cols);
