@@ -517,8 +517,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s4.p7.visual": "Required, central. Character design, palette, wordmark, poster system, merchandise application. Art director owns it; work is already underway.",
               "s4.p7.verbal": "Required, owned. Tone for trailers, captions and press. Owner: marketing lead, who writes the tone brief before Session 5. Risk: outside press and social teams will improvise without it.",
               "s4.p7.sonic": "Required, and late. This is a film; sound is native to the medium. Needed: a short motif for trailers and idents, separate from the score. Owner: composer, via the marketing lead, before Session 5.",
-              "s4.p7.motion": "Required. Title animation and ident behaviour. Must follow the hand-made rule — motion that reads as drawn, not tweened.",
-              "s4.p7.spatial": "Partially required. Cinema lobby standees and school screening events. Low priority until a release date is fixed; revisit in Session 6.",
+              "s4.p7.motion": "Required. Title animation and ident behaviour. Must follow the hand-made rule — motion that reads as drawn, not tweened. Owner: animation lead.",
+              "s4.p7.spatial": "Partially required. Cinema lobby standees and school screening events. Low priority until a release date is fixed; revisit in Session 6. Owner: marketing lead.",
               "s4.p7.interactive": "Not needed, because… There is no app, game, or interactive companion planned. If the Session 5 merchandise plan adds one, this row changes."
             },
             notice: "Four of six fully needed, one partly, one not at all — a film genuinely uses most channels. A team writing “not needed” in four boxes is usually describing their budget rather than their medium, and should say so in those words."
@@ -541,8 +541,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               "s4.p7.visual": "Required, central. Helmet silhouette, palette, title lockup, key art, merchandise application. Art director owns it; the first key-art round is underway.",
               "s4.p7.verbal": "Required, owned. Tone for trailers, press and social: “start here, no homework.” Marketing lead owns it. Risk: outside press and social teams will improvise.",
               "s4.p7.sonic": "Required, and late. A trailer without a sound identity wastes a code. Needed: a short studio motif for trailers and the post-credits scene, separate from the score. Music supervisor, before Session 5.",
-              "s4.p7.motion": "Required. Title animation and studio ident behaviour. Must follow the built-by-a-person rule from the brief — engineered, not generic CGI.",
-              "s4.p7.spatial": "Partially required. Cinema standees and the premiere. Low priority until a release date is fixed, and no standee may show the universe layer. Revisit in Session 6.",
+              "s4.p7.motion": "Required. Title animation and studio ident behaviour. Must follow the built-by-a-person rule from the brief — engineered, not generic CGI. Art director owns it.",
+              "s4.p7.spatial": "Partially required. Cinema standees and the premiere. Low priority until a release date is fixed, and no standee may show the universe layer. Revisit in Session 6. Events lead owns it.",
               "s4.p7.interactive": "Not needed, because… No game or companion app is planned. A game tie-in is a Session 5 licensing decision; if it happens this row changes and the app-store check on page 4 reopens."
             },
             notice: "Four of six fully needed, one partly, one not at all — a film genuinely uses most channels. A team writing “not needed” in four boxes is usually describing their budget rather than their medium, and should say so in those words."
@@ -628,7 +628,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
                 ["PLATFORM — thumbnail, listing page", "The poster shrinks to 200 pixels and only the helmet silhouette survives. The endorsement line must still read. Owner: art director."],
                 ["EVENT — screenings, premiere", "A host improvising on stage will mention “the universe”. A one-page host brief with the prohibited box on it fixes that. Owner: events lead."],
                 ["PACKAGING & MERCH — built later, by a licensee", "Made by licensees months from now, from a style guide, by people who were never in this room. Needs the helmet-alone rule, the 40mm rule and a no-universe-art rule. Owner: licensing lead."],
-                ["COMMUNITY — fan art, reposts", "The fan community is a deposit, but a niche one; mainstream has none yet. Cannot be controlled. What can: keep the silhouette easy to copy, and agree one line on the tease — “stay if you want to”."]] }
+                ["COMMUNITY — fan art, reposts", "A niche deposit; mainstream has none yet. Cannot be controlled. What can: keep the silhouette easy to copy, and agree one line on the tease — “stay if you want to”. Owner: marketing lead."]] }
             },
             notice: "Merchandise is made by strangers from a document, and the community will discuss the post-credits scene whether the studio likes it or not — which is exactly why both need decisions made now rather than reactions later."
           },
