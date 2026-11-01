@@ -1,0 +1,78 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "live": {
+      "state": {
+        ".read": "auth != null",
+        ".write": "root.child('dosen').child(auth.uid).exists() && auth.token.firebase.sign_in_provider == 'google.com'",
+        ".validate": "newData.hasChildren(['active', 'open', 'revealed'])"
+      }
+    },
+
+    "dosen": {
+      "$uid": { ".validate": "newData.isBoolean()" }
+    },
+
+    "roster": {
+      ".read": "root.child('dosen').child(auth.uid).exists()",
+      "$nim": { ".validate": "newData.isBoolean() || newData.isString()" }
+    },
+
+    "seat": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid",
+        ".validate": "newData.isString() && newData.val().matches(/^[0-9A-Za-z]{4,20}$/) && root.child('roster').child(newData.val()).exists()"
+      }
+    },
+
+    "claims": {
+      ".read": "root.child('dosen').child(auth.uid).exists()",
+      "$nim": {
+        ".read": "auth != null && root.child('seat').child(auth.uid).val() === $nim",
+        ".write": "auth != null && newData.val() === auth.uid && root.child('seat').child(auth.uid).val() === $nim",
+        ".validate": "newData.isString()"
+      }
+    },
+
+    "presence": {
+      ".read": "root.child('dosen').child(auth.uid).exists()",
+      "$uid": {
+        ".write": "auth != null && auth.uid == $uid",
+        ".validate": "newData.isBoolean()"
+      }
+    },
+
+    "answers": {
+      ".read": "root.child('dosen').child(auth.uid).exists()",
+      "$screen": {
+        ".read": "root.child('dosen').child(auth.uid).exists()",
+        "$nim": {
+          ".read": "auth != null && root.child('claims').child($nim).val() === auth.uid",
+          ".write": "auth != null && root.child('claims').child($nim).val() === auth.uid && root.child('live').child('state').child('active').val() === $screen && root.child('live').child('state').child('open').val() === true",
+          ".validate": "newData.hasChildren(['values', 't']) && newData.child('t').val() === now",
+          "values": {
+            "$f": {
+              ".validate": "(newData.isString() && newData.val().length <= 300) || newData.hasChildren()",
+              "$k": { ".validate": "newData.isString() && newData.val().length <= 100" }
+            }
+          },
+          "t": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+
+    "hidden": {
+      ".read": "root.child('dosen').child(auth.uid).exists()",
+      ".write": "root.child('dosen').child(auth.uid).exists()"
+    },
+
+    "dosenState": {
+      ".read": "root.child('dosen').child(auth.uid).exists()",
+      ".write": "root.child('dosen').child(auth.uid).exists()"
+    }
+  }
+}
