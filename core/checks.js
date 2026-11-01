@@ -308,7 +308,7 @@
   CB.checkGroups.S4 = {
     a: { title: "Tes 1 · Brand architecture (hlm. 2)", help: "Lolos kalau model ditulis dalam satu kalimat, garis punya alasan kepercayaan atau kerusakan, dan sisi OUT menyebut nama yang konkret." },
     n: { title: "Tes 2 · Naming direction (hlm. 3–4)", help: "Lolos kalau lima kriteria dinilai dengan alasan, setiap skor 1–2 punya mitigasi yang bisa dianggarkan, kelas yang dicek disebut, dan setiap UNKNOWN atau TAKEN punya owner, waktu, dan uji penutupan." },
-    b: { title: "Tes 3 · Identity brief (hlm. 5–9)", help: "Lolos kalau delapan bagian brief terisi dengan satu baris ditolak dan ditulis ulang, kode maksimal lima dengan pemilik, enam kanal terisi atau beralasan, minimal satu touchpoint dibuat orang luar, dan 5–7 kriteria biner." }
+    b: { title: "Tes 3 · Identity brief (hlm. 5–9)", help: "Lolos kalau delapan bagian brief terisi dengan satu baris ditolak dan ditulis ulang, kode maksimal lima dengan pemilik, enam kanal terisi atau beralasan, minimal satu touchpoint dibuat orang luar, 5–7 kriteria biner (dengan halaman asal dan tes), dan satu pertanyaan dari creative stream atau UNKNOWN yang berpemilik dan bertanggal." }
   };
 
   CB.checks.S4 = function (data) {
@@ -367,16 +367,26 @@
     var mx = c["s4.p8.matrix"] || {}, rows = mx.rows || {};
     var tp = ["product", "campaign", "platform", "event", "packaging", "community"];
     var tpFull = tp.filter(function (k) { var r = rows[k] || {}; return txt(r.how) && txt(r.who); }).length;
-    out.push({ group: "b", key: "b5", label: "Touchpoint Consistency Matrix: " + tpFull + "/6 baris punya isi dan penanggung jawab. Cek sendiri: minimal satu baris dibuat belakangan oleh orang di luar tim.", where: "S4 · hlm. 8", state: tpFull === 6 ? "warn" : "no" });
+    var outside = tp.filter(function (k) { return (rows[k] || {}).outside; }).length + (mx.extra || []).filter(function (x) { return x.outside && (txt(x.label) || txt(x.how)); }).length;
+    out.push({ group: "b", key: "b5", label: "Touchpoint Consistency Matrix: " + tpFull + "/6 baris punya isi dan penanggung jawab; " + (outside ? outside + " baris ditandai dibuat orang di luar tim." : "belum ada baris yang ditandai dibuat orang di luar tim (minimal satu)."), where: "S4 · hlm. 8", state: tpFull === 6 && outside >= 1 ? "ok" : "no" });
     var cr = ((c["s4.p9.criteria"] || {}).items || []).filter(function (x) { return txt(x.q); });
-    var crBad = cr.filter(function (x) { return !x.test || !x.answer || !x.pass_on; }).length;
+    var crBad = cr.filter(function (x) { return !x.test || !x.answer || !x.pass_on || !(Array.isArray(x.src_page) && x.src_page.length); }).length;
     var tests = {}; cr.forEach(function (x) { if (x.test) tests[x.test] = 1; });
-    out.push({ group: "b", key: "b6", label: cr.length + " kriteria ditulis (5–7)" + (crBad ? "; " + crBad + " belum lengkap (tes, jawaban yang lolos, atau jawaban hari ini)." : "."), where: "S4 · hlm. 9", state: cr.length >= 5 && cr.length <= 7 && !crBad ? "ok" : "no" });
+    out.push({ group: "b", key: "b6", label: cr.length + " kriteria ditulis (5–7)" + (crBad ? "; " + crBad + " belum lengkap (halaman asal, tes, jawaban yang lolos, atau jawaban)." : "."), where: "S4 · hlm. 9", state: cr.length >= 5 && cr.length <= 7 && !crBad ? "ok" : "no" });
     if (cr.length) {
       var allPass = cr.every(function (x) { return x.answer && x.answer === x.pass_on; });
       out.push({ group: "b", key: "b7", label: allPass ? "Semua kriteria terjawab lolos. Checklist yang semuanya lolos biasanya ditulis setelah karyanya jadi: yang belum bisa dicek tulis UNKNOWN." : "Ada kriteria yang belum lolos atau masih UNKNOWN (jujur, bukan kekurangan).", where: "S4 · hlm. 9", state: allPass ? "warn" : "info" });
       out.push({ group: "b", key: "b8", label: "Tes yang diuji kriteria: " + (Object.keys(tests).join(", ") || "belum ada") + "." + (tests.architecture ? "" : " Belum ada kriteria arsitektur; satu kriteria arsitektur membuat Tes 1 bisa diperiksa."), where: "S4 · hlm. 9", state: "info" });
     }
+    var q = c["s4.p9.creative_question"] || {};
+    var qAsked = q.state === "asked" && txt(q.question) && txt(q.asker) && q.role && q.section_page;
+    var qUnk = q.state === "unknown" && txt(q.owner) && txt(q.due);
+    var qLabel = qAsked ? "Pertanyaan dari creative stream terisi: pertanyaan, penanya dengan stream, dan bagian yang ambigu."
+      : qUnk ? "Pertanyaan dari creative stream ditulis UNKNOWN dengan pemilik dan tanggal."
+      : q.state === "asked" ? "Pertanyaan dari creative stream belum lengkap: butuh pertanyaan, nama penanya, stream penanya (bukan Product Manager), dan halaman bagian yang ambigu."
+      : q.state === "unknown" ? "UNKNOWN belum lengkap: tulis pemilik dan tanggal."
+      : "Pertanyaan dari creative stream belum diisi. Kirim brief (hlm. 5) ke stream kreatif lalu bawa satu pertanyaan; kalau belum ada, pilih UNKNOWN dan tulis pemilik dan tanggal.";
+    out.push({ group: "b", key: "b9", label: qLabel, where: "S4 · hlm. 9", state: qAsked || qUnk ? "ok" : "no" });
     return out;
   };
 })();

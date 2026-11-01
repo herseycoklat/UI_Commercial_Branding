@@ -1,16 +1,20 @@
-/* sessions/s4.js — SPEC Sesi 4 (struktur halaman dan ID field). DRAF PERTAMA 30 Okt 2026.
- * Sumber: WORKBOOK_S4-team-workbook-v2.pptx (14 Okt 2026). Teks slide 1–9 = ekstrak teks di Project Knowledge
- * (biner .pptx tidak dilampirkan di chat ini), disalin ke tools/extracts/S4.md. Label, hint, subjudul, footer persis workbook.
+/* sessions/s4.js — SPEC Sesi 4 (struktur halaman dan ID field). Draf pertama 30 Okt 2026; direvisi ke kit v3 pada 1 Nov 2026.
+ * Sumber: WORKBOOK_S4-team-workbook-v3.pptx (1 Nov 2026, 14:50). Teks slide 1–9 = claude/S4-workbook-v3-extract.md,
+ * disalin ke tools/extracts/S4.md. Label, hint, subjudul, footer persis workbook.
+ * Perubahan v2 → v3 (revisi 1 Nov): hlm. 9 = NO. · SOURCE PAGE · YES/NO QUESTION · GATE 3 TEST · ANSWER (+ strip HOW TO PICK THEM,
+ * + kotak QUESTION FROM YOUR CREATIVE STREAM = field s4.p9.creative_question); hlm. 5 hint ACCESSIBILITY + "regional meanings";
+ * hlm. 8 kotak centang appOnly "dibuat orang di luar tim" (rowFlag outside); sampul tanpa tanggal; kolom "bukti" hlm. 9 dihapus.
  * Keputusan desain draf (menunggu Fai):
  *  - Urutan linear hlm. 2 → 9 (Bedah S4 v2 §2.4: tiap halaman memakai keluaran halaman sebelumnya).
  *  - Satu kotak workbook = satu field. Kotak yang di workbook punya bagian bernama dipecah di dalam field yang sama
  *    (tipe parts/list/status), tanpa menambah kotak: OUR MODEL (pilih model + kalimat), WHAT FLOWS IN/OUT (IN dan OUT),
  *    WHAT WE WILL DO ABOUT IT (satu tindakan per baris: pemilik, kapan, uji penutupan), REJECTED → REWROTE (dua sisi),
- *    hlm. 9 (daftar 5–7 kriteria: pertanyaan, tes Gate 3, jawaban yang lolos, jawaban, bukti).
+ *    hlm. 9 (daftar 5–7 kriteria: pertanyaan, tes Gate 3, jawaban yang lolos, jawaban; v3: + halaman asal, tanpa bukti).
  *  - Tipe baru "status" (core/fields.js): pilih status + catatan (+ isian tambahan). Dipakai hlm. 4 (CLEAR/TAKEN/UNKNOWN)
  *    dan hlm. 7 (dibutuhkan / sebagian / tidak dibutuhkan + siapa + kapan).
- *  - Footer hlm. 9 workbook TIDAK dipakai: memuat kata status Gate dan tanggal. Penjelasannya pindah ke callout (tanpa status).
- *  - Tanggal tercetak di cover workbook tidak dipakai; tenggat dibaca dari config.
+ *  - Catatan "GATE 3 — READ FROM YOUR DOCUMENTS" di bawah hlm. 9 workbook TIDAK dipakai: memuat kata status Gate dan tanggal.
+ *    Penjelasannya pindah ke callout (content/s4.js, tanpa status dan tanpa tanggal).
+ *  - Tanggal di sampul workbook tidak dipakai (hideDue + no_upload_deadline di config/course.json).
  * ID FIELD DIKUNCI SETELAH S4 DIRILIS: boleh menambah, tidak boleh mengganti nama/menghapus.
  */
 window.CB = window.CB || {}; CB.specs = CB.specs || {};
@@ -25,8 +29,9 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     id: "S4", n: 4,
     title: "Cross-Stream Brand Identity and Experience Brief",
     wbCover: "SESSION 4 TEAM WORKBOOK",
-    coverNote: "Fill this in as a team, outside class — class covers the theory and the pattern. Everything on these pages gets read and executed by someone OUTSIDE your team: write for a stranger.",
-    coverExtra: "Isi di HTML tool ini, lalu kirim file JSON lewat Form yang sama seperti minggu lalu. Semua halaman (hlm. 2–9) ada di satu file. Gate 3 dibaca dari file ini.",
+    coverNote: "Fill this in as a team after class, in the Session 4 HTML tool; these nine pages mirror it. Everything here gets read and executed by someone OUTSIDE your team: write for a stranger. Upload the JSON file from the tool through the Form. The last upload is the one read.",
+    hideDue: true,
+    coverExtra: "Semua halaman (hlm. 2–9) ada di satu file. Batas unggah diumumkan dosen di kelas dan di grup kelas. Gate 3 dibaca dari file ini.",
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
     pages: [
       {
@@ -113,7 +118,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
           { id: "s4.p5.tone", type: "longtext", label: "PERSONALITY & TONE OF VOICE", hint: "Write pairs: “warm, not sweet”. Add one right and one wrong sentence." },
           { id: "s4.p5.mandatory", type: "longtext", label: "MANDATORY ELEMENTS", hint: "Requirements, not solutions. Things that must be true of any answer." },
           { id: "s4.p5.prohibited", type: "longtext", label: "PROHIBITED ELEMENTS", hint: "What must NOT appear — and the strategic reason why." },
-          { id: "s4.p5.accessibility", type: "longtext", label: "ACCESSIBILITY REQUIREMENTS", hint: "Contrast, thumbnail legibility, never colour alone, captions." },
+          { id: "s4.p5.accessibility", type: "longtext", label: "ACCESSIBILITY REQUIREMENTS", hint: "Contrast, thumbnail legibility, never colour alone, captions, regional meanings." },
           { id: "s4.p5.rejected", type: "parts", label: "A LINE WE REJECTED → REWROTE", hint: "Keep the dictating version visible next to the fix.",
             parts: [{ k: "rejected", label: "REJECTED (versi yang mendikte)", ph: "baris asli yang menyebut solusi", long: true }, { k: "rewritten", label: "REWRITTEN (persyaratannya)", ph: "persyaratan strategis di balik baris itu", long: true }] }
         ]
@@ -161,6 +166,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ] },
         fields: [
           { id: "s4.p8.matrix", type: "table", rowLabel: "Touchpoint", wrapCells: true, allowExtraRows: true,
+            rowFlag: { k: "outside", label: "Dibuat orang di luar tim", short: "di luar tim", appOnly: true },
             rows: [
               { k: "product", label: "PRODUCT — the thing itself" },
               { k: "campaign", label: "CAMPAIGN — trailer, poster, social" },
@@ -175,21 +181,27 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
       {
         p: 9, title: "Creative Approval Checklist — Gate 3 Check",
         sub: "5–7 binary criteria; two checkers, same answer. Mark YES, NO, or UNKNOWN.",
+        strip: { head: "HOW TO PICK THEM", text: "collect 10–15 rules from pp. 2–8 → strike what is not yes/no → rank by “cost if wrong and already printed” → keep 5–7 → label each with its source page and Gate 3 test. If every criterion comes from one test, write why the other two have none." },
         carry: { title: "Bahan kriteria (hanya tampil, tidak disalin)", items: [
           { id: "s4.p5.mandatory", label: "MANDATORY ELEMENTS (hlm. 5)" },
           { id: "s4.p5.prohibited", label: "PROHIBITED ELEMENTS (hlm. 5)" },
           { id: "s4.p5.accessibility", label: "ACCESSIBILITY REQUIREMENTS (hlm. 5)" }
         ] },
         fields: [
-          { id: "s4.p9.criteria", type: "list", addText: "+ Tambah kriteria", max: 7,
+          { id: "s4.p9.criteria", type: "list", addText: "+ Tambah kriteria", max: 7, numbered: true,
             emptyText: "Belum ada kriteria. Tulis 5 sampai 7.",
-            guide: "<p>Setiap baris = <b>satu pertanyaan ya/tidak</b> yang bisa dijawab dua pemeriksa terpisah dengan hasil sama. \"Apakah terasa premium?\" gagal; \"Apakah wordmark terbaca hitam-putih pada lebar 120 piksel?\" lolos.</p><p><b>Jawaban yang lolos</b> tidak selalu YES: untuk kriteria larangan (\"Apakah ada elemen yang hanya mengandalkan warna?\"), jawaban yang lolos adalah NO. Yang belum bisa dicek ditulis UNKNOWN (termasuk yang belum diuji), bukan dicentang.</p>",
+            guide: "<p>Setiap baris = <b>satu pertanyaan ya/tidak</b> yang bisa dijawab dua pemeriksa terpisah dengan hasil sama. \"Apakah terasa premium?\" gagal; \"Apakah wordmark terbaca hitam-putih pada lebar 120 piksel?\" lolos.</p><p><b>Source page</b>: halaman 2–8 tempat aturan itu tertulis (boleh lebih dari satu). <b>Jawaban yang lolos</b> tidak selalu YES: untuk kriteria larangan (\"Apakah ada elemen yang hanya mengandalkan warna?\"), jawaban yang lolos adalah NO. Yang belum bisa dicek ditulis UNKNOWN (termasuk yang belum diuji), bukan dicentang.</p>",
             itemFields: [
-              { k: "q", label: "Criterion — a yes/no question", type: "longtext" },
-              { k: "test", label: "Gate 3 test", type: "select", empty: "— pilih tes —", options: [{ v: "architecture", label: "architecture (hlm. 2)" }, { v: "naming", label: "naming (hlm. 3–4)" }, { v: "brief", label: "brief (hlm. 5–9)" }] },
-              { k: "pass_on", label: "Jawaban yang lolos", type: "select", empty: "— pilih —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }] },
-              { k: "answer", label: "Jawaban hari ini", type: "select", empty: "— belum dijawab —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }, { v: "unknown", label: "UNKNOWN (belum dicek)" }] },
-              { k: "evidence", label: "Bukti — apa yang dilihat pemeriksa", type: "longtext" }] }
+              { k: "src_page", label: "SOURCE PAGE", type: "pages", pages: [2, 3, 4, 5, 6, 7, 8] },
+              { k: "q", label: "YES/NO QUESTION", type: "longtext" },
+              { k: "test", label: "GATE 3 TEST", type: "select", empty: "— pilih tes —", options: [{ v: "architecture", label: "architecture (hlm. 2)" }, { v: "naming", label: "naming (hlm. 3–4)" }, { v: "brief", label: "brief (hlm. 5–9)" }] },
+              { k: "pass_on", label: "Jawaban yang lolos", type: "select", empty: "— pilih —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }], appOnly: true },
+              { k: "answer", label: "ANSWER", type: "select", empty: "— belum dijawab —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }, { v: "unknown", label: "UNKNOWN (belum dicek)" }] }] },
+          { id: "s4.p9.creative_question", type: "creativeq", label: "QUESTION FROM YOUR CREATIVE STREAM",
+            hint: "Send the brief (p. 5) to your creative stream; bring back one question. Gate 3 reads it in test 3: filled, or UNKNOWN with owner and date.",
+            subLabels: ["THE QUESTION", "WHO ASKED (name, stream role)", "AMBIGUOUS SECTION (pp. 2–8)"],
+            roles: [{ v: "designer_artist", label: "DESIGNER / ARTIST" }, { v: "engineer_technical", label: "ENGINEER / TECHNICAL" }, { v: "content_production", label: "CONTENT / PRODUCTION" }, { v: "other_stream", label: "Stream lain (tulis di nama)" }],
+            pages: [2, 3, 4, 5, 6, 7, 8] }
         ]
       }
     ]

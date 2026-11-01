@@ -8,7 +8,9 @@
  *   table           : { rows: { <baris>: { <kolom>: "teks" } }, extra: [ { label, <kolom>... } ] }
  *   score           : { score: 1–5, justification: "teks" }
  *   trace           : { text: "teks", trace: [ "<id sumber>" ] }
- *   list            : { items: [ { id, <k>: "teks" } ] }
+ *   list            : { items: [ { id, <k>: "teks" } ] }   (itemField type "pages": <k> = [2, 5] daftar nomor halaman)
+ *   table + rowFlag : baris tetap { <kolom>..., <rowFlag.k>: true }, baris extra { label, <kolom>..., <rowFlag.k>: true }  (v0.4.1, S4 hlm. 8)
+ *   creativeq (S4)  : { state: "asked"|"unknown", question, asker, role, section_page, section_text, owner, due }  (v0.4.1)
  */
 (function () {
   "use strict";
@@ -66,6 +68,8 @@
     var thead = U.el("thead"), hr = U.el("tr");
     hr.appendChild(U.el("th", { text: f.rowLabel || "" }));
     f.columns.forEach(function (c) { hr.appendChild(U.el("th", { text: c.label })); });
+    /* f.rowFlag = { k, label, short }: kotak centang per baris (tambahan app, nilai boolean di baris itu). */
+    if (f.rowFlag) hr.appendChild(U.el("th", { class: "flagcol", text: f.rowFlag.label }));
     if (hasAct) hr.appendChild(U.el("th", { class: "act", text: "" }));
     thead.appendChild(hr); t.appendChild(thead);
     var tb = U.el("tbody"); t.appendChild(tb);
@@ -80,6 +84,14 @@
       if (f.wrapCells) requestAnimationFrame(function () { autosize(inp, 36); });
       return td;
     }
+    function flagCell(get, set, name) {
+      var td = U.el("td", { class: "flagcol" });
+      var cb = U.el("input", { type: "checkbox", "aria-label": f.rowFlag.label + ": " + name });
+      cb.checked = !!get();
+      cb.onchange = function () { set(cb.checked); commit(); };
+      td.appendChild(cb);
+      return td;
+    }
     function draw() {
       tb.innerHTML = "";
       f.rows.forEach(function (r) {
@@ -89,6 +101,7 @@
         f.columns.forEach(function (c) {
           tr.appendChild(cell(function () { return val.rows[r.k][c.k]; }, function (v) { val.rows[r.k][c.k] = v; }));
         });
+        if (f.rowFlag) tr.appendChild(flagCell(function () { return val.rows[r.k][f.rowFlag.k]; }, function (v) { val.rows[r.k][f.rowFlag.k] = v; }, r.label));
         if (hasAct) tr.appendChild(U.el("td", { class: "act" }));
         tb.appendChild(tr);
       });
@@ -98,6 +111,7 @@
         f.columns.forEach(function (c) {
           tr.appendChild(cell(function () { return row[c.k]; }, function (v) { row[c.k] = v; }));
         });
+        if (f.rowFlag) tr.appendChild(flagCell(function () { return row[f.rowFlag.k]; }, function (v) { row[f.rowFlag.k] = v; }, row.label || "baris tambahan"));
         var td = U.el("td", { class: "act" });
         var del = U.el("button", { type: "button", class: "iconbtn", title: "Hapus baris", "aria-label": "Hapus baris", text: "✕" });
         del.onclick = function () { val.extra.splice(i, 1); commit(); draw(); };
@@ -206,9 +220,26 @@
   function itemInput(it, spec, onChange, onSelect) {
     var w = U.el("div", { class: "lfield " + (spec.type || "text") + " k_" + spec.k });
     var id = "li_" + it.id + "_" + spec.k;
-    w.appendChild(U.el("label", { for: id, text: spec.label }));
+    w.appendChild(U.el(spec.type === "pages" ? "div" : "label", spec.type === "pages" ? { class: "lbl", text: spec.label } : { for: id, text: spec.label }));
     var el;
-    if (spec.type === "longtext") {
+    if (spec.type === "pages") {
+      /* pilih satu atau lebih nomor halaman workbook (spec.pages); nilai: [2, 5] terurut */
+      el = U.el("div", { class: "pagepick", id: id, role: "group", "aria-label": spec.label });
+      var cur = Array.isArray(it[spec.k]) ? it[spec.k] : [];
+      spec.pages.forEach(function (n) {
+        var lb = U.el("label", { class: "pgchip" + (cur.indexOf(n) >= 0 ? " on" : "") });
+        var cb = U.el("input", { type: "checkbox", value: String(n) });
+        cb.checked = cur.indexOf(n) >= 0;
+        cb.onchange = function () {
+          var a = (Array.isArray(it[spec.k]) ? it[spec.k] : []).filter(function (x) { return x !== n; });
+          if (cb.checked) a.push(n);
+          a.sort(function (x, y) { return x - y; });
+          it[spec.k] = a; lb.classList.toggle("on", cb.checked); onChange();
+        };
+        lb.appendChild(cb); lb.appendChild(U.el("span", { text: "hlm. " + n }));
+        el.appendChild(lb);
+      });
+    } else if (spec.type === "longtext") {
       el = textarea(id, it[spec.k], function (v) { it[spec.k] = v; onChange(); }, 56);
     } else if (spec.type === "select") {
       el = U.el("select", { id: id });
@@ -240,7 +271,8 @@
       list.innerHTML = "";
       if (!val.items.length) list.appendChild(U.el("div", { class: "small muted", text: f.emptyText || "Belum ada isian." }));
       val.items.forEach(function (it, i) {
-        var row = U.el("div", { class: "litem" + ((f.itemFields || []).length > 1 ? " multi" : ""), "data-iid": it.id });
+        var row = U.el("div", { class: "litem" + ((f.itemFields || []).length > 1 ? " multi" : "") + (f.numbered ? " numbered" : ""), "data-iid": it.id });
+        if (f.numbered) row.appendChild(U.el("span", { class: "lnum", "aria-label": "Nomor " + (i + 1), text: String(i + 1) }));
         (f.itemFields || [{ k: "text", label: "", type: "text" }]).forEach(function (spec) {
           if (spec.showIf && it[spec.showIf.k] !== spec.showIf.eq) return;
           row.appendChild(itemInput(it, spec, commit, draw));
@@ -935,6 +967,81 @@
     return box;
   };
 
+  /* ---------- creativeq (S4 hlm. 9): pertanyaan dari creative stream ----------
+   * Dua keadaan yang terbaca mesin (penilai tidak perlu menebak dari teks bebas):
+   *   asked   : question + asker (nama) + role (stream selain PM) + section_page (2–8) [+ section_text]
+   *   unknown : owner + due (tanggal yang ditulis mahasiswa sendiri)
+   * f.roles [{v,label}] · f.pages [2..8] · f.subLabels [THE QUESTION, WHO ASKED, AMBIGUOUS SECTION]
+   * Nilai dari keadaan yang tidak dipilih tetap disimpan (tidak dihapus saat berganti). */
+  F.creativeq = function (sessId, f) {
+    var box = U.el("div", { class: "box cqbox", "data-fid": f.id });
+    box.appendChild(U.el("label", { text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var val = clone(CB.getField(sessId, f.id));
+    function commit() { CB.setField(sessId, f.id, clone(val)); changed(f.id); }
+    var base = fid(f), sl = f.subLabels || [];
+    var row = U.el("div", { class: "statusrow", role: "radiogroup", "aria-label": f.label });
+    var states = [{ v: "asked", label: "Sudah ada yang bertanya" }, { v: "unknown", label: "UNKNOWN — belum ada yang bertanya" }];
+    var pA = U.el("div", { class: "cqpanel cq_asked" }), pU = U.el("div", { class: "cqpanel cq_unknown" });
+    function show() { pA.hidden = val.state !== "asked"; pU.hidden = val.state !== "unknown"; }
+    states.forEach(function (o) {
+      var lb = U.el("label", { class: "stchip" + (val.state === o.v ? " on" : "") });
+      var r = U.el("input", { type: "radio", name: base + "_state", value: o.v });
+      r.checked = val.state === o.v;
+      r.onchange = function () {
+        val.state = o.v; commit(); show();
+        row.querySelectorAll(".stchip").forEach(function (x) { x.classList.remove("on"); });
+        lb.classList.add("on");
+      };
+      lb.appendChild(r); lb.appendChild(U.el("span", { text: o.label }));
+      row.appendChild(lb);
+    });
+    box.appendChild(row);
+    function sub(parent, id, text) { var w = U.el("div", { class: "lfield" }); w.appendChild(U.el("label", { for: id, class: "sub", text: text })); parent.appendChild(w); return w; }
+    /* asked */
+    var qid = base + "_question";
+    sub(pA, qid, sl[0] || "THE QUESTION").appendChild(textarea(qid, val.question, function (t) { val.question = t; commit(); }, 56));
+    var who = U.el("div", { class: "cqwho" });
+    var aid = base + "_asker", rid = base + "_role";
+    sub(who, aid, (sl[1] || "WHO ASKED (name, stream role)")).appendChild(lineInput(aid, val.asker, "nama", function (t) { val.asker = t; commit(); }));
+    var rw = U.el("div", { class: "lfield" });
+    rw.appendChild(U.el("label", { for: rid, class: "sub", text: "Stream penanya (bukan Product Manager)" }));
+    var rs = U.el("select", { id: rid });
+    rs.appendChild(U.el("option", { value: "", text: "— pilih stream —" }));
+    (f.roles || []).forEach(function (o) { rs.appendChild(U.el("option", { value: o.v, text: o.label })); });
+    rs.value = val.role || "";
+    rs.onchange = function () { val.role = rs.value; commit(); };
+    rw.appendChild(rs); who.appendChild(rw);
+    pA.appendChild(who);
+    var sec = U.el("div", { class: "cqsec" });
+    var gid = base + "_section_page", tid = base + "_section_text";
+    var gw = sub(sec, gid, sl[2] || "AMBIGUOUS SECTION (pp. 2–8)");
+    var gs = U.el("select", { id: gid });
+    gs.appendChild(U.el("option", { value: "", text: "— halaman —" }));
+    (f.pages || []).forEach(function (n) { gs.appendChild(U.el("option", { value: String(n), text: "hlm. " + n })); });
+    gs.value = val.section_page ? String(val.section_page) : "";
+    gs.onchange = function () { val.section_page = gs.value ? parseInt(gs.value, 10) : null; commit(); };
+    gw.appendChild(gs);
+    var tw = U.el("div", { class: "lfield" });
+    tw.appendChild(U.el("label", { for: tid, class: "sub", text: "Bagian di halaman itu" }));
+    tw.appendChild(lineInput(tid, val.section_text, "mis. Mandatory", function (t) { val.section_text = t; commit(); }));
+    sec.appendChild(tw); pA.appendChild(sec);
+    /* unknown */
+    pU.appendChild(U.el("div", { class: "small muted", text: "UNKNOWN yang ditulis lengkap (pemilik dan tanggal) berbeda dari kotak yang dibiarkan kosong." }));
+    var uw = U.el("div", { class: "cqwho" });
+    var oid = base + "_owner", did = base + "_due";
+    sub(uw, oid, "Pemilik: siapa yang akan menanyakannya").appendChild(lineInput(oid, val.owner, "nama atau peran di tim", function (t) { val.owner = t; commit(); }));
+    var dw = sub(uw, did, "Tanggal ditanyakan");
+    var di = U.el("input", { id: did, type: "date", class: "line" });
+    di.value = val.due || "";
+    di.addEventListener("input", function () { val.due = di.value; commit(); });
+    di.addEventListener("change", function () { val.due = di.value; commit(); });
+    dw.appendChild(di);
+    pU.appendChild(uw);
+    box.appendChild(pA); box.appendChild(pU); show();
+    return box;
+  };
+
   /* ---------- teks cetak per tipe ---------- */
   F.printText = function (f, v, sessId) {
     if (v == null || v === "") return "";
@@ -949,16 +1056,17 @@
       (f.rows || []).forEach(function (r) {
         var x = (v.rows || {})[r.k] || {};
         var cells = f.columns.map(function (c) { return x[c.k] || "—"; });
+        if (f.rowFlag && x[f.rowFlag.k]) cells.push("[" + (f.rowFlag.short || f.rowFlag.label) + "]");
         if (cells.some(function (c) { return c !== "—"; })) rows.push(r.label + ": " + cells.join(" · "));
       });
-      (v.extra || []).forEach(function (x) { rows.push((x.label || "(tanpa nama)") + ": " + f.columns.map(function (c) { return x[c.k] || "—"; }).join(" · ")); });
+      (v.extra || []).forEach(function (x) { rows.push((x.label || "(tanpa nama)") + ": " + f.columns.map(function (c) { return x[c.k] || "—"; }).join(" · ") + (f.rowFlag && x[f.rowFlag.k] ? " · [" + (f.rowFlag.short || f.rowFlag.label) + "]" : "")); });
       return rows.join("\n");
     }
     if (f.type === "list") {
       return (v.items || []).map(function (it, i) {
         return (i + 1) + ". " + (f.itemFields || [{ k: "text" }]).map(function (s) {
           if (s.showIf && it[s.showIf.k] !== s.showIf.eq) return "";
-          var x = s.type === "select" ? CB.optLabel(s, it[s.k]) : it[s.k];
+          var x = s.type === "select" ? CB.optLabel(s, it[s.k]) : s.type === "pages" ? (Array.isArray(it[s.k]) && it[s.k].length ? it[s.k].map(function (n) { return "hlm. " + n; }).join(", ") : "") : it[s.k];
           return x ? (s.label ? s.label + ": " : "") + x : "";
         }).filter(Boolean).join(" · ");
       }).join("\n");
@@ -1006,6 +1114,12 @@
       if (v.note) bits.push(v.note);
       (f.extras || []).forEach(function (x) { if (v[x.k]) bits.push(x.label + " " + v[x.k]); });
       return bits.join(" — ");
+    }
+    if (f.type === "creativeq") {
+      if (v.state === "unknown") return "UNKNOWN — pemilik: " + (v.owner || "—") + " · tanggal: " + (v.due || "—");
+      if (v.state !== "asked") return "(belum diisi)";
+      var ro = (f.roles || []).filter(function (x) { return x.v === v.role; })[0];
+      return "“" + (v.question || "—") + "” — penanya: " + (v.asker || "—") + " (" + (ro ? ro.label : "stream belum dipilih") + ") · bagian: " + (v.section_page ? "hlm. " + v.section_page : "—") + (v.section_text ? ", " + v.section_text : "");
     }
     if (f.type === "enum") { var o = (f.options || []).filter(function (x) { return x.v === v; })[0]; return o ? o.label : v; }
     if (f.type === "segments") {

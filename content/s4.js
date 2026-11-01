@@ -309,6 +309,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           src: "Silabus §4 dan §15; Wheeler (2017), Designing Brand Identity, ed. 5 (proses brief)",
           html: `
 <p>Ini <b>artefak inti</b> Sesi 4. Pembacanya desainer yang tidak pernah bertemu timmu. Satu uji untuk seluruh brief: <b>could a designer who has never met your team act on this?</b> Kalau butuh satu percakapan lisan supaya masuk akal, brief-nya belum selesai, dan di proyek nyata percakapan itu tidak terjadi.</p>
+<p>Peranmu di halaman ini <b>director, bukan artist</b>: menetapkan apa yang harus benar dan bagaimana hasilnya dinilai, bukan menggambarnya. Kalau PM menulis "pakai merah bata", dia mengambil pekerjaan desainer, dan kalau hasilnya tidak disukai yang tersisa hanya debat selera.</p>
 <p><b>Direct, don't dictate.</b> Brief yang menyebut <b>solusi</b> ("logonya biru dan bulat") hanya menghasilkan tebakanmu sendiri, dikerjakan orang yang lebih terampil. Brief yang menyebut <b>persyaratan dan aturan penilaiannya</b> ("harus terbaca hitam-putih di ukuran thumbnail") bisa kembali sebagai tiga jawaban yang tidak terpikirkan, dan kamu tetap punya dasar objektif untuk memilih.</p>
 <p>Delapan kotak, dan dari mana isinya:</p>
 <ul>
@@ -347,14 +348,13 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             values: {
               "s4.p5.objective": "Give the design and animation team enough direction to build a visual and verbal identity for the film, its campaign, and its first merchandise — without dictating the artwork.",
               "s4.p5.audience": "Indonesian families with young children (primary, Session 2). Secondary: adults who want to back local creative work.",
-              "s4.p5.positioning": "“…the animated family film that proves local stories can be told at world-class quality” (Session 3 sentence). The identity must carry BOTH halves; either alone is a different film.",
+              "s4.p5.positioning": "“For Indonesian families who doubt a local film can be as good as an imported one, Jumbo is the animated family film made by an Indonesian studio to world-class production standards…” (Session 3 sentence, v2.) The identity must carry BOTH halves; either alone is a different film.",
               "s4.p5.tone": "Warm, not sweet. Proud, not defensive. Confident, not loud. RIGHT: “Made here. Made properly.” WRONG: “Finally, an Indonesian film you won't be embarrassed by.”",
               "s4.p5.mandatory": "Legible in black and white at thumbnail size · one character element that works without the wordmark · feels hand-made, not machine-perfect · works on a cinema poster AND a 40mm merch tag.",
               "s4.p5.prohibited": "No batik or wayang motifs as decorative shorthand for “Indonesian” — specificity must come from the story's own setting. No imitation of imported house styles.",
               "s4.p5.accessibility": "Contrast that survives print and small screens · colour never the sole carrier of meaning · Indonesian captions on the trailer from first release, not added later.",
               "s4.p5.rejected": { label: "A LINE WE REJECTED → REWROTE", text: "REJECTED: “Use a warm orange palette and hand-drawn textures.” REWRITTEN: “Must feel warm and hand-made rather than machine-perfect.”" }
             },
-            anno: { "s4.p5.positioning": "Catatan konsistensi: kalimat di worked example S4 ini masih kalimat Jumbo versi lama. Setelah revisi Sesi 3 (v2), kalimat Jumbo menjadi \"…the animated family film made by an Indonesian studio to world-class production standards…\". Prinsipnya tetap: kotak ini mengutip kalimat Sesi 3-mu yang berlaku, persis." },
             notice: "Read the prohibited box again. “No batik as decorative shorthand” is a strategic requirement, not a taste rule — it protects the claim that the film is authentically local rather than decoratively local. That is what a prohibition is for."
           },
           gojek: {
@@ -572,7 +572,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <ol>
 <li>Untuk tiap baris, tulis bagaimana janji itu <b>benar-benar</b> muncul di sana: wujudnya, aturannya, yang tidak boleh terjadi. "Jaga konsistensi brand" bukan isi baris, itu harapan.</li>
 <li>Tulis <b>siapa yang bertanggung jawab</b> di tiap baris. Baris tanpa nama tidak akan pernah diperiksa.</li>
-<li>Pastikan <b>minimal satu baris dibuat belakangan oleh orang di luar timmu</b>: vendor kemasan, licensee merchandise, tim toko, halaman checkout, email konfirmasi. Poster dan trailer dibuat orang yang duduk di rapat brand; touchpoint yang merusak brand hampir selalu yang dibuat paling akhir, oleh orang yang hanya memegang dokumen.</li>
+<li>Pastikan <b>minimal satu baris dibuat belakangan oleh orang di luar timmu</b>: vendor kemasan, licensee merchandise, tim toko, halaman checkout, email konfirmasi. Poster dan trailer dibuat orang yang duduk di rapat brand; touchpoint yang merusak brand hampir selalu yang dibuat paling akhir, oleh orang yang hanya memegang dokumen. Centang kolom <b>Dibuat orang di luar tim</b> pada baris itu (kolom ini tambahan app; tidak ada di workbook).</li>
 </ol>
 <p>Ada touchpoint lain yang penting untuk proyekmu (mis. layanan pelanggan, kemasan pengiriman)? Tambahkan baris.</p>`
         },
@@ -596,21 +596,20 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           jumbo: {
             name: "Jumbo", sub: "Six rows. The last two are the ones the team almost skipped.", caveat: CAVEAT,
             values: {
-              "s4.p8.matrix": { cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
-                ["PRODUCT — the film itself", "The promise is kept or broken here first. Production quality IS the promise; no identity work compensates for a film that doesn't hold attention."],
-                ["CAMPAIGN — trailer, poster, social", "Must carry both halves of the positioning. Highest-visibility touchpoint, and the one the team naturally over-focuses on."],
-                ["PLATFORM — thumbnail, listing page", "Where the black-and-white thumbnail rule earns its place: the poster gets shrunk to 200 pixels and the character element is all that survives."],
-                ["EVENT — screenings, premiere", "Warm, proud, non-defensive tone has to hold live, with a host improvising and nobody holding the brief."],
-                ["PACKAGING & MERCH — built later, by a licensee", "Made months from now by people who were never in this room, working from a style guide. Most likely place for the brand to break. Needs the 40mm rule and the character-alone element."],
-                ["COMMUNITY — fan art, reposts", "Cannot be controlled, and shouldn't be. What CAN be done: make the codes easy to copy. A silhouette people can draw is a code that spreads for free."]] }
+              "s4.p8.matrix": { keys: ["product", "campaign", "platform", "event", "packaging", "community"], cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
+                ["PRODUCT — the film itself", "The promise is kept or broken here first. Production quality IS the promise; no identity work compensates for a film that doesn't hold attention. Owner: producer."],
+                ["CAMPAIGN — trailer, poster, social", "Must carry both halves of the positioning. Highest-visibility touchpoint, and the one the team naturally over-focuses on. Owner: marketing lead."],
+                ["PLATFORM — thumbnail, listing page", "Where the black-and-white thumbnail rule earns its place: the poster gets shrunk to 200 pixels and the character element is all that survives. Owner: art director."],
+                ["EVENT — screenings, premiere", "Warm, proud, non-defensive tone has to hold live, with a host improvising and nobody holding the brief. Owner: marketing lead."],
+                ["PACKAGING & MERCH — built later, by a licensee", "Made months from now by people who were never in this room, working from a style guide. Most likely place for the brand to break. Needs the 40mm rule and the character-alone element. Owner: art director."],
+                ["COMMUNITY — fan art, reposts", "Cannot be controlled, and shouldn't be. What CAN be done: make the codes easy to copy. A silhouette people can draw is a code that spreads for free. Owner: marketing lead."]] }
             },
-            anno: { "s4.p8.matrix": "Perhatikan: worked example Jumbo tidak menyebut penanggung jawab per baris (Gojek, Marvel, dan LEGO menyebutnya). Di file-mu, kolom penanggung jawab wajib diisi." },
             notice: "Merchandise is made by strangers from a document, and community expression can't be controlled at all — which is exactly why both need decisions made now rather than reactions later."
           },
           gojek: {
             name: "Gojek / GoFood", sub: "Six rows. The last two are the ones the team almost skipped.", caveat: CAVEAT,
             values: {
-              "s4.p8.matrix": { cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
+              "s4.p8.matrix": { keys: ["product", "campaign", "platform", "event", "packaging", "community"], cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
                 ["PRODUCT — the thing itself", "The promise is kept or broken here first: the home-screen entry, the tracker and the order must work as rides do. Owner: product designer, with engineering lead."],
                 ["CAMPAIGN — trailer, poster, social", "In-app banner, push and social. Must show reuse (“nothing to enter”) before it shows any offer, and must not claim more merchants than the pilot has. Owner: marketing lead."],
                 ["PLATFORM — thumbnails, listings, store pages", "Gojek’s existing app listing and the merchant list page: the green and the “Go” name must survive a small thumbnail. Owner: GoFood product lead."],
@@ -623,7 +622,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           marvel: {
             name: "Disney/Marvel (Iron Man)", sub: "Six rows. The last two are the ones the team almost skipped.", caveat: CAVEAT,
             values: {
-              "s4.p8.matrix": { cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
+              "s4.p8.matrix": { keys: ["product", "campaign", "platform", "event", "packaging", "community"], cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
                 ["PRODUCT — the film itself", "The promise is kept or broken here first: the film must work, start to finish, for someone who knows nothing. If it needs the comic, no campaign fixes that. Owner: director."],
                 ["CAMPAIGN — trailer, poster, social", "Must show the man and the wit, never the mythology. Highest-visibility touchpoint, and where a universe teaser will be most tempting to add. Owner: marketing lead."],
                 ["PLATFORM — thumbnail, listing page", "The poster shrinks to 200 pixels and only the helmet silhouette survives. The endorsement line must still read. Owner: art director."],
@@ -636,7 +635,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           lego: {
             name: "LEGO Technic", sub: "Six rows. The last two are the ones the team almost skipped.", caveat: CAVEAT,
             values: {
-              "s4.p8.matrix": { cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
+              "s4.p8.matrix": { keys: ["product", "campaign", "platform", "event", "packaging", "community"], cols: ["Touchpoint", "How the brand promise is expressed here — and who is responsible for it"], rows: [
                 ["PRODUCT — the thing itself", "The promise is kept or broken here first: every function named on the pack has to work as shown, and the build has to survive a long session. Owner: engineering lead."],
                 ["CAMPAIGN — trailer, poster, social", "Mechanism demo, reviewer outreach, press. Must show the function moving before it talks about price. Highest-visibility touchpoint. Owner: marketing lead."],
                 ["PLATFORM — thumbnails, listings, store pages", "Product page and retailer listings: the parent mark and the function list must survive a 200-pixel thumbnail. Owner: e-commerce lead."],
@@ -658,14 +657,14 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <p>Halaman ini mengubah selera menjadi sesuatu yang bisa diperiksa. Tulis <b>5–7 kriteria biner</b> (ya/tidak) untuk menerima atau menolak hasil kerja kreatif. <i>"Anyone can have taste. Only a brief makes taste checkable."</i></p>
 <ol>
 <li><b>Uji dua-pemeriksa:</b> dua orang memeriksa terpisah, apakah jawabannya sama? "Apakah terasa premium?" gagal. "Apakah wordmark terbaca hitam-putih pada lebar 120 piksel?" lolos. Kriteria yang dijawab berbeda belum biner.</li>
-<li>Tandai setiap kriteria milik <b>tes Gate 3</b> yang mana: architecture, naming, atau brief. Kebanyakan kriteria biasanya milik brief; satu kriteria arsitektur (mis. "logo induk wajib ada di depan kemasan") membuat Tes 1 bisa diperiksa.</li>
+<li>Tulis <b>source page</b>: halaman 2–8 tempat aturan itu tertulis (boleh lebih dari satu). Lalu tandai kriteria itu milik <b>tes Gate 3</b> yang mana: architecture, naming, atau brief. Kebanyakan kriteria biasanya milik brief; satu kriteria arsitektur (mis. "logo induk wajib ada di depan kemasan") membuat Tes 1 bisa diperiksa. Kalau semua kriteriamu berasal dari satu tes, tulis kenapa dua tes lainnya tidak punya.</li>
 <li>Tulis <b>jawaban yang lolos</b>. Untuk kriteria larangan ("Apakah ada elemen yang hanya mengandalkan warna?"), jawaban yang lolos adalah NO.</li>
 <li>Jawab hari ini: YES, NO, atau UNKNOWN. Yang belum bisa dicek (belum ada karya, belum diuji ke orang luar) ditulis UNKNOWN, bukan dicentang. Checklist yang semuanya tercentang biasanya ditulis setelah karyanya jadi.</li>
-<li>Tulis bukti: apa yang dilihat pemeriksa.</li>
 </ol>
-<p>Bahan kriteria paling mudah ada di kotak Mandatory, Prohibited, dan Accessibility hlm. 5 (panel atas). Lebih dari tujuh butir, checklist berhenti dipakai: pilih.</p>`
+<p><b>Cara memilih:</b> kumpulkan 10–15 aturan dari hlm. 2–8, coret yang bukan ya/tidak, urutkan dengan pertanyaan <i>"seberapa mahal kalau salah dan sudah tercetak?"</i>, simpan 5–7, lalu beri setiap kriteria source page dan tes Gate 3-nya. Bahan paling mudah ada di kotak Mandatory, Prohibited, dan Accessibility hlm. 5 (panel atas). Lebih dari tujuh butir, checklist berhenti dipakai: pilih.</p>
+<p><b>Pertanyaan dari creative stream.</b> Kirim brief hlm. 5 ke creative stream (atau satu orang di luar timmu), lalu bawa pulang <b>satu pertanyaan</b>. Penanya harus dari stream selain Product Manager; nama PM timmu sendiri tidak dihitung. Tulis pertanyaannya, siapa yang bertanya dan dari stream apa, dan bagian mana (hlm. 2–8) yang ternyata ambigu. Belum ada yang bertanya? Pilih <b>UNKNOWN</b> dan tulis pemilik dan tanggal ditanyakannya. UNKNOWN yang ditulis lengkap berbeda dari kotak yang dibiarkan kosong. Yang dicek hanya ada atau tidaknya, bukan mutu pertanyaannya.</p>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> ini output silabus butir 9 (<i>creative approval checklist</i>) dan sisi kedua CLO 3: <i>decision criteria</i> untuk stream lain. Kamu menulis kriteria dan buktinya; <b>Gate 3 tidak diputuskan di halaman ini</b>. Gate 3 dibaca dari file-mu setelah dikumpulkan.</p>
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> ini output silabus butir 9 (<i>creative approval checklist</i>) dan sisi kedua CLO 3: <i>decision criteria</i> untuk stream lain. Kamu menulis kriteria, jawabannya, dan satu pertanyaan dari creative stream; <b>Gate 3 tidak diputuskan di halaman ini</b>. Gate 3 dibaca dari file-mu setelah dikumpulkan.</p>
 <p>Gate 3 membaca tiga tes satu per satu: <b>architecture</b> (hlm. 2), <b>naming direction</b> (hlm. 3–4), <b>identity brief</b> (hlm. 5–9). Pertanyaannya bukan "lolos atau tidak", tetapi "tes mana yang bermasalah?" Status ditentukan oleh tes yang terlemah, dan ambangnya sama untuk semua orang. Kondisi Gate 2 yang masih terbuka tidak hilang: ia ikut terbawa ke Gate 3. UNKNOWN yang punya owner, tanggal, dan uji penutupan tidak menggagalkan tes.</p>`,
         deeper: {
           summary: "Deeper read — tiga tes Gate 3 dan apa yang dicari di tiap tes",
@@ -673,18 +672,254 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <ul>
 <li><b>Tes 1 · Brand architecture (hlm. 2).</b> Model ditulis dalam satu kalimat; garis punya alasan kepercayaan atau kerusakan; sisi OUT menyebut nama yang konkret. Bila ada lapisan internal (seri, universe), aturan apa yang boleh dilihat audiens sudah tertulis, bukan niat.</li>
 <li><b>Tes 2 · Naming direction (hlm. 3–4).</b> Lima kriteria dinilai dengan alasan; setiap skor 1–2 punya mitigasi yang bisa dianggarkan; kelas yang dicek disebut; setiap UNKNOWN atau TAKEN punya owner, tanggal, dan uji penutupan.</li>
-<li><b>Tes 3 · Identity brief (hlm. 5–9).</b> Delapan bagian brief terisi dengan minimal satu baris ditolak dan ditulis ulang; kode maksimal lima dengan pemilik; enam kanal terisi atau beralasan; minimal satu touchpoint dibuat orang luar; 5–7 kriteria biner yang lolos uji dua-pemeriksa.</li>
+<li><b>Tes 3 · Identity brief (hlm. 5–9).</b> Delapan bagian brief terisi dengan minimal satu baris ditolak dan ditulis ulang; kode maksimal lima dengan pemilik; enam kanal terisi atau beralasan; minimal satu touchpoint dibuat orang luar (ditandai di hlm. 8); 5–7 kriteria biner yang lolos uji dua-pemeriksa; kotak pertanyaan creative stream terisi, atau UNKNOWN dengan pemilik dan tanggal.</li>
 </ul>
 <p>Kenapa Gate ini ada sebelum Sesi 5 dan 6: silabus §13 melarang masuk produksi berbiaya tinggi atau eksekusi promosi saat gate strategis utama belum disetujui. Brief yang tidak koheren membuat semua uang yang dikeluarkan setelahnya terbuang.</p>`
         },
-        callout: "<b>Gate 3 dibaca dari dokumenmu, tidak diputuskan olehmu.</b> Kamu menulis kriteria dan buktinya; penilai membaca tiga tes (architecture hlm. 2, naming direction hlm. 3–4, identity brief hlm. 5–9) setelah file dikumpulkan. Kondisi Gate 2 yang masih terbuka ikut terbawa. Contoh di bawah menampilkan isi ketiga tes untuk tiap kasus, bukan statusnya.",
+        callout: "<b>Gate 3 dibaca dari dokumenmu, tidak diputuskan olehmu.</b> Kamu menulis kriteria, jawabannya, dan satu pertanyaan dari creative stream; penilai membaca tiga tes (architecture hlm. 2, naming direction hlm. 3–4, identity brief hlm. 5–9) setelah file dikumpulkan. Kondisi Gate 2 yang masih terbuka ikut terbawa. Contoh di bawah menampilkan isi ketiga tes untuk tiap kasus, bukan statusnya.",
+        tigaTes: {
+          "title": "Cek tiga tes Gate 3",
+          "intro": "Gate 3 dibaca dari dokumenmu lewat tiga tes, satu per satu. Pertanyaannya bukan \"lolos atau tidak\", tetapi \"tes mana yang bermasalah?\". Di bawah ini apa yang dicek di tiap tes, dan bagaimana kelihatannya di contoh Jumbo dan LEGO Technic (isinya diambil langsung dari panel contoh).",
+          "cara": "Gate 3 tidak diperiksa live. Yang dibaca adalah file JSON dari HTML tool ini, unggahan terakhir yang masuk lewat Form. Batas unggah, hari penilaian, dan hari hasil keluar diumumkan dosen di kelas dan di grup kelas; app tidak menampilkannya. Hasil ditentukan oleh tes yang paling lemah dari ketiganya. Kondisi Gate 2 yang masih terbuka pada hari file dibaca ikut terbawa. Silabus §13: tim tidak melanjutkan ke produksi berbiaya tinggi atau eksekusi promosi selama gate strategis utama belum disetujui.",
+          "tests": [
+            {
+              "k": "t1",
+              "title": "Tes 1 · Brand architecture",
+              "pages": "hlm. 2",
+              "items": [
+                {
+                  "k": "t1a",
+                  "text": "Model ditulis dalam satu kalimat (\"We are a … because …\")."
+                },
+                {
+                  "k": "t1b",
+                  "text": "Setiap garis punya alasan kepercayaan atau kerusakan."
+                },
+                {
+                  "k": "t1c",
+                  "text": "Sisi OUT menyebut sepasang nama yang konkret."
+                }
+              ]
+            },
+            {
+              "k": "t2",
+              "title": "Tes 2 · Naming direction",
+              "pages": "hlm. 3–4",
+              "items": [
+                {
+                  "k": "t2a",
+                  "text": "Lima kriteria dinilai, masing-masing dengan alasan."
+                },
+                {
+                  "k": "t2b",
+                  "text": "Setiap skor 1–2 punya mitigasi yang bisa dianggarkan."
+                },
+                {
+                  "k": "t2c",
+                  "text": "Setiap UNKNOWN atau TAKEN punya pemilik, tanggal, dan uji penutupan."
+                }
+              ]
+            },
+            {
+              "k": "t3",
+              "title": "Tes 3 · Identity brief",
+              "pages": "hlm. 5–9",
+              "items": [
+                {
+                  "k": "t3a",
+                  "text": "Delapan bagian brief terisi dan bisa dipakai orang asing."
+                },
+                {
+                  "k": "t3b",
+                  "text": "Minimal satu baris ditolak dan ditulis ulang."
+                },
+                {
+                  "k": "t3c",
+                  "text": "Kode maksimal lima, masing-masing dengan pemilik."
+                },
+                {
+                  "k": "t3d",
+                  "text": "Enam kanal terisi, atau diberi alasan \"not needed, because…\"."
+                },
+                {
+                  "k": "t3e",
+                  "text": "Minimal satu touchpoint dibuat orang di luar tim."
+                },
+                {
+                  "k": "t3f",
+                  "text": "Lima sampai tujuh kriteria biner, masing-masing dengan halaman asal dan tes."
+                },
+                {
+                  "k": "t3g",
+                  "text": "Satu pertanyaan dari creative stream: terisi, atau UNKNOWN dengan pemilik dan tanggal."
+                }
+              ]
+            }
+          ],
+          "cases": {
+            "jumbo": {
+              "name": "Jumbo",
+              "items": {
+                "t1a": {
+                  "refs": [
+                    "s4.p2.model_why"
+                  ]
+                },
+                "t1b": {
+                  "read": "Both lines are drawn."
+                },
+                "t1c": {
+                  "refs": [
+                    "s4.p2.flows"
+                  ]
+                },
+                "t2a": {
+                  "scores": [
+                    "s4.p3.meaningful",
+                    "s4.p3.distinctive",
+                    "s4.p3.pronounceable",
+                    "s4.p3.protectable",
+                    "s4.p3.growth"
+                  ],
+                  "read": "Scored honestly: Distinctive & Findable and Protectable are both 2, with mitigation named and budgeted for Session 5."
+                },
+                "t2b": {
+                  "refs": [
+                    "s4.p3.mitigation"
+                  ],
+                  "read": "The name is locked, so the mitigation is the decision."
+                },
+                "t2c": {
+                  "refs": [
+                    "s4.p4.actions"
+                  ],
+                  "read": "Three UNKNOWNs on the trademark page each carry an owner and a date."
+                },
+                "t3a": {
+                  "read": "A stranger can act without a conversation: requirements, not solutions; a prohibited box with its strategic reason; one line rejected and rewritten."
+                },
+                "t3b": {
+                  "refs": [
+                    "s4.p5.rejected"
+                  ]
+                },
+                "t3c": {
+                  "refs": [
+                    "s4.p6.owners"
+                  ],
+                  "read": "Codes cut to two (one weak), each with an owner."
+                },
+                "t3d": {
+                  "refs": [
+                    "s4.p7.interactive"
+                  ],
+                  "read": "Six channels."
+                },
+                "t3e": {
+                  "read": "Six touchpoints, two built by outsiders."
+                },
+                "t3f": {
+                  "refs": [
+                    "s4.p9.criteria"
+                  ],
+                  "read": "Checklist: five pass, two open. Column check: all seven come from the brief; none guards the architecture or the naming. That gap is real, so we leave it visible."
+                },
+                "t3g": {
+                  "refs": [
+                    "s4.p9.creative_question"
+                  ]
+                }
+              },
+              "after": {
+                "t1": "Sub-names are UNKNOWN with an owner and a date. No checklist criterion guards this decision."
+              }
+            },
+            "lego": {
+              "name": "LEGO Technic",
+              "items": {
+                "t1a": {
+                  "refs": [
+                    "s4.p2.model_why"
+                  ]
+                },
+                "t1b": {
+                  "read": "Sub-brand model chosen and lines drawn on trust: the parent’s fit tolerance flows in; a cash-grab reading flows out to the parent’s price discipline."
+                },
+                "t1c": {
+                  "refs": [
+                    "s4.p2.flows"
+                  ]
+                },
+                "t2a": {
+                  "scores": [
+                    "s4.p3.meaningful",
+                    "s4.p3.distinctive",
+                    "s4.p3.pronounceable",
+                    "s4.p3.protectable",
+                    "s4.p3.growth"
+                  ],
+                  "read": "Scored honestly: Room to Grow is a 2, with an owner and a date for the tier name."
+                },
+                "t2b": {
+                  "refs": [
+                    "s4.p3.mitigation"
+                  ]
+                },
+                "t2c": {
+                  "refs": [
+                    "s4.p4.actions"
+                  ],
+                  "read": "Two UNKNOWNs on the trademark check each carry an action, an owner and a date."
+                },
+                "t3a": {
+                  "read": "A stranger can act: requirements, not solutions; a prohibited box with its strategic reason; a rejected line rewritten as a requirement."
+                },
+                "t3b": {
+                  "refs": [
+                    "s4.p5.rejected"
+                  ]
+                },
+                "t3c": {
+                  "refs": [
+                    "s4.p6.owners"
+                  ],
+                  "read": "Codes cut to four with owners."
+                },
+                "t3d": {
+                  "refs": [
+                    "s4.p7.interactive"
+                  ],
+                  "read": "Six channels."
+                },
+                "t3e": {
+                  "read": "Six touchpoints, two built by outsiders."
+                },
+                "t3f": {
+                  "refs": [
+                    "s4.p9.criteria"
+                  ],
+                  "read": "Checklist: five pass, two open. Column check: criterion 5 is the only one that guards the architecture; the other six come from the brief."
+                },
+                "t3g": {
+                  "refs": [
+                    "s4.p9.creative_question"
+                  ]
+                }
+              },
+              "after": {
+                "t1": "The parent mark stays on the pack front (page 9, criterion 5 passes). Tier names are UNKNOWN, with an owner and a date."
+              }
+            }
+          }
+        },
         reverse: {
           title: "Cek terbalik sebelum lanjut",
           items: [
             "Lima sampai tujuh kriteria, masing-masing satu pertanyaan ya/tidak?",
             "Bacakan satu kriteria ke teman: apakah dua orang akan menjawab sama?",
-            "Setiap kriteria ditandai tesnya, dan minimal satu kriteria menguji arsitektur?",
+            "Setiap kriteria punya source page dan tesnya, dan minimal satu kriteria menguji arsitektur?",
             "Yang belum bisa dicek ditulis UNKNOWN, bukan YES?",
+            "Kotak pertanyaan creative stream terisi (penanya bukan PM timmu), atau UNKNOWN dengan pemilik dan tanggal?",
             "Kondisi Gate 2-mu (kalau ada) sudah ditutup, atau masih terbuka dengan owner dan waktunya?"
           ]
         },
@@ -692,65 +927,152 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           jumbo: {
             name: "Jumbo", sub: "Five pass — a NO is the passing answer on 4 and 5. Two stay open, and that is honest.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["#", "Criterion", "Answer"], rows: [
-                ["1", "Does the wordmark stay legible in black and white at 120 pixels wide?", "YES · PASS"],
-                ["2", "Does the character element work with the wordmark removed?", "YES · PASS"],
-                ["3", "Does the identity use at least two of our named brand codes?", "YES · PASS"],
-                ["4", "Does any element rely on colour alone to carry meaning?", "NO · PASS"],
-                ["5", "Does it use borrowed cultural motifs as decorative shorthand?", "NO · PASS"],
-                ["6", "Does it work on both a cinema poster and a 40mm merchandise tag?", "UNKNOWN"],
-                ["7", "Do both outside readers (brief unseen) call the tone proud or warm, not defensive?", "UNTESTED"]] }
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "GATE 3 TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+                ["1", "p. 5", "Does the wordmark stay legible in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
+                ["2", "p. 5", "Does the character element work with the wordmark removed?", "BRIEF", "YES · PASS"],
+                ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
+                ["4", "p. 5", "Does any element rely on colour alone to carry meaning?", "BRIEF", "NO · PASS"],
+                ["5", "p. 5", "Does it use borrowed cultural motifs as decorative shorthand?", "BRIEF", "NO · PASS"],
+                ["6", "pp. 5, 8", "Does it work on both a cinema poster and a 40mm merchandise tag?", "BRIEF", "UNKNOWN"],
+                ["7", "p. 5", "Do both outside readers (brief unseen) call the tone proud or warm, not defensive?", "BRIEF", "UNTESTED"]] },
+              "s4.p9.creative_question": { label: "QUESTION FROM YOUR CREATIVE STREAM", text: "UNKNOWN. The brief has not reached the animation lead yet, so no outside reader has asked anything. Owner: producer. Due: before Gate 3 is read. Written down, not left blank." }
             },
-            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2, 9): PASS. Endorsed brand chosen on the damage question: Jumbo may borrow the studio’s credibility, but a weak result does not automatically hurt the next release. Both lines are drawn. Sub-names are UNKNOWN with an owner and a date. Page 9, criteria 1–3 pass. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Distinctive & Findable and Protectable are both 2, with mitigation named and budgeted for Session 5. Three UNKNOWNs on the trademark page each carry an owner and a date. The name is locked, so the mitigation is the decision. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act without a conversation: requirements, not solutions; a prohibited box with its strategic reason; one line rejected and rewritten. Codes cut to two (one weak), each with an owner; six channels; six touchpoints, two built by outsiders. Checklist: five pass, two open. Carried from Gate 2: five parent interviews, owner producer, before Gate 3 is read. Until it closes, low-cost work only, no high-cost production (syllabus §13). Criteria 6 and 7 stay open until two checkers from outside the team test them.",
+            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2, 9): PASS. Endorsed brand chosen on the damage question: Jumbo may borrow the studio’s credibility, but a weak result does not automatically hurt the next release. Both lines are drawn. Sub-names are UNKNOWN with an owner and a date. No checklist criterion guards this decision. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Distinctive & Findable and Protectable are both 2, with mitigation named and budgeted for Session 5. Three UNKNOWNs on the trademark page each carry an owner and a date. The name is locked, so the mitigation is the decision. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act without a conversation: requirements, not solutions; a prohibited box with its strategic reason; one line rejected and rewritten. Codes cut to two (one weak), each with an owner; six channels; six touchpoints, two built by outsiders. Checklist: five pass, two open. Carried from Gate 2: five parent interviews, owner producer, before Gate 3 is read. Until it closes, low-cost work only, no high-cost production (syllabus §13). Criteria 6 and 7 stay open until two checkers from outside the team test them. CREATIVE-STREAM QUESTION: UNKNOWN, with an owner and a date. COLUMN CHECK: all seven come from the brief; none guards the architecture or the naming. That gap is real, so we leave it visible.",
             notice: "Notice: two 2s on the naming page did not stop the pass. A pass means the weakness is written down with a budget and an owner, not that it went away."
           },
           gojek: {
             name: "Gojek / GoFood", sub: "Five pass — a NO is the passing answer on 4 and 5. Two stay open because they need real riders.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["#", "Criterion", "Answer"], rows: [
-                ["1", "Does the GoFood entry on the home screen stay recognisable in black and white at 120 pixels wide?", "YES · PASS"],
-                ["2", "Does a GoFood screen still read as Gojek with the logo covered?", "YES · PASS"],
-                ["3", "Does the identity use at least two of our named brand codes?", "YES · PASS"],
-                ["4", "Does any order-status step rely on colour alone?", "NO · PASS"],
-                ["5", "Does GoFood use its own palette, logo or navigation separate from the Gojek app?", "NO · PASS"],
-                ["6", "Can a rider who has never seen GoFood find and place an order from the home screen without help?", "UNKNOWN"],
-                ["7", "Do at least 4 of 5 riders (brief unseen) call the tone familiar or practical, not flashy?", "UNTESTED"]] }
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "GATE 3 TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+                ["1", "pp. 5, 8", "Does the GoFood entry on the home screen stay recognisable in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
+                ["2", "pp. 5–6", "Does a GoFood screen still read as Gojek with the logo covered?", "BRIEF", "YES · PASS"],
+                ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
+                ["4", "p. 5", "Does any order-status step rely on colour alone?", "BRIEF", "NO · PASS"],
+                ["5", "p. 2", "Does GoFood use its own palette, logo or navigation separate from the Gojek app?", "ARCHITECTURE", "NO · PASS"],
+                ["6", "pp. 5, 8", "Can a rider who has never seen GoFood find and place an order from the home screen without help?", "BRIEF", "UNKNOWN"],
+                ["7", "p. 5", "Do at least 4 of 5 riders (brief unseen) call the tone familiar or practical, not flashy?", "BRIEF", "UNTESTED"]] },
+              "s4.p9.creative_question": { label: "QUESTION FROM YOUR CREATIVE STREAM (illustrative)", text: "“Mandatory says Gojek green on every GoFood screen. Does that include the restaurant’s own photo banner, which has its own colours?” Asked by: app UI designer. Ambiguous section: p. 5, Mandatory." }
             },
-            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2, 9): PASS. Branded house chosen on the damage question, not on efficiency. Damage line drawn: a failed food order lands on GoRide and GoPay, a payment bug on GoFood. The team accepted it and wrote a food-failure rule (an open action, with an owner). Page 9, criterion 5 passes. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Distinctive & Findable is a 2, a common-word trap with a mitigation, an owner and a date. One UNKNOWN on the trademark check — legal counsel, asked by the GoFood product lead, before Session 5. The scoped CLEARs say what they cover. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act: requirements, not solutions; a prohibited box with its reason; a rejected line rewritten. Codes cut to four with owners; six channels; six touchpoints, two built by outsiders. Checklist: five pass; criteria 6 and 7 need real riders, folded into the Gate 2 interviews. Carried from Gate 2: v2 re-score (brand lead) and five real-rider interviews (GoFood product lead), before Gate 3 is read. OPEN ACTIONS (owner · when · closed when): (1) 5 interviews with real GoRide riders who are not colleagues, about past behaviour only, plus the home screen and a tracker mock-up for criteria 6 and 7 — GoFood product lead · before Gate 3 is read · raw notes filed unedited; criteria 6 and 7 answered YES or NO by two checkers. (2) Re-score the v2 positioning draft so another super-app could not say it — brand lead · before Gate 3 is read · a peer team re-scores Distinctive at 3 or higher. (3) Write the food-failure rule on one page — customer ops lead · before Session 5 · rule filed with ops sign-off, and tried once on a pretend incident. (4) Legal counsel searches the combined “GoFood” mark and logo form — legal counsel, asked by GoFood product lead · before Session 5 · written answer filed, naming the classes covered. Rows 1 and 2 close the carried condition; rows 3 and 4 are owned actions.",
+            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2, 9): PASS. Branded house chosen on the damage question, not on efficiency. Damage line drawn: a failed food order lands on GoRide and GoPay, a payment bug on GoFood. The team accepted it and wrote a food-failure rule (an open action, with an owner). Page 9, criterion 5 passes. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Distinctive & Findable is a 2, a common-word trap with a mitigation, an owner and a date. One UNKNOWN on the trademark check — legal counsel, asked by the GoFood product lead, before Session 5. The scoped CLEARs say what they cover. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act: requirements, not solutions; a prohibited box with its reason; a rejected line rewritten. Codes cut to four with owners; six channels; six touchpoints, two built by outsiders. Checklist: five pass; criteria 6 and 7 need real riders, folded into the Gate 2 interviews. Carried from Gate 2: v2 re-score (brand lead) and five real-rider interviews (GoFood product lead), before Gate 3 is read. OPEN ACTIONS (owner · when · closed when): (1) 5 interviews with real GoRide riders who are not colleagues, about past behaviour only, plus the home screen and a tracker mock-up for criteria 6 and 7 — GoFood product lead · before Gate 3 is read · raw notes filed unedited; criteria 6 and 7 answered YES or NO by two checkers. (2) Re-score the v2 positioning draft so another super-app could not say it — brand lead · before Gate 3 is read · a peer team re-scores Distinctive at 3 or higher. (3) Write the food-failure rule on one page — customer ops lead · before Session 5 · rule filed with ops sign-off, and tried once on a pretend incident. (4) Legal counsel searches the combined “GoFood” mark and logo form — legal counsel, asked by GoFood product lead · before Session 5 · written answer filed, naming the classes covered. Rows 1 and 2 close the carried condition; rows 3 and 4 are owned actions. CREATIVE-STREAM QUESTION: answered (illustrative). COLUMN CHECK: criterion 5 is the only one that guards the architecture; the other six come from the brief.",
             notice: "Notice: a carried condition is not a new defect. What is open is evidence from outside the team, and it already has an owner and a date."
           },
           marvel: {
             name: "Disney/Marvel (Iron Man)", sub: "Five pass — a NO is the passing answer on 4 and 5. Two stay open, and that is honest.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["#", "Criterion", "Answer"], rows: [
-                ["1", "Does the title lockup stay legible in black and white at 120 pixels wide?", "YES · PASS"],
-                ["2", "Does the helmet silhouette work with the wordmark removed?", "YES · PASS"],
-                ["3", "Does the identity use at least two of our named brand codes?", "YES · PASS"],
-                ["4", "Does any public asset show or name another hero or the connected universe?", "NO · PASS"],
-                ["5", "Does any element rely on colour alone to carry meaning?", "NO · PASS"],
-                ["6", "Does it work on both a cinema poster and a 40mm merchandise tag?", "UNKNOWN"],
-                ["7", "Do both outside readers (brief unseen) call the tone witty and plain, not “for fans”?", "UNTESTED"]] }
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "GATE 3 TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+                ["1", "p. 5", "Does the title lockup stay legible in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
+                ["2", "pp. 5–6", "Does the helmet silhouette work with the wordmark removed?", "BRIEF", "YES · PASS"],
+                ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
+                ["4", "p. 2", "Does any public asset show or name another hero or the connected universe?", "ARCHITECTURE", "NO · PASS"],
+                ["5", "p. 5", "Does any element rely on colour alone to carry meaning?", "BRIEF", "NO · PASS"],
+                ["6", "pp. 5, 8", "Does it work on both a cinema poster and a 40mm merchandise tag?", "BRIEF", "UNKNOWN"],
+                ["7", "p. 5", "Do both outside readers (brief unseen) call the tone witty and plain, not “for fans”?", "BRIEF", "UNTESTED"]] },
+              "s4.p9.creative_question": { label: "QUESTION FROM YOUR CREATIVE STREAM (illustrative)", text: "“Prohibited bans other heroes’ names on the poster. Does a crowd of unnamed silhouettes behind the helmet count as a universe tease?” Asked by: poster designer. Ambiguous section: p. 5, Prohibited." }
             },
-            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2): PASS WITH CONDITION. Model and lines are clear: endorsed brand plus an internal universe layer, damage case written. Gap: the rule for what the audience may see of that layer is an intention, not a document. ACTION: one-page rule — what is shown, in which asset, until when. OWNER: studio head. WHEN: before Gate 4 is read. CLOSED WHEN: filed and signed by the marketing and licensing leads. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Distinctive & Findable is a 2, with mitigation named and budgeted. Three UNKNOWNs on the trademark check each carry an action, an owner and a date — DJKI search, studio legal counsel, before Session 5; qualified handle, marketing lead, before Gate 3 is read; app stores, licensing lead, Session 5. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act without a conversation: requirements, not solutions; a prohibited box with its strategic reason; one line rejected and rewritten. Codes cut to three with owners; six channels with owners; six touchpoints, two built by outsiders; a binary checklist — five pass, two open. The weakness sits in brand architecture — one of the three. Gate 2’s condition (five screenings with non-comic readers, marketing lead) carries over if still open. Until the rule exists, no high-cost production or promotion that shows the universe layer (syllabus §13).",
+            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2): PASS WITH CONDITION. Model and lines are clear: endorsed brand plus an internal universe layer, damage case written. Gap: the rule for what the audience may see of that layer is an intention, not a document. ACTION: one-page rule — what is shown, in which asset, until when. OWNER: studio head. WHEN: before Gate 4 is read. CLOSED WHEN: filed and signed by the marketing and licensing leads. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Distinctive & Findable is a 2, with mitigation named and budgeted. Three UNKNOWNs on the trademark check each carry an action, an owner and a date — DJKI search, studio legal counsel, before Session 5; qualified handle, marketing lead, before Gate 3 is read; app stores, licensing lead, Session 5. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act without a conversation: requirements, not solutions; a prohibited box with its strategic reason; one line rejected and rewritten. Codes cut to three with owners; six channels with owners; six touchpoints, two built by outsiders; a binary checklist — five pass, two open. The weakness sits in brand architecture — one of the three. Gate 2’s condition (five screenings with non-comic readers, marketing lead) carries over if still open. Until the rule exists, no high-cost production or promotion that shows the universe layer (syllabus §13). CREATIVE-STREAM QUESTION: answered (illustrative). COLUMN CHECK: criterion 4 is the only one that guards the architecture; the other six come from the brief.",
             notice: "Notice: the same threshold applies to every case. What differs here is WHERE the weakness sits — in the architecture, not the brief — which is why the fix is a one-page rule and not a rewritten brief."
           },
           lego: {
             name: "LEGO Technic", sub: "Five pass — a NO is the passing answer on 4. Two stay open, and that is honest.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["#", "Criterion", "Answer"], rows: [
-                ["1", "Does the Technic wordmark stay legible in black and white at 120 pixels wide?", "YES · PASS"],
-                ["2", "Does the liftarm beam shape work with the wordmark removed?", "YES · PASS"],
-                ["3", "Does the identity use at least two of our named brand codes?", "YES · PASS"],
-                ["4", "Does any instruction step rely on colour alone to tell parts apart?", "NO · PASS"],
-                ["5", "Does the brief require the parent LEGO mark on the front of the pack and above the fold of the product page?", "YES · PASS"],
-                ["6", "Does every function named on the pack have a demonstration an outsider can watch?", "UNKNOWN"],
-                ["7", "Do both hobbyist readers (brief unseen) call the tone plain-spoken, not showy?", "UNTESTED"]] }
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "GATE 3 TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+                ["1", "p. 5", "Does the Technic wordmark stay legible in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
+                ["2", "pp. 5–6", "Does the liftarm beam shape work with the wordmark removed?", "BRIEF", "YES · PASS"],
+                ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
+                ["4", "p. 5", "Does any instruction step rely on colour alone to tell parts apart?", "BRIEF", "NO · PASS"],
+                ["5", "p. 2", "Does the brief require the parent LEGO mark on the front of the pack and above the fold of the product page?", "ARCHITECTURE", "YES · PASS"],
+                ["6", "pp. 5, 8", "Does every function named on the pack have a demonstration an outsider can watch?", "BRIEF", "UNKNOWN"],
+                ["7", "p. 5", "Do both hobbyist readers (brief unseen) call the tone plain-spoken, not showy?", "BRIEF", "UNTESTED"]] },
+              "s4.p9.creative_question": { label: "QUESTION FROM YOUR CREATIVE STREAM (illustrative)", text: "“Prohibited bans a blueprint-only look. Does a faint blueprint grid behind a product photo count as blueprint-only?” Asked by: packaging designer. Ambiguous section: p. 5, Prohibited." }
             },
-            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2, 9): PASS. Sub-brand model chosen and lines drawn on trust: the parent’s fit tolerance flows in; a cash-grab reading flows out to the parent’s price discipline. The parent mark stays on the pack front (page 9, criterion 5 passes). Tier names are UNKNOWN, with an owner and a date. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Room to Grow is a 2, with an owner and a date for the tier name. Two UNKNOWNs on the trademark check each carry an action, an owner and a date — parent legal team via brand manager, before Session 5; app stores, product lead, Session 5. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act: requirements, not solutions; a prohibited box with its strategic reason; a rejected line rewritten as a requirement. Codes cut to four with owners; six channels; six touchpoints, two built by outsiders. Checklist: five pass, two open. Gate 2 carries nothing. TRACKED ACTIONS (none is a condition): (1) Write the parent-link rule on one page — brand manager, with brand-leadership sign-off · before Session 5 · rule filed with brand leadership’s signature on it. (2) Parent legal team confirms the line-name registrations in classes 28 and 41; the tier name is searched in the same classes once chosen — brand manager asks the parent legal team · before Session 5 · written answer filed, naming the classes covered. (3) Hold the PLANNED pre-launch reviewer demo so each named function is seen moving — marketing lead · date proposed before Session 5; UNKNOWN until fixed · raw notes from the reviewers filed unedited; criterion 6 answered YES or NO by two checkers. If one slips past its date, say so in the next workbook update.",
+            note: "Gate 3 dibaca dari dokumen; contoh ini menampilkan isi ketiga tes, bukan statusnya. TEST 1 · BRAND ARCHITECTURE (p. 2, 9): PASS. Sub-brand model chosen and lines drawn on trust: the parent’s fit tolerance flows in; a cash-grab reading flows out to the parent’s price discipline. The parent mark stays on the pack front (page 9, criterion 5 passes). Tier names are UNKNOWN, with an owner and a date. TEST 2 · NAMING DIRECTION (pp. 3–4): PASS. Scored honestly: Room to Grow is a 2, with an owner and a date for the tier name. Two UNKNOWNs on the trademark check each carry an action, an owner and a date — parent legal team via brand manager, before Session 5; app stores, product lead, Session 5. TEST 3 · IDENTITY BRIEF (pp. 5–9): PASS. A stranger can act: requirements, not solutions; a prohibited box with its strategic reason; a rejected line rewritten as a requirement. Codes cut to four with owners; six channels; six touchpoints, two built by outsiders. Checklist: five pass, two open. Gate 2 carries nothing. TRACKED ACTIONS (none is a condition): (1) Write the parent-link rule on one page — brand manager, with brand-leadership sign-off · before Session 5 · rule filed with brand leadership’s signature on it. (2) Parent legal team confirms the line-name registrations in classes 28 and 41; the tier name is searched in the same classes once chosen — brand manager asks the parent legal team · before Session 5 · written answer filed, naming the classes covered. (3) Hold the PLANNED pre-launch reviewer demo so each named function is seen moving — marketing lead · date proposed before Session 5; UNKNOWN until fixed · raw notes from the reviewers filed unedited; criterion 6 answered YES or NO by two checkers. If one slips past its date, say so in the next workbook update. CREATIVE-STREAM QUESTION: answered (illustrative). COLUMN CHECK: criterion 5 is the only one that guards the architecture; the other six come from the brief.",
             notice: "Notice: same threshold as the other three cases; the facts differ, so the open items are written down as UNKNOWNs with owners, not as conditions. A PLANNED reviewer demo is a plan, not a gap."
           }
         }
       }
-    }
+    },
+    /* Mode kelas (skrip Kelas Live v3): tautan langsung ke panel contoh. Parameter: kelas=1 · hlm · kasus (jumbo|gojek|marvel|lego) · sorot (kunci kotak, pisah koma) · urut=1 (sorot satu per satu, tombol panah) · panel=tigates · bagian=cara. Daftar lengkap: s4.html?kelas=daftar */
+    kelasLinks: [
+      {
+        "step": "Hlm. 2 · langkah 3 · Lihat Jumbo",
+        "q": "hlm=2&kasus=jumbo"
+      },
+      {
+        "step": "Hlm. 2 · langkah 5 · LEGO Technic",
+        "q": "hlm=2&kasus=lego"
+      },
+      {
+        "step": "Hlm. 3 · langkah 2 · Lihat Jumbo (dua skor 2)",
+        "q": "hlm=3&kasus=jumbo&sorot=distinctive,protectable"
+      },
+      {
+        "step": "Hlm. 3 · langkah 4 · LEGO Technic (Room to grow)",
+        "q": "hlm=3&kasus=lego&sorot=growth"
+      },
+      {
+        "step": "Hlm. 4 · langkah 2 · Lihat Jumbo",
+        "q": "hlm=4&kasus=jumbo"
+      },
+      {
+        "step": "Hlm. 4 · langkah 4 · LEGO Technic",
+        "q": "hlm=4&kasus=lego"
+      },
+      {
+        "step": "Hlm. 5 · langkah 2 · Jumbo: Mandatory, Rejected→Rewrote",
+        "q": "hlm=5&kasus=jumbo&sorot=mandatory,rejected"
+      },
+      {
+        "step": "Hlm. 5 · langkah 4 · LEGO: baris REJECTED",
+        "q": "hlm=5&kasus=lego&sorot=rejected"
+      },
+      {
+        "step": "Hlm. 5 · (putaran kedua) Jumbo: Prohibited, Tone, Accessibility",
+        "q": "hlm=5&kasus=jumbo&sorot=prohibited,tone,accessibility"
+      },
+      {
+        "step": "Hlm. 5 · (putaran kedua) LEGO: Prohibited",
+        "q": "hlm=5&kasus=lego&sorot=prohibited"
+      },
+      {
+        "step": "Hlm. 6 · langkah 2 · Lihat Jumbo",
+        "q": "hlm=6&kasus=jumbo"
+      },
+      {
+        "step": "Hlm. 6 · langkah 4 · LEGO Technic",
+        "q": "hlm=6&kasus=lego"
+      },
+      {
+        "step": "Hlm. 7 · langkah 2 · Jumbo, satu kanal per tekan →",
+        "q": "hlm=7&kasus=jumbo&urut=1"
+      },
+      {
+        "step": "Hlm. 7 · langkah 4 · LEGO, jawaban contoh, satu kanal per tekan →",
+        "q": "hlm=7&kasus=lego&urut=1"
+      },
+      {
+        "step": "Hlm. 8 · langkah 2 · Jumbo: baris Packaging & Merch",
+        "q": "hlm=8&kasus=jumbo&sorot=packaging"
+      },
+      {
+        "step": "Hlm. 8 · langkah 4 · LEGO (buka setelah poll ditutup)",
+        "q": "hlm=8&kasus=lego"
+      },
+      {
+        "step": "Hlm. 9 · langkah 2 · Jumbo, satu kriteria per tekan →",
+        "q": "hlm=9&kasus=jumbo&urut=1"
+      },
+      {
+        "step": "Gate 3 · langkah 2 · Cek tiga tes (Jumbo)",
+        "q": "panel=tigates&kasus=jumbo"
+      },
+      {
+        "step": "Gate 3 · langkah 2 · Cek tiga tes (LEGO)",
+        "q": "panel=tigates&kasus=lego"
+      },
+      {
+        "step": "Gate 3 · langkah 3 · Cara baca",
+        "q": "panel=tigates&kasus=jumbo&bagian=cara"
+      }
+    ]
   };
 })();

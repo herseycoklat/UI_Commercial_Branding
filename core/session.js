@@ -35,7 +35,11 @@
       var t = U.el("table", { class: "wbtable ex" });
       var hr = U.el("tr"); v.cols.forEach(function (c) { hr.appendChild(U.el("th", { text: c })); });
       t.appendChild(hr);
-      v.rows.forEach(function (r) { var tr = U.el("tr"); r.forEach(function (c, i) { tr.appendChild(U.el(i ? "td" : "th", { text: c })); }); t.appendChild(tr); });
+      v.rows.forEach(function (r, ri) {
+        var tr = U.el("tr"); r.forEach(function (c, i) { tr.appendChild(U.el(i ? "td" : "th", { text: c })); });
+        if (v.keys && v.keys[ri]) tr.setAttribute("data-key", v.keys[ri]); /* kunci baris untuk sorotan mode kelas */
+        t.appendChild(tr);
+      });
       sc.appendChild(t); d.appendChild(sc); return d;
     }
     if (v.items) {
@@ -57,10 +61,12 @@
     var panel = U.el("div", { class: "expanel hidden" });
     var active = null;
     var byId = byIdOf(pg);
+    var btns = {}, api = { panel: panel, bar: bar };
     CASES.forEach(function (c) {
       var ex = ct.examples && ct.examples[c.k];
       var b = U.el("button", { class: "chip", type: "button", text: ex ? c.label : c.label + " (menyusul)" });
       if (!ex) b.disabled = true;
+      btns[c.k] = b;
       b.onclick = function () {
         if (active === c.k) { active = null; panel.classList.add("hidden"); b.classList.remove("active"); return; }
         active = c.k;
@@ -71,7 +77,7 @@
         if (ex.sub) panel.appendChild(U.el("div", { class: "exsub", text: ex.sub + (ex.caveat ? " " + ex.caveat : "") }));
         pg.fields.forEach(function (f) {
           var v = ex.values[f.id]; if (v == null) return;
-          var bx = U.el("div", { class: "exbox" });
+          var bx = U.el("div", { class: "exbox", "data-key": f.id.split(".").pop() });
           bx.appendChild(U.el("b", { text: (v && v.label) || f.label || pg.title }));
           bx.appendChild(exampleValue(byId[f.id], v));
           if (ex.anno && ex.anno[f.id]) bx.appendChild(U.el("div", { class: "anno", text: ex.anno[f.id] }));
@@ -80,10 +86,126 @@
         if (ex.notice) panel.appendChild(U.el("div", { class: "exnotice", text: ex.notice }));
         if (ex.note) panel.appendChild(U.el("div", { class: "exnote", text: ex.note }));
         panel.classList.remove("hidden");
+        panel.classList.remove("hasSorot"); sorotIdx = -1;
       };
       bar.appendChild(b);
     });
+    /* ---- sorotan (dipakai mode kelas, tetap aman untuk mahasiswa): klik kotak atau baris = sorot; klik lagi = lepas ---- */
+    var sorotIdx = -1;
+    function steps() {
+      var out = [];
+      panel.querySelectorAll(".exbox").forEach(function (bx) {
+        var rows = bx.querySelectorAll("tr[data-key]");
+        if (rows.length) rows.forEach(function (r) { out.push(r); }); else out.push(bx);
+      });
+      return out;
+    }
+    function setSorot(els) {
+      panel.querySelectorAll(".sorot,.sorotInside").forEach(function (x) { x.classList.remove("sorot"); x.classList.remove("sorotInside"); });
+      els.forEach(function (e) { e.classList.add("sorot"); var bx = e.closest(".exbox"); if (bx && bx !== e) bx.classList.add("sorotInside"); });
+      panel.classList.toggle("hasSorot", els.length > 0);
+      if (els[0] && els[0].scrollIntoView) els[0].scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+    panel.addEventListener("click", function (ev) {
+      var el = ev.target.closest && (ev.target.closest("tr[data-key]") || ev.target.closest(".exbox[data-key]"));
+      if (!el || !panel.contains(el)) return;
+      if (el.classList.contains("sorot")) { setSorot([]); sorotIdx = -1; } else { setSorot([el]); sorotIdx = steps().indexOf(el); }
+    });
+    api.open = function (k) { if (btns[k] && !btns[k].disabled && active !== k) btns[k].click(); return !!(btns[k] && active === k); };
+    api.sorotKeys = function (keys) {
+      var els = [];
+      panel.querySelectorAll("[data-key]").forEach(function (e) { if (keys.indexOf(e.getAttribute("data-key")) >= 0) els.push(e); });
+      setSorot(els); return els.length;
+    };
+    api.step = function (d) {
+      var st = steps(); if (!st.length) return;
+      sorotIdx = Math.max(0, Math.min(st.length - 1, sorotIdx + d));
+      setSorot([st[sorotIdx]]);
+    };
+    api.clear = function () { setSorot([]); sorotIdx = -1; };
     host.appendChild(bar); host.appendChild(panel);
+    host._ex = api;
+    return api;
+  }
+
+  /* ---------- panel "cek tiga tes" (S4 hlm. 9): isi tiap tes + bukti dari contoh Jumbo dan LEGO ----------
+   * Data: content.pages[9].tigaTes. Bukti diambil dari nilai contoh di content (bukan ditulis ulang) supaya tetap verbatim. */
+  function renderTigaTes(sessId, spec, content, host) {
+    var tg = content.pages[9] && content.pages[9].tigaTes;
+    if (!tg) return null;
+    var card = U.el("section", { class: "tigates", id: "tigates" });
+    card.appendChild(U.el("h3", { text: tg.title }));
+    card.appendChild(U.el("p", { class: "tgintro", text: tg.intro }));
+    var bar = U.el("div", { class: "exbar" });
+    bar.appendChild(U.el("span", { class: "lbl", text: "Lihat di contoh:" }));
+    var body = U.el("div", { class: "tgbody" });
+    var cur = null, btns = {};
+    function exVal(caseK, id) {
+      var pn = parseInt(id.split(".")[1].slice(1), 10);
+      var ex = content.pages[pn] && content.pages[pn].examples && content.pages[pn].examples[caseK];
+      return ex && ex.values ? ex.values[id] : null;
+    }
+    function fieldOf(id) { return CB.findField ? CB.findField(id) : null; }
+    function draw() {
+      body.innerHTML = "";
+      tg.tests.forEach(function (t) {
+        var tb = U.el("div", { class: "tgtest", "data-key": t.k });
+        tb.appendChild(U.el("h4", { text: t.title + "  ·  " + t.pages }));
+        t.items.forEach(function (it) {
+          var row = U.el("div", { class: "tgitem", "data-key": it.k });
+          row.appendChild(U.el("div", { class: "tgrule", text: it.text }));
+          var ev = cur && tg.cases[cur] && tg.cases[cur].items[it.k];
+          if (ev) {
+            var eb = U.el("div", { class: "tgev" });
+            if (ev.scores) {
+              eb.appendChild(U.el("div", { class: "tgscores", text: ev.scores.map(function (id) { var v = exVal(cur, id) || {}, f = fieldOf(id) || {}; return (f.label || id) + " " + (v.score || "—"); }).join("  ·  ") }));
+            }
+            (ev.refs || []).forEach(function (id) {
+              var v = exVal(cur, id); if (v == null) return;
+              var f = fieldOf(id) || { id: id };
+              var one = U.el("div", { class: "tgref" });
+              one.appendChild(U.el("b", { text: (v && v.label) || f.label || id }));
+              one.appendChild(exampleValue(f, v));
+              eb.appendChild(one);
+            });
+            if (ev.read) eb.appendChild(U.el("div", { class: "tgread", text: ev.read }));
+            row.appendChild(eb);
+          }
+          tb.appendChild(row);
+        });
+        var aft = cur && tg.cases[cur] && tg.cases[cur].after && tg.cases[cur].after[t.k];
+        if (aft) tb.appendChild(U.el("div", { class: "tgread tgafter", text: aft }));
+        body.appendChild(tb);
+      });
+      var cara = U.el("div", { class: "tgcara", "data-key": "cara" });
+      cara.appendChild(U.el("h4", { text: "Cara baca" }));
+      cara.appendChild(U.el("p", { text: tg.cara }));
+      body.appendChild(cara);
+    }
+    Object.keys(tg.cases).forEach(function (k) {
+      var b = U.el("button", { class: "chip", type: "button", text: tg.cases[k].name });
+      btns[k] = b;
+      b.onclick = function () {
+        cur = cur === k ? null : k;
+        Object.keys(btns).forEach(function (x) { btns[x].classList.toggle("active", x === cur); });
+        draw();
+      };
+      bar.appendChild(b);
+    });
+    card.appendChild(bar); card.appendChild(body);
+    draw();
+    var api = {
+      el: card,
+      open: function (k) { if (tg.cases[k] && cur !== k) btns[k].click(); },
+      focusPart: function (key) {
+        var t = body.querySelector('[data-key="' + key + '"]');
+        body.classList.toggle("hasSorot", !!t);
+        body.querySelectorAll(".sorot").forEach(function (x) { x.classList.remove("sorot"); });
+        if (t) { t.classList.add("sorot"); t.scrollIntoView({ block: "center" }); }
+      }
+    };
+    host.appendChild(card);
+    return api;
   }
 
   function renderReverse(sessId, ct, host) {
@@ -201,6 +323,7 @@
     renderCarry(sessId, pg, card);
     var wa = U.el("div", { class: "workarea" });
     if (pg.fields.length) wa.appendChild(U.el("div", { class: "wahead", text: pg.workLabel || "Workbook" }));
+    if (pg.strip) { var sp = U.el("div", { class: "wbstrip" }); sp.appendChild(U.el("b", { text: pg.strip.head })); sp.appendChild(document.createTextNode("  " + pg.strip.text)); wa.appendChild(sp); }
     var byId = byIdOf(pg);
     if (pg.layout === "canvas2" && pg.columns) {
       var grid = U.el("div", { class: "canvas2" });
@@ -235,7 +358,87 @@
 
     renderReverse(sessId, ct, card);
     if (ct.examples) renderExamples(sessId, pg, ct, card);
+    if (ct.tigaTes) card._tg = renderTigaTes(sessId, spec, { pages: CB.content[sessId].pages }, card);
     return card;
+  }
+
+
+  /* ---------- mode kelas (dosen berbagi layar lewat Zoom) ----------
+   * s4.html?kelas=1&hlm=5&kasus=jumbo&sorot=mandatory,rejected  → hanya panel contoh, huruf besar, kotak yang disebut menyala.
+   * Parameter: hlm · kasus (jumbo|gojek|marvel|lego) · sorot (kunci kotak/baris, pisah koma) · urut=1 (sorot satu per satu, tombol → ←)
+   *            · panel=tigates (+ bagian=cara) · kelas=daftar (daftar tautan semua langkah). Tidak menyimpan atau mengubah isian apa pun. */
+  function kelasUrl(sessId, q) { return sessId.toLowerCase() + ".html?kelas=1" + (q ? "&" + q : ""); }
+  function renderKelas(sessId, spec, content, built, main, P) {
+    document.body.classList.add("kelas");
+    main.innerHTML = "";
+    var kb = U.el("div", { class: "kbar" });
+    function klink(text, href, cls) { var a = U.el("a", { class: "kbtn" + (cls ? " " + cls : ""), href: href, text: text }); kb.appendChild(a); return a; }
+    var kasus = P.get("kasus") || "";
+    if (P.get("kelas") === "daftar") {
+      kb.appendChild(U.el("span", { class: "ktitle", text: "Mode kelas · Sesi " + spec.n + " · daftar tautan" }));
+      klink("Keluar", sessId.toLowerCase() + ".html");
+      main.appendChild(kb);
+      var c0 = U.el("section", { class: "card kdaftar" });
+      c0.appendChild(U.el("h2", { text: "Tautan langkah [HTML TOOL] · Kelas Live Sesi " + spec.n }));
+      c0.appendChild(U.el("p", { class: "lead", text: "Buka tautan dari browser kelas yang identitasnya sudah terisi (halaman utama, sekali saja). Di panel: klik kotak atau baris = sorot, klik lagi = lepas; tombol → dan ← menggeser sorotan satu per satu; Esc = lepas semua." }));
+      var tb = U.el("table", { class: "wbtable" });
+      var hr = U.el("tr"); ["#", "Langkah skrip", "Tautan"].forEach(function (h) { hr.appendChild(U.el("th", { text: h })); }); tb.appendChild(hr);
+      ((content.kelasLinks) || []).forEach(function (l, i) {
+        var tr = U.el("tr");
+        tr.appendChild(U.el("td", { text: String(i + 1) }));
+        tr.appendChild(U.el("td", { text: l.step }));
+        var td = U.el("td"); td.appendChild(U.el("a", { href: kelasUrl(sessId, l.q), text: "buka" }));
+        var cp = U.el("button", { type: "button", class: "iconbtn", text: "salin", title: "Salin tautan lengkap" });
+        cp.onclick = function () { var abs = new URL(kelasUrl(sessId, l.q), location.href).href; if (navigator.clipboard) navigator.clipboard.writeText(abs).then(function () { cp.textContent = "tersalin"; }, function () { cp.textContent = abs; }); else cp.textContent = abs; };
+        td.appendChild(document.createTextNode(" ")); td.appendChild(cp);
+        tr.appendChild(td); tb.appendChild(tr);
+      });
+      var sc = U.el("div", { class: "tscroll" }); sc.appendChild(tb); c0.appendChild(sc);
+      main.appendChild(c0);
+      return;
+    }
+    var hlm = parseInt(P.get("hlm"), 10) || 0;
+    var isTg = P.get("panel") === "tigates";
+    var pg = spec.pages.filter(function (x) { return x.p === hlm; })[0];
+    kb.appendChild(U.el("span", { class: "ktitle", text: "Mode kelas · Sesi " + spec.n + (isTg ? " · cek tiga tes" : pg ? " · hlm. " + hlm : "") }));
+    var ord = spec.fillOrder.filter(function (p) { return built.indexOf(p) >= 0; });
+    var qk = function (extra) { return kelasUrl(sessId, (kasus ? "kasus=" + encodeURIComponent(kasus) + "&" : "") + extra); };
+    if (pg && !isTg) {
+      var i = ord.indexOf(hlm);
+      if (i > 0) klink("‹ hlm. " + ord[i - 1], qk("hlm=" + ord[i - 1]));
+      if (i >= 0 && i < ord.length - 1) klink("hlm. " + ord[i + 1] + " ›", qk("hlm=" + ord[i + 1]));
+    }
+    if (content.pages[9] && content.pages[9].tigaTes) klink("Cek tiga tes", qk("panel=tigates"));
+    klink("Daftar tautan", kelasUrl(sessId, "").replace("kelas=1", "kelas=daftar"));
+    klink("Keluar", sessId.toLowerCase() + ".html");
+    main.appendChild(kb);
+    var card = U.el("section", { class: "card kcard" });
+    main.appendChild(card);
+    var api = null, tg = null;
+    if (isTg) {
+      tg = renderTigaTes(sessId, spec, content, card);
+      if (!tg) { card.appendChild(U.el("p", { text: "Panel cek tiga tes belum tersedia." })); return; }
+      if (kasus) tg.open(kasus);
+      if (P.get("bagian")) tg.focusPart(P.get("bagian"));
+    } else if (pg && content.pages[hlm] && content.pages[hlm].examples) {
+      var head = U.el("div", { class: "pagehead" });
+      head.appendChild(U.el("span", { class: "num", text: String(pg.p) }));
+      var ht = U.el("div"); ht.appendChild(U.el("h2", { text: pg.title }));
+      if (pg.sub) ht.appendChild(U.el("p", { class: "wbsub", text: pg.sub }));
+      head.appendChild(ht); card.appendChild(head);
+      api = renderExamples(sessId, pg, content.pages[hlm], card);
+      if (kasus && !api.open(kasus)) card.appendChild(U.el("p", { class: "small muted", text: "Kasus \"" + kasus + "\" belum tersedia di halaman ini." }));
+      if (P.get("sorot")) api.sorotKeys(P.get("sorot").split(","));
+      if (P.get("urut")) api.step(1);
+    } else {
+      card.appendChild(U.el("p", { text: "Halaman atau kasus tidak ditemukan. Buka daftar tautan." }));
+      return;
+    }
+    if (api) document.addEventListener("keydown", function (ev) {
+      if (ev.key === "ArrowRight" || ev.key === "ArrowDown" || ev.key === "PageDown") { ev.preventDefault(); api.step(1); }
+      else if (ev.key === "ArrowLeft" || ev.key === "ArrowUp" || ev.key === "PageUp") { ev.preventDefault(); api.step(-1); }
+      else if (ev.key === "Escape") api.clear();
+    });
   }
 
   /* Cek kelengkapan. Baris diberi key supaya elemen dipakai ulang antar-gambar ulang
@@ -341,7 +544,7 @@
     cols.appendChild(dl("Identitas", [["Nama", id.full_name], ["NIM", id.nim], ["Email", id.email], ["Proyek", id.group_id + " · " + id.project_name]]));
     var sesPairs = [["Minggu", String(cfg.week || "—")],
       ["Dibuka", cfg.release ? U.fmtDate(cfg.release) : "—"],
-      (spec.hideDue || cfg.no_upload_deadline) ? ["Batas unggah", "Tanpa batas unggah (hari baca diumumkan di chat kelas)"] : ["Tenggat file", cfg.due ? U.fmtDate(cfg.due) : "—"],
+      (spec.hideDue || cfg.no_upload_deadline) ? ["Batas unggah", (cfg.deadline_note ? cfg.deadline_note : "tanpa batas unggah (hari baca diumumkan di chat kelas)").replace(/^./, function (m) { return m.toUpperCase(); })] : ["Tenggat file", cfg.due ? U.fmtDate(cfg.due) : "—"],
       ["Status", last ? "Submitted " + U.fmtDate(last.submitted_at) + (st.versions.length > 1 ? " · versi " + st.versions.length : "") + (st.changed_since_submit ? " · ada perubahan belum di-submit" : "") : "Belum di-submit"],
       ["Leadership Log", lead + " entri (ikut di setiap file)"]];
     if (spec.coverExtra) { var tmp = U.el("div", null, CB.fill(spec.coverExtra, sessId)); sesPairs.push(["Catatan", tmp.textContent]); }
@@ -391,6 +594,7 @@
       h.appendChild(U.el("div", { class: "pp-title", text: pg.title + "  ·  " + sessId + " · hlm. " + pg.p }));
       pp.appendChild(h);
       if (pg.sub) pp.appendChild(U.el("p", { class: "pp-sub", text: pg.sub }));
+      if (pg.strip) pp.appendChild(U.el("p", { class: "pp-sub", text: pg.strip.head + ": " + pg.strip.text }));
       var byId = byIdOf(pg);
       function ptable(heads, rows) {
         var t = U.el("table", { class: "pp-table" });
@@ -413,13 +617,17 @@
           v = v || {};
           var rows = (f.rows || []).map(function (r) {
             var x = (v.rows || {})[r.k] || {};
-            var a = [r.label].concat(f.columns.map(function (c) { return x[c.k]; })); a.label1 = true; return a;
+            var a = [r.label].concat(f.columns.map(function (c) { return x[c.k]; }));
+            if (f.rowFlag) a.push(x[f.rowFlag.k] ? "✓" : "");
+            a.label1 = true; return a;
           });
           (v.extra || []).forEach(function (x) {
-            var a = [x.label || "(tanpa nama)"].concat(f.columns.map(function (c) { return x[c.k]; })); a.label1 = true; rows.push(a);
+            var a = [x.label || "(tanpa nama)"].concat(f.columns.map(function (c) { return x[c.k]; }));
+            if (f.rowFlag) a.push(x[f.rowFlag.k] ? "✓" : "");
+            a.label1 = true; rows.push(a);
           });
           b.appendChild(U.el("b", { text: f.label || pg.title }));
-          var tt = ptable([f.rowLabel || ""].concat(f.columns.map(function (c) { return c.label; })), rows);
+          var tt = ptable([f.rowLabel || ""].concat(f.columns.map(function (c) { return c.label; }), f.rowFlag ? [f.rowFlag.label] : []), rows);
           if (f.narrowHead) tt.classList.add("pp-narrow"); // kolom judul ramping, kolom isian sama lebar (sama dengan layar)
           b.appendChild(tt);
           b.classList.add("pp-tablebox");
@@ -447,6 +655,7 @@
           b.appendChild(ptable(["#"].concat(f.itemFields.map(function (c) { return c.label || c.k; })),
             items.length ? items.map(function (it, i) { return [String(i + 1)].concat(f.itemFields.map(function (c) {
               if (c.showIf && it[c.showIf.k] !== c.showIf.eq) return "";
+              if (c.type === "pages") return Array.isArray(it[c.k]) ? it[c.k].map(function (n) { return "hlm. " + n; }).join(", ") : "";
               return c.type === "select" ? CB.optLabel(c, it[c.k]) : it[c.k];
             })); }) : [["—"]]));
           b.classList.add("pp-tablebox");
@@ -500,6 +709,8 @@
         return;
       }
       var built = builtPages(spec, content);
+      var qp = new URLSearchParams(location.search);
+      if (qp.get("kelas")) { renderKelas(sessId, spec, content, built, main, qp); return; }
 
       var intro = U.el("section", { class: "card" });
       intro.appendChild(U.el("h2", { text: "Sesi " + spec.n + " · " + spec.title }));
