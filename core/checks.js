@@ -342,9 +342,10 @@
     var open = st.filter(function (x) { return x[1] === "taken" || x[1] === "unknown"; });
     var noAct = open.filter(function (x) { return !acts.some(function (a) { return a.source === x[0] && txt(a.action); }); });
     var incomplete = acts.filter(function (a) { return txt(a.action) && !(txt(a.owner) && txt(a.when) && txt(a.closed)); }).length;
+    var dup = Object.keys(SRC).filter(function (k) { return acts.filter(function (a) { return a.source === k && txt(a.action); }).length > 1; });
     out.push({ group: "n", key: "n5", label: !open.length ? "Tidak ada sumber TAKEN atau UNKNOWN, jadi tidak ada tindakan wajib." :
-      open.length + " sumber TAKEN/UNKNOWN. " + (noAct.length ? noAct.length + " belum punya baris tindakan (" + noAct.map(function (x) { return SRC[x[0]]; }).join(", ") + ")." : "Semuanya punya baris tindakan.") + (incomplete ? " " + incomplete + " tindakan belum lengkap (owner, kapan, uji penutupan)." : ""),
-      where: "S4 · hlm. 4", state: !open.length ? (noSt.length ? "pending" : "info") : (noAct.length || incomplete ? "no" : "ok") });
+      open.length + " sumber TAKEN/UNKNOWN. " + (noAct.length ? noAct.length + " belum punya baris tindakan (" + noAct.map(function (x) { return SRC[x[0]]; }).join(", ") + ")." : "Semuanya punya baris tindakan.") + (incomplete ? " " + incomplete + " tindakan belum lengkap (owner, kapan, closing test)." : "") + (dup.length ? " Lebih dari satu baris untuk " + dup.map(function (k) { return SRC[k]; }).join(", ") + ": workbook meminta satu tindakan per sumber; gabungkan bila bisa." : ""),
+      where: "S4 · hlm. 4", state: !open.length ? (noSt.length ? "pending" : "info") : (noAct.length || incomplete ? "no" : (dup.length ? "warn" : "ok")) });
 
     /* Tes 3 · Identity brief */
     var bk = ["objective", "audience", "positioning", "tone", "mandatory", "prohibited", "accessibility"];

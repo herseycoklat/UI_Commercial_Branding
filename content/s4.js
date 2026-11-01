@@ -18,7 +18,7 @@
 window.CB = window.CB || {}; CB.content = CB.content || {};
 (function () {
   var CAVEAT = "Contoh ini rekonstruksi ilustratif: fakta internal tim adalah asumsi pengajaran, fakta publik bersumber di catatan pembicara worked example. Tiru pola berpikirnya, bukan isinya.";
-  var ACT_ANNO = "Di app, setiap tindakan ditulis satu baris (sumber, tindakan, owner, kapan, uji penutupan). Worked example menulisnya sebagai satu paragraf dan tidak menulis uji penutupan untuk setiap tindakan; bagian itu tidak dikarang di sini. Di file-mu, tulis keempatnya.";
+  var ACT_ANNO = "Worked example menulis satu baris per sumber TAKEN atau UNKNOWN: sumber — owner · kapan · closed when. Di app, satu baris tindakan berisi Untuk sumber, Action (apa yang dikerjakan), Owner, Date, dan Closing test (selesai kalau…). Satu sumber, satu baris.";
 
   CB.content.S4 = {
     pages: {
@@ -248,55 +248,55 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         },
         examples: {
           jumbo: {
-            name: "Jumbo", sub: "A first-pass check, honestly recorded. Three UNKNOWNs, each with an owner and a date.", caveat: CAVEAT,
+            name: "Jumbo", sub: "A first-pass check, honestly recorded. Every UNKNOWN and TAKEN has one action: owner, date, closing test.", caveat: CAVEAT,
             values: {
               "s4.p4.djki": "UNKNOWN — Not searched here, so no result is claimed. Food and retail classes are likely crowded; class 41 is UNKNOWN. Illustrative reconstruction.",
               "s4.p4.web": "TAKEN — Already a trading name elsewhere (e.g. a Dutch supermarket chain). No clean space; record the search date.",
               "s4.p4.appstores": "UNKNOWN — Not checked. Only relevant if a game or companion app happens, and that hasn't been decided.",
               "s4.p4.handles": "UNKNOWN — Not checked here. A bare handle is unlikely to be free; the plan is one qualified handle, UNKNOWN until the marketing lead checks before Gate 3 is read.",
               "s4.p4.languages": "CLEAR — Means “very large” in English and Bahasa Indonesia; nothing embarrassing in either. Regional languages not checked.",
-              "s4.p4.actions": "Visinema legal counsel runs the DJKI class-41 search and records the result before Session 5 · prepare the stylised mark plus character device for filing, not the bare word · marketing lead checks one qualified handle on each platform before Gate 3 is read, before any promotional material is printed · merchandise classes revisited once the merch plan exists in Session 5."
+              "s4.p4.actions": { items: ["1 · DJKI — Visinema legal counsel · before Session 5 · closed when the result is filed with the classes searched (41 now; merchandise after the Session 5 plan).", "2 · Google & Web — producer · before Session 5 · closed when the filing route (stylised wordmark plus character device, never the bare word) is written on one page.", "3 · App stores — marketing lead · Session 5 · closed when the merch plan says app yes or no; if yes, the store search is recorded here.", "4 · Handles — marketing lead · before Gate 3 is read · closed when one qualified handle per platform is recorded, before anything is printed."] }
             },
             anno: { "s4.p4.actions": ACT_ANNO },
             notice: "Three UNKNOWNs, one TAKEN and one scoped CLEAR is an honest page. The failure mode is writing CLEAR because nobody looked."
           },
           gojek: {
-            name: "Gojek / GoFood", sub: "A first-pass check, honestly recorded. One UNKNOWN, with an owner and a date.", caveat: CAVEAT,
+            name: "Gojek / GoFood", sub: "A first-pass check, honestly recorded. Every UNKNOWN and TAKEN has one action: owner, date, closing test.", caveat: CAVEAT,
             values: {
               "s4.p4.djki": "UNKNOWN — Assumed, not verified: the “Go” family marks sit under the parent’s registrations — for legal counsel to confirm. The combined “GoFood” mark and logo form are not searched here. Illustrative reconstruction.",
               "s4.p4.web": "TAKEN — “Go food” is made of plain words, so generic results are expected; only brand-qualified searches can find us. The word “Food” alone cannot be protected.",
               "s4.p4.appstores": "CLEAR — Scoped CLEAR: GoFood launches inside the Gojek app, so no separate store listing exists to clear. If a standalone app is ever proposed, this row reopens.",
               "s4.p4.handles": "CLEAR — Scoped CLEAR: no separate GoFood handle is planned; the parent’s official accounts carry it. A food-specific handle would be a Session 6 decision.",
               "s4.p4.languages": "CLEAR — Reads naturally in Bahasa Indonesia and English; nothing embarrassing found in either. Regional languages and other markets not checked.",
-              "s4.p4.actions": "Legal counsel searches the combined “GoFood” mark and logo form in the relevant classes and answers in writing — GoFood product lead asks, before Session 5 · registration route for the “Go” family confirmed in the same answer · generic-word results handled by the page 3 mitigation."
+              "s4.p4.actions": { items: ["1 · DJKI — legal counsel, asked by the GoFood product lead · before Session 5 · closed when a written answer is filed, naming the classes covered and the filing route for the “Go” family.", "2 · Google & Web — GoFood product lead · before Session 5 · closed when the decision is recorded: the combined mark and logo form are filed, the word “Food” alone is not."] }
             },
-            anno: { "s4.p4.actions": ACT_ANNO + " Untuk baris pertama, Gojek punya uji penutupan di slide Open Actions: \"Written answer filed, naming the classes covered.\"" },
+            anno: { "s4.p4.actions": ACT_ANNO },
             notice: "One honest UNKNOWN, one TAKEN that is really a common-word warning, three scoped CLEARs. A CLEAR that says what it covers is worth more than a bare one."
           },
           marvel: {
-            name: "Disney/Marvel (Iron Man)", sub: "A first-pass check, honestly recorded. Three UNKNOWNs, each with an owner and a date.", caveat: CAVEAT,
+            name: "Disney/Marvel (Iron Man)", sub: "A first-pass check, honestly recorded. Every UNKNOWN and TAKEN has one action: owner, date, closing test.", caveat: CAVEAT,
             values: {
               "s4.p4.djki": "UNKNOWN — Not searched in this example, so no result is claimed. Entertainment class 41 and merchandise classes 25 and 28 are open: UNKNOWN. Illustrative reconstruction of a team check.",
               "s4.p4.web": "TAKEN — In wide use — the triathlon brand and decades of comic coverage. No clean space, so the film must win search by pairing with the studio name.",
               "s4.p4.appstores": "UNKNOWN — Not checked. Only relevant if a game tie-in is licensed, which is a Session 5 decision.",
               "s4.p4.handles": "UNKNOWN — Not checked here. A bare handle is unlikely to be free, so the plan is a qualified variant; availability is UNKNOWN until the marketing lead checks it before Gate 3 is read.",
               "s4.p4.languages": "CLEAR — Nothing offensive found in English and Bahasa Indonesia. Regional languages not checked — this CLEAR covers those two only.",
-              "s4.p4.actions": "DJKI search, classes 41, 28 and 25, recorded before Session 5 — studio legal counsel · one qualified handle on every platform before Gate 3 is read, before key art is printed — marketing lead · game tie-in decided before app stores are checked — licensing lead, Session 5."
+              "s4.p4.actions": { items: ["1 · DJKI — studio legal counsel · before Session 5 · closed when the result is filed with the classes searched (41, 28, 25) and the search date.", "2 · Google & Web — marketing lead · before Gate 3 is read · closed when the lockup rule (title never without the helmet silhouette) is in the key-art specs.", "3 · App stores — licensing lead · Session 5 · closed when the game tie-in decision is minuted; if licensed, the store search is recorded here.", "4 · Handles — marketing lead · before Gate 3 is read · closed when one qualified handle per platform is recorded, before key art is printed."] }
             },
             anno: { "s4.p4.actions": ACT_ANNO },
             notice: "Three UNKNOWNs, one TAKEN and one scoped CLEAR is an honest page. The failure mode is writing CLEAR because nobody looked."
           },
           lego: {
-            name: "LEGO Technic", sub: "A first-pass check, honestly recorded. Two UNKNOWNs, each with an owner and a date.", caveat: CAVEAT,
+            name: "LEGO Technic", sub: "A first-pass check, honestly recorded. Every UNKNOWN and TAKEN has one action: owner, date, closing test.", caveat: CAVEAT,
             values: {
               "s4.p4.djki": "UNKNOWN — The line name is assumed to sit under the parent’s registrations — for the parent’s legal team to confirm, not this team. No tier name yet, so nothing to search. Illustrative reconstruction of a team check.",
               "s4.p4.web": "TAKEN — “Technic” reads as an ordinary word, and an audio brand called Technics is spelled almost the same. The LEGO prefix resolves search; the bare word does not.",
               "s4.p4.appstores": "UNKNOWN — Not checked. Only relevant if the flagship’s motorised functions need a control app — a product decision that is still open.",
               "s4.p4.handles": "CLEAR — No separate Technic handle is planned: the parent’s official accounts carry the line (teaching assumption). A tier handle would be a Session 6 decision.",
               "s4.p4.languages": "CLEAR — “Technic” reads as “teknik” in Bahasa Indonesia. Nothing embarrassing found in English and Bahasa Indonesia; other languages not checked.",
-              "s4.p4.actions": "Parent legal team confirms the line-name registrations in classes 28 and 41 — brand manager asks, before Session 5 · tier name searched in the same classes once chosen — brand manager, Session 5 · flagship needs an app or not, then app stores checked — product lead, Session 5."
+              "s4.p4.actions": { items: ["1 · DJKI — brand manager asks the parent legal team · before Session 5 · closed when a written answer naming the classes covered (28, 41) is filed.", "2 · Google & Web — brand manager · before Session 5 · closed when the parent-link rule is filed with brand leadership’s signature.", "3 · App stores — product lead · Session 5 · closed when the minutes say whether the flagship needs a control app; if yes, the store search is recorded here."] }
             },
-            anno: { "s4.p4.actions": ACT_ANNO + " Untuk baris pertama, LEGO punya uji penutupan di slide Open Actions: \"Written answer filed, naming the classes covered.\"" },
+            anno: { "s4.p4.actions": ACT_ANNO },
             notice: "An honest page: two UNKNOWNs, one TAKEN, two scoped CLEARs. The CLEAR on handles says what it covers and when it reopens."
           }
         }
@@ -793,7 +793,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
                   "refs": [
                     "s4.p4.actions"
                   ],
-                  "read": "Three UNKNOWNs on the trademark page each carry an owner and a date."
+                  "read": "Every UNKNOWN and the TAKEN on the trademark page carries an owner, a date and a closing test."
                 },
                 "t3a": {
                   "read": "A stranger can act without a conversation: requirements, not solutions; a prohibited box with its strategic reason; one line rejected and rewritten."
@@ -869,7 +869,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
                   "refs": [
                     "s4.p4.actions"
                   ],
-                  "read": "Two UNKNOWNs on the trademark check each carry an action, an owner and a date."
+                  "read": "Two UNKNOWNs and the TAKEN on the trademark check each carry an owner, a date and a closing test — parent legal team via brand manager, before Session 5; parent-link rule, brand manager, same date; app stores, product lead, Session 5."
                 },
                 "t3a": {
                   "read": "A stranger can act: requirements, not solutions; a prohibited box with its strategic reason; a rejected line rewritten as a requirement."
