@@ -34,8 +34,8 @@ def norm(s):
 
 def slides(md):
     out = {}
-    for block in re.split(r"^## Slide (\d+)\s*$", md, flags=re.M)[1:]:
-        pass
+    # Ekstrak format butir ("- teks" per baris, dipakai ekstrak v3 mulai S4) dan format paragraf lama sama-sama diterima.
+    md = re.sub(r"^- ", "", md, flags=re.M)
     parts = re.split(r"^## Slide (\d+)\s*$", md, flags=re.M)
     for i in range(1, len(parts), 2):
         out[int(parts[i])] = norm(parts[i + 1])
@@ -75,6 +75,8 @@ def main():
             pat = re.escape(t)
             pat = re.sub(r"\\\{\\\{\w+\\\}\\\}", ".+?", pat)
             return re.search(pat, txt) is not None
+        if pg.get("strip"):
+            check(norm(pg["strip"]["head"] + " " + pg["strip"]["text"]) in txt, f"hlm. {p}: strip tidak persis sama dengan workbook")
         for key in ("sub", "footer"):
             if pg.get(key) and key in pg.get("appText", []):
                 if present(pg[key]):
@@ -96,6 +98,12 @@ def main():
                 check(norm(f["label"]) in txt, f"hlm. {p}: label '{f['label']}' tidak ada di workbook")
             if f.get("hint"):
                 check(norm(f["hint"]) in txt, f"hlm. {p}: hint '{f['hint']}' tidak ada di workbook")
+            for sl in f.get("subLabels", []):
+                check(norm(sl) in txt, f"hlm. {p}: sub-label '{sl}' tidak ada di workbook")
+            if f["id"] == "s4.p9.criteria":  # v3: kolom daftar kriteria hlm. 9 harus sama dengan kepala kolom workbook (kolom appOnly dikecualikan)
+                for itf in f.get("itemFields", []):
+                    if not itf.get("appOnly"):
+                        check(norm(itf["label"]) in txt, f"hlm. {p}: kolom isian '{itf['label']}' tidak ada di workbook")
             for r in f.get("rows", []):
                 check(norm(r["label"]) in txt, f"hlm. {p}: baris '{r['label']}' tidak ada di workbook")
             for c in f.get("columns", []):
@@ -122,6 +130,14 @@ def main():
                 check(not missing, f"hlm. {p}: contoh {case} tidak mengisi {sorted(missing)}", warn=True)
 
     check(len(ids) == len(set(ids)), "ID field ganda")
+    # bagian konten di luar pages (mis. kelasLinks S4): juga tanpa kata status dan tanpa tanggal kalender
+    for k, v in (content or {}).items():
+        if k == "pages":
+            continue
+        blob = json.dumps(v, ensure_ascii=False)
+        check(not STATUS_RE.search(blob), f"konten '{k}' memuat kata status Gate")
+        m = DATE_RE.search(blob)
+        check(not m, f"konten '{k}' memuat tanggal kalender ({m.group(0) if m else ''})")
 
     lock = json.load(open(LOCK)) if os.path.exists(LOCK) else {}
     if sid in lock:

@@ -4,7 +4,7 @@
   var CB = window.CB, U = CB.util;
   var SESSION_IDS = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"];
   // Sesi yang halamannya sudah ada di repo. Ditambah oleh chat pembangun saat sesi baru di-deploy.
-  var LIVE_PAGES = ["S1", "S2", "S3"];
+  var LIVE_PAGES = ["S1", "S2", "S3", "S4"];
 
   function fld(id, label, input, help) {
     var d = U.el("div", { class: "fld" });
@@ -202,7 +202,7 @@
         var ll = U.el("div");
         ll.appendChild(U.el("div", { class: "name", text: "Sesi " + sid.slice(1) + (lc.title ? " · " + lc.title : "") }));
         var lm = U.el("div", { class: "meta" });
-        lm.innerHTML = '<span class="status-pill">terkunci</span>Dibuka ' + U.esc(U.fmtDate(lc.release)) + " · Minggu " + U.esc(lc.week) + (lc.no_upload_deadline ? ", tanpa batas unggah (hari baca diumumkan di chat kelas)" : ", tenggat " + U.esc(U.fmtDate(lc.due)));
+        lm.innerHTML = '<span class="status-pill">terkunci</span>' + (lc.hide_release_date ? "" : "Dibuka " + U.esc(U.fmtDate(lc.release)) + " · ") + "Minggu " + U.esc(lc.week) + ", " + U.esc(CB.deadlineText(lc));
         ll.appendChild(lm); lr.appendChild(ll);
         var lb = U.el("button", { class: "btn", type: "button", text: "Terkunci" }); lb.disabled = true;
         lr.appendChild(lb);
@@ -215,7 +215,7 @@
       var l = U.el("div");
       l.appendChild(U.el("div", { class: "name", text: "Sesi " + sid.slice(1) + (cfg.title ? " · " + cfg.title : "") }));
       var meta = U.el("div", { class: "meta" });
-      meta.innerHTML = '<span class="status-pill ' + st.cls + '">' + U.esc(st.pill) + "</span>" + U.esc(st.text) + " · Minggu " + U.esc(cfg.week) + (cfg.no_upload_deadline ? ", tanpa batas unggah (hari baca diumumkan di chat kelas)" : ", tenggat " + U.esc(U.fmtDate(cfg.due)));
+      meta.innerHTML = '<span class="status-pill ' + st.cls + '">' + U.esc(st.pill) + "</span>" + U.esc(st.text) + " · Minggu " + U.esc(cfg.week) + ", " + U.esc(CB.deadlineText(cfg));
       l.appendChild(meta); r.appendChild(l);
       r.appendChild(U.el("a", { class: "btn", href: sid.toLowerCase() + ".html", text: "Buka" }));
       list.appendChild(r);

@@ -20,7 +20,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.3.3";
+  var APP_VERSION = "0.4.1";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
@@ -262,6 +262,13 @@
       CB.config = r[0]; CB.projects = r[1].projects || []; CB.groupAliases = r[1].aliases || {};
       return CB.config;
     });
+  };
+  /* Teks tenggat satu tempat untuk hub dan sampul. cfg.no_upload_deadline: tanpa tanggal tercetak;
+   * cfg.deadline_note (opsional) mengganti kalimat bawaan (S4: batas diumumkan dosen). */
+  CB.deadlineText = function (cfg) {
+    cfg = cfg || {};
+    if (cfg.no_upload_deadline) return cfg.deadline_note || "tanpa batas unggah (hari baca diumumkan di chat kelas)";
+    return "tenggat " + fmtDate(cfg.due);
   };
   CB.sessionCfg = function (id) { return (CB.config && CB.config.sessions && CB.config.sessions[id]) || null; };
   CB.isReleased = function (id) {

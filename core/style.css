@@ -398,3 +398,85 @@ ul.exlist li{margin-bottom:3px;}
 .tabs a{font-size:14px; text-decoration:none; color:var(--muted); padding:8px 16px; border:1px solid transparent; border-bottom:none; border-radius:8px 8px 0 0; margin-bottom:-1px;}
 .tabs a.on{color:var(--ink); background:#fff; border-color:var(--line); font-weight:600;}
 .tabs a:hover{color:var(--ink);}
+
+/* ---- S4: hint kriteria di baris skor, komponen status ---- */
+.scorerow .dimhint{display:block; font-weight:normal; font-style:italic; color:var(--muted); font-size:12px; margin-top:2px;}
+.statusrow{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 8px;}
+.stchip{display:inline-flex; align-items:center; gap:5px; border:1px solid var(--line); border-radius:999px; padding:4px 11px; font-size:13px; cursor:pointer; background:#fff;}
+.stchip.on{border-color:var(--terra); background:#fbf1ea; font-weight:bold;}
+.stchip input{margin:0 2px 0 0;}
+.statusbox .lfield label.sub{font-size:12.5px; font-weight:normal; color:var(--muted); display:block; margin:4px 0 2px; text-transform:none; letter-spacing:0;}
+.statusextras{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+
+/* ===== v0.4.1 (S4 revisi kit v3) ===== */
+.wbstrip{margin:0 0 14px; padding:10px 13px; border-left:4px solid var(--terra); background:var(--sand); border-radius:0 6px 6px 0; font-size:13.5px;}
+.wbstrip b{color:var(--terra); letter-spacing:.04em; font-size:12px;}
+.litem.numbered{position:relative; padding-left:40px;}
+.litem .lnum{position:absolute; left:8px; top:8px; width:24px; height:24px; border-radius:50%; background:var(--terra); color:#fff; font:bold 13px/24px var(--sans); text-align:center;}
+.lfield .lbl{display:block; font-size:11.5px; font-weight:bold; color:var(--muted); margin-bottom:2px;}
+.lfield.pages{flex:1 1 100%;}
+.pagepick{display:flex; flex-wrap:wrap; gap:5px;}
+.pgchip{display:inline-flex; align-items:center; gap:4px; border:1px solid var(--line); border-radius:999px; padding:3px 10px; font-size:13px; cursor:pointer; background:#fff; margin:0; font-weight:normal; color:inherit;}
+.pgchip.on{border-color:var(--terra); background:#fbf1ea; font-weight:bold;}
+.pgchip input{margin:0;}
+table.wbtable th.flagcol, table.wbtable td.flagcol{min-width:0; width:92px; text-align:center; font-size:12px;}
+table.wbtable td.flagcol input{width:18px; height:18px;}
+.cqbox .cqpanel{margin-top:4px;}
+.cqbox .cqpanel[hidden]{display:none;}
+.cqwho, .cqsec{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;}
+@media (max-width:640px){.cqwho, .cqsec{grid-template-columns:1fr;}}
+.cqbox select{width:100%; padding:7px 8px; border:1px solid var(--line); border-radius:6px; background:#fff; font-size:14px;}
+
+/* ===== sorotan panel contoh (klik kotak atau baris; dipakai juga di mode kelas) ===== */
+.expanel .exbox[data-key], .expanel tr[data-key]{cursor:pointer;}
+.expanel.hasSorot .exbox{opacity:.28; transition:opacity .15s;}
+.expanel.hasSorot .exbox.sorot, .expanel.hasSorot .exbox.sorotInside{opacity:1;}
+.expanel .exbox.sorot{outline:3px solid var(--terra); outline-offset:1px;}
+.expanel.hasSorot .exbox.sorotInside tr[data-key]{opacity:.28;}
+.expanel.hasSorot .exbox.sorotInside tr[data-key].sorot{opacity:1;}
+.expanel tr[data-key].sorot td, .expanel tr[data-key].sorot th{background:#fff3c4; box-shadow:inset 0 0 0 2px var(--terra);}
+
+/* ===== panel cek tiga tes (S4 hlm. 9) ===== */
+.tigates{margin-top:18px; padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:#fff;}
+.tigates h3{margin:0 0 6px; font-family:var(--serif); color:var(--deep);}
+.tigates .tgintro{margin:0 0 10px; font-size:14px;}
+.tgtest{margin:12px 0; padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:var(--field);}
+.tgtest h4{margin:0 0 6px; color:var(--terra);}
+.tgitem{padding:6px 0; border-top:1px dashed var(--line);}
+.tgitem:first-of-type{border-top:0;}
+.tgrule{font-weight:bold; font-size:14px;}
+.tgev{margin:4px 0 2px 12px; padding-left:10px; border-left:3px solid var(--sand);}
+.tgref b{display:block; font-size:12px; color:var(--terra);}
+.tgref .exval{font-size:13.5px;}
+.tgscores{font-size:13px; color:var(--deep); margin-bottom:3px;}
+.tgread{font-size:13.5px; font-style:italic; margin-top:3px;}
+.tgafter{margin:6px 0 0;}
+.tgcara{margin:12px 0 0; padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:var(--sand);}
+.tgcara h4{margin:0 0 4px; color:var(--deep);}
+.tgcara p{margin:0; font-size:14px;}
+.tgbody.hasSorot > *{opacity:.3;}
+.tgbody.hasSorot > .sorot{opacity:1; outline:3px solid var(--terra);}
+
+/* ===== mode kelas: layar dibagikan lewat Zoom ===== */
+body.kelas .topbar, body.kelas .tabs, body.kelas .foot, body.kelas .actionbar, body.kelas #print-root{display:none !important;}
+body.kelas .wrap{max-width:1180px;}
+body.kelas .kbar{position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 12px; background:var(--deep); color:#fff; border-radius:0 0 8px 8px; font-size:15px;}
+body.kelas .kbar .ktitle{flex:1 1 auto; font-weight:bold;}
+body.kelas .kbtn{color:#fff; border:1px solid rgba(255,255,255,.5); border-radius:6px; padding:3px 10px; text-decoration:none; font-size:14px;}
+body.kelas .kbtn:hover{background:rgba(255,255,255,.18);}
+body.kelas .kcard{margin-top:12px; font-size:20px;}
+body.kelas .kcard h2{font-size:30px;}
+body.kelas .kcard .wbsub{font-size:18px;}
+body.kelas .exbar .lbl{display:none;}
+body.kelas .exbar .chip{font-size:18px; padding:6px 16px;}
+body.kelas .expanel{font-size:20px; line-height:1.45;}
+body.kelas .expanel h4{font-size:22px;}
+body.kelas .exbox b{font-size:15px;}
+body.kelas .exbox .exval{font-size:21px;}
+body.kelas .exbox .anno, body.kelas .exsub, body.kelas .exnotice, body.kelas .exnote{font-size:17px;}
+body.kelas table.wbtable.ex th, body.kelas table.wbtable.ex td{font-size:19px; padding:8px 10px; min-width:0;}
+body.kelas .exscore{font-size:22px;}
+body.kelas .tigates{font-size:19px; border:0; padding:0;}
+body.kelas .tgrule{font-size:20px;}
+body.kelas .tgref .exval, body.kelas .tgread, body.kelas .tgscores, body.kelas .tgcara p, body.kelas .tigates .tgintro{font-size:18px;}
+body.kelas .kdaftar table.wbtable td{font-size:15px; min-width:0;}

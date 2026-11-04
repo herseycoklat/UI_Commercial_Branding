@@ -25,10 +25,13 @@
       "no_upload_deadline": true
     },
     "S4": {
-      "title": "",
+      "title": "Cross-Stream Brand Identity and Experience Brief",
       "week": 3,
       "release": "2026-11-05T00:00:00+07:00",
-      "due": "2026-11-10T23:59:00+07:00"
+      "due": "2026-11-10T23:59:00+07:00",
+      "no_upload_deadline": true,
+      "deadline_note": "batas unggah diumumkan dosen di kelas dan di grup kelas",
+    "hide_release_date": true
     },
     "S5": {
       "title": "",
