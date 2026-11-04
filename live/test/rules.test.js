@@ -169,3 +169,34 @@ test('mahasiswa tidak bisa mendaftarkan diri jadi dosen atau mengubah roster/hid
   await assertFails(a.ref(`hidden/q1/${NIM_A}`).set(true));
   await assertFails(a.ref('dosenState/spot').set('x'));
 });
+
+// ---------- Keluar (tombol di layar mahasiswa): Rules TIDAK diubah; ini mendokumentasikan apa yang sudah diizinkan ----------
+test('keluar: pemilik boleh menghapus seat dan presence-nya sendiri; milik orang lain tidak', async () => {
+  const a = await login('A', NIM_A);
+  const b = await login('B', NIM_B);
+  await assertSucceeds(a.ref('presence/A').set(true));
+  await assertSucceeds(b.ref('presence/B').set(true));
+  await assertFails(a.ref('presence/B').remove());
+  await assertFails(a.ref('seat/B').remove());
+  await assertSucceeds(a.ref('presence/A').remove());
+  await assertSucceeds(a.ref('seat/A').remove());
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    assert.equal((await ctx.database().ref('seat/A').get()).exists(), false);
+    assert.equal((await ctx.database().ref('presence/A').get()).exists(), false);
+    assert.equal((await ctx.database().ref('seat/B').get()).val(), NIM_B);
+  });
+});
+
+test('keluar: klaim NIM tidak bisa dihapus mahasiswa (sengaja dibiarkan; perangkat baru tetap bisa mengambil alih)', async () => {
+  const a = await login('A', NIM_A);
+  await assertFails(a.ref(`claims/${NIM_A}`).remove());
+  const a2 = await login('A2', NIM_A); // setelah keluar + masuk lagi: uid baru, klaim berpindah
+  await assertSucceeds(a2.ref(`answers/q1/${NIM_A}`).set(ans()));
+});
+
+test('keluar: setelah seat dilepas, uid itu tidak bisa memasang klaim baru atas NIM lain', async () => {
+  const a = await login('A', NIM_A);
+  await assertSucceeds(a.ref('seat/A').remove());
+  await assertFails(a.ref(`claims/${NIM_B}`).set('A'));
+  await assertFails(a.ref(`claims/${NIM_A}`).set('A')); // seat sudah tidak ada
+});

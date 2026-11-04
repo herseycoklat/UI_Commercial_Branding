@@ -4,7 +4,7 @@ Mahasiswa menjawab 25 layar dari HP; jawaban muncul anonim di layar dosen. Ini a
 
 | Halaman | Untuk | Keterangan |
 |---|---|---|
-| `/live/` | mahasiswa | NIM, layar jawaban, Catatanku, Unduh CSV |
+| `/live/` | mahasiswa | NIM, layar jawaban, Catatanku, Unduh CSV, Keluar |
 | `/live/dosen.html` | dosen | login Google; buka/tutup layar, Tampilkan hasil, kehadiran |
 | `/live/setup.html` | dosen | membuat berkas impor roster + UID dosen (jalan lokal di browser, tidak mengirim apa pun) |
 
@@ -22,8 +22,8 @@ Roster, NIM, dan jawaban hanya ada di Firebase (project `kelas-live-combrand`, R
 ```
 cd live && npm install
 npm test                 # 33 uji logika (Node)
-npm run test:rules:jar   # 16 uji Rules (emulator; test:rules bila CLI Firebase bisa ke localhost)
-npm run test:e2e         # 42 pemeriksaan browser + emulator
+npm run test:rules:jar   # 19 uji Rules (emulator; test:rules bila CLI Firebase bisa ke localhost)
+npm run test:e2e         # 73 pemeriksaan browser + emulator (termasuk tombol Keluar)
 node loadtest/run.mjs    # load test, Firebase sungguhan, NIM uji (butuh dosen membuka layar)
 node loadtest/failures.mjs   # skenario gagal terhadap Rules sungguhan
 ```

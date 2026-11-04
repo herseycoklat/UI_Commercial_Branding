@@ -2,6 +2,7 @@
 // Jalankan: bash scripts/e2e.sh   (atau `node test/e2e.mjs` bila emulator dan server sudah hidup)
 import { createRequire } from 'node:module';
 import { readFileSync, mkdirSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 const { chromium } = createRequire(import.meta.url)('playwright');
 
 const DB = 'http://127.0.0.1:9000', NS = 'demo-kelas-live', BASE = 'http://127.0.0.1:8080';
@@ -195,6 +196,118 @@ const [dl2] = await Promise.all([d.page.waitForEvent('download'), d.page.click('
 const csv2 = readFileSync(await dl2.path(), 'utf8');
 check('kehadiran CSV: tanpa kolom/penanda aktif-tidak aktif', !/aktif/i.test(csv2) && csv2.split('\r\n')[0].startsWith('﻿nim;dijawab;dari;q1;poll1'));
 await d.page.click('button:has-text("Layar")');
+
+// ---------- 10b. Keluar ----------
+const N4 = '2306000004';
+await admin(`roster/${N4}`, 'PUT', true);
+const connN = async () => +(/Terhubung (\d+)/.exec(await d.page.textContent('#conn'))?.[1] ?? -1);
+const lsGet = (page, k) => page.evaluate((key) => localStorage.getItem(key), k);
+const x = await newPage(true);
+await x.page.setViewportSize({ width: 360, height: 640 });
+await studentLogin(x.page, N3);
+await x.page.waitForSelector('fieldset[data-field="kena"]');
+await opt(x.page, 'kena', 'Ya').click();
+await opt(x.page, 'model', 'Endorsed').click();
+await x.page.fill('fieldset[data-field="karena"] .txt', 'catatan rahasia N3');
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+await until(d.page, () => /Terhubung [4-9]/.test(document.querySelector('#conn').textContent)); // s1, s1b, s2, x
+const before = await connN();
+
+// header: tombol Keluar terbaca, ada di header (jauh dari tombol Kirim)
+const keluarBox = await x.page.locator('header.top button:has-text("Keluar")').boundingBox();
+const kirimBox = await x.page.locator('button:has-text("Kirim perubahan")').boundingBox();
+check('Keluar ada di header, target sentuh ≥ 40px tinggi, jauh dari tombol Kirim', keluarBox && keluarBox.height >= 40 && keluarBox.y < 80 && kirimBox.y - (keluarBox.y + keluarBox.height) > 150, JSON.stringify({ keluarBox, kirimBox }));
+const hdrOverflow = await x.page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
+check('360px: header tidak meluap ke samping', !hdrOverflow);
+await x.page.screenshot({ path: `${SHOTS}/keluar-360-header.png` });
+
+await x.page.click('header.top button:has-text("Keluar")');
+check('dialog: teks konfirmasi persis', await bodyHas(x.page, /Keluar dari kelas\?\s+Jawaban yang sudah terkirim tetap tersimpan\. Kamu bisa masuk lagi dengan NIM yang sama\./));
+check('dialog: Catatanku tidak kosong -> baris "Unduh CSV dulu?" + tombol', await bodyHas(x.page, /Catatanku ada di perangkat ini\. Unduh CSV dulu\?/) && await x.page.locator('.modal button:has-text("Unduh CSV")').count() === 1);
+check('dialog: tidak ada peringatan jawaban tertunda saat semua terkirim', !(await x.page.innerText('.modal')).includes('belum terkirim'));
+const mb = await x.page.locator('.modal').boundingBox();
+check('360px: dialog tidak terpotong (di dalam layar)', mb.x >= 0 && mb.y >= 0 && mb.x + mb.width <= 360 && mb.y + mb.height <= 640, JSON.stringify(mb));
+const btnH = await x.page.locator('.modal .actions button').evaluateAll((bs) => bs.map((b) => Math.round(b.getBoundingClientRect().height)));
+check('dialog: tombol Keluar dan Batal setinggi ≥ 44px', btnH.length === 2 && btnH.every((v) => v >= 44), btnH.join(','));
+check('dialog: fokus awal di Batal (bukan Keluar)', await x.page.evaluate(() => document.activeElement?.textContent === 'Batal'));
+await x.page.screenshot({ path: `${SHOTS}/keluar-360-dialog.png` });
+const [dlx] = await Promise.all([x.page.waitForEvent('download'), x.page.click('.modal button:has-text("Unduh CSV")')]);
+check('dialog: Unduh CSV memakai fungsi unduh yang ada (catatanku-<nim>.csv)', dlx.suggestedFilename() === `catatanku-${N3}.csv`, dlx.suggestedFilename());
+await x.page.click('.modal button:has-text("Batal")');
+check('Batal menutup dialog dan tetap masuk', (await x.page.locator('.modal').count()) === 0 && await bodyHas(x.page, /Kirim perubahan/));
+await x.page.click('header.top button:has-text("Keluar")');
+await x.page.keyboard.press('Escape');
+check('Esc menutup dialog', (await x.page.locator('.modal').count()) === 0);
+
+const seatsBefore = await admin('seat'), presBefore = await admin('presence');
+await x.page.click('header.top button:has-text("Keluar")');
+await x.page.click('.modal button.danger');
+check('keluar: kembali ke kotak NIM', await bodyHas(x.page, /Masukkan NIM kamu/));
+check('keluar: sesi lokal dihapus (kl.nim), Catatanku tetap ada (kl.mine.<nim>)', (await lsGet(x.page, 'kl.nim')) === null && (await lsGet(x.page, `kl.mine.${N3}`))?.includes('endorsed'));
+await until(d.page, (n) => +/Terhubung (\d+)/.exec(document.querySelector('#conn').textContent)[1] === n, before - 1).catch(() => {});
+check('keluar: penghitung "Terhubung" di layar dosen turun 1', (await connN()) === before - 1, `${before} -> ${await connN()}`);
+const pres = await admin('presence'); const seats = await admin('seat');
+const gone = (b4, now) => Object.keys(b4 || {}).filter((k) => !(now || {})[k]);
+check('keluar: tepat satu seat (milik NIM3) dan satu presence hilang dari Firebase', gone(seatsBefore, seats).length === 1 && seatsBefore[gone(seatsBefore, seats)[0]] === N3 && gone(presBefore, pres).length === 1 && gone(presBefore, pres)[0] === gone(seatsBefore, seats)[0], JSON.stringify({ seatsBefore, seats, presBefore, pres }));
+check('keluar: jawaban yang sudah terkirim TIDAK dihapus', !!(await admin(`answers/h2-terapkan/${N3}`))?.values);
+
+// masuk lagi dengan NIM yang sama
+await x.page.fill('#nim', N3);
+await x.page.click('button[type=submit]');
+await x.page.waitForSelector('fieldset[data-field="kena"]');
+check('masuk lagi NIM sama: jawaban lama tampil (Ya, satu model, teks)', await x.page.evaluate(() =>
+  document.querySelector('fieldset[data-field="karena"] .txt').value === 'catatan rahasia N3' &&
+  document.querySelector('fieldset[data-field="kena"] input[value="ya"]').checked &&
+  document.querySelectorAll('fieldset[data-field="model"] input:checked').length === 1));
+check('masuk lagi NIM sama: status "Terkirim ✓", masih bisa mengubah', await bodyHas(x.page, /Terkirim ✓/) && await bodyHas(x.page, /Kirim perubahan/));
+await x.page.click('header.top button:has-text("Catatanku")');
+check('masuk lagi NIM sama: Catatanku utuh', await bodyHas(x.page, /Halaman 2 · Brand Architecture Map/) && await bodyHas(x.page, /catatan rahasia N3/));
+await x.page.click('header.top button:has-text("Keluar")');
+check('Catatanku terbuka -> dialog tetap sama', await bodyHas(x.page, /Keluar dari kelas\?/));
+await x.page.click('.modal button.danger');
+await bodyHas(x.page, /Masukkan NIM kamu/);
+
+// NIM lain di perangkat yang sama
+await x.page.fill('#nim', N4);
+await x.page.click('button[type=submit]');
+await x.page.waitForSelector('fieldset[data-field="kena"]');
+check('NIM lain di perangkat sama: formulir kosong (tidak mewarisi jawaban NIM pertama)', await x.page.evaluate(() => document.querySelectorAll('input:checked').length === 0 && document.querySelector('fieldset[data-field="karena"] .txt').value === ''));
+await x.page.click('header.top button:has-text("Catatanku")');
+check('NIM lain: Catatanku kosong, tanpa isi NIM pertama', await bodyHas(x.page, /Belum ada jawaban Catatanku/) && !(await x.page.innerText('body')).includes('catatan rahasia N3'));
+const lsKeys = await x.page.evaluate(() => Object.keys(localStorage).sort().join(','));
+check('penyimpanan terpisah per NIM (kl.mine.<N3> dan kl.mine.<N4> berbeda)', lsKeys.includes(`kl.mine.${N3}`) && !(await lsGet(x.page, `kl.mine.${N4}`))?.includes('Endorsed'), lsKeys);
+await x.page.click('header.top button:has-text("Keluar")');
+check('NIM lain tanpa Catatanku: dialog tidak menawarkan Unduh CSV', !(await x.page.innerText('.modal')).includes('Unduh CSV'));
+await x.page.click('.modal button.danger');
+await bodyHas(x.page, /Masukkan NIM kamu/);
+
+// keluar saat offline dengan jawaban tertunda
+await x.page.fill('#nim', N3);
+await x.page.click('button[type=submit]');
+await x.page.waitForSelector('fieldset[data-field="kena"]');
+await x.ctx.setOffline(true);
+await opt(x.page, 'kena', 'Tidak').click();
+await x.page.click('button:has-text("Kirim perubahan")');
+check('offline: jawaban tertunda ("Menunggu koneksi")', await bodyHas(x.page, /Menunggu koneksi/));
+await x.page.click('header.top button:has-text("Keluar")');
+check('offline + tertunda: peringatan persis muncul', await bodyHas(x.page, /Ada jawaban yang belum terkirim\. Tunggu tersambung dulu, atau keluar dan jawaban itu hilang\./));
+await x.page.screenshot({ path: `${SHOTS}/keluar-360-pending.png` });
+await x.page.click('.modal button:has-text("Batal")');
+check('peringatan: mahasiswa bisa memilih Batal (tidak keluar diam-diam)', (await x.page.locator('.modal').count()) === 0 && await bodyHas(x.page, /Menunggu koneksi/));
+await x.page.click('header.top button:has-text("Keluar")');
+await x.page.click('.modal button.danger');
+check('offline + memilih keluar: tetap berhasil kembali ke kotak NIM', await bodyHas(x.page, /Masukkan NIM kamu/));
+await x.ctx.setOffline(false);
+await new Promise((r) => setTimeout(r, 3000));
+const kept = await admin(`answers/h2-terapkan/${N3}`);
+check('jawaban tertunda benar-benar hilang: tidak terkirim setelah tersambung kembali', kept?.values?.kena === 'ya', JSON.stringify(kept));
+await x.page.fill('#nim', N3);
+await x.page.click('button[type=submit]');
+await x.page.waitForSelector('fieldset[data-field="kena"]');
+check('masuk lagi setelah keluar-offline: jawaban lama (bukan yang tertunda) yang tampil', await x.page.evaluate(() => !document.querySelector('fieldset[data-field="kena"] input[value="tidak"]')?.checked && document.querySelectorAll('fieldset[data-field="kena"] input:checked').length === 1));
+
+check('Rules tidak berubah (database.rules.json sama dengan HEAD)', (() => { try { execSync('git diff --quiet HEAD -- database.rules.json'); return true; } catch { return false; } })());
 
 // ---------- 11. penutup ----------
 await d.page.click('#btn-end');

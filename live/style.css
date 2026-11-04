@@ -15,6 +15,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .top { display: flex; align-items: center; gap: .75rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); z-index: 2; }
 .top .who { color: var(--muted); font-size: .85rem; margin-left: auto; }
 .link { background: none; border: 0; color: var(--accent); padding: .3rem .2rem; cursor: pointer; font-weight: 600; }
+.link.out { color: var(--muted); font-weight: 500; font-size: .9rem; text-decoration: underline; min-height: 2.5rem; padding: .3rem .5rem; margin-left: .4rem; }
+.modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 10; }
+.modal { background: var(--card); color: var(--fg); border-radius: .9rem; padding: 1.2rem; width: 100%; max-width: 24rem; max-height: calc(100vh - 2rem); overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+.modal h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+.modal p { margin: .4rem 0; }
+.warnbox { background: #fde7c7; color: #5b3a00; padding: .6rem .7rem; border-radius: .5rem; font-size: .92rem; }
+.xcat { border-top: 1px solid var(--line); margin-top: .8rem; padding-top: .6rem; }
+.xcat .ghost { width: 100%; }
+.xact { margin-top: 1rem; flex-wrap: nowrap; }
+.xact .ghost, .xact .primary { flex: 1 1 0; }
+.primary.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
 .banner { background: #fde7c7; color: #5b3a00; padding: .6rem 1rem; font-size: .9rem; }
 .main { max-width: 36rem; margin: 0 auto; padding: 1rem 1rem 5rem; }
 .center { text-align: center; padding: 3.5rem 0; }

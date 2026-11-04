@@ -1,5 +1,5 @@
 // Hanya fungsi Firebase yang dipakai Kelas Live. Dibundel sekali ke ../vendor/firebase.js (tanpa CDN).
-export { initializeApp } from 'firebase/app';
+export { initializeApp, deleteApp } from 'firebase/app';
 export {
   getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider,
   signInWithPopup, signInWithCredential, signOut, connectAuthEmulator,

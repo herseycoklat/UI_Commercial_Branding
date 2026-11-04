@@ -25,6 +25,13 @@ export function init() {
   }
 }
 const R = (p) => F.ref(db, p);
+// Keluar: buang seluruh koneksi + antrean tulis (jawaban tertunda ikut hilang), lalu mulai app baru yang bersih.
+export async function resetApp() {
+  const old = app;
+  app = auth = db = undefined;
+  try { await F.deleteApp(old); } catch { /* sudah mati */ }
+  init();
+}
 export const isDenied = (e) => /permission[_ ]denied/i.test(`${e?.code ?? ''} ${e?.message ?? e}`);
 
 // ---------- auth ----------
@@ -59,12 +66,17 @@ export async function claimNim(nim) {
 export const watchClaim = (nim, cb) => F.onValue(R(`claims/${nim}`), (s) => cb(s.val()), () => {});
 export const watchState = (cb) => F.onValue(R('live/state'), (s) => cb(s.val()));
 export const watchConnected = (cb) => F.onValue(R('.info/connected'), (s) => cb(!!s.val()));
+// Mengembalikan stop(): lepas pemantau, batalkan onDisconnect, hapus penanda hadir (Rules: presence/{uid} boleh dihapus pemiliknya).
 export function startPresence() {
   const pr = R(`presence/${uid()}`);
-  F.onValue(R('.info/connected'), (s) => {
+  const off = F.onValue(R('.info/connected'), (s) => {
     if (s.val()) { F.onDisconnect(pr).remove(); F.set(pr, true).catch(() => {}); }
   });
+  return () => { off(); return Promise.allSettled([F.onDisconnect(pr).cancel(), F.remove(pr)]); };
 }
+// Lepas kursi (Rules: seat/{uid} boleh dihapus pemiliknya). Klaim NIM sengaja tidak disentuh: Rules tidak mengizinkan penghapusan klaim.
+export const releaseSeat = () => F.remove(R(`seat/${uid()}`));
+export const signOutNow = () => F.signOut(auth);
 export const sendAnswer = (screenId, nim, values) =>
   F.set(R(`answers/${screenId}/${nim}`), { values, t: F.serverTimestamp() });
 

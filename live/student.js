@@ -15,6 +15,7 @@ const mem = {};
 const LS = {
   get(k, d) { if (k in mem) return mem[k]; try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) { mem[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* diblokir */ } },
+  del(k) { delete mem[k]; try { localStorage.removeItem(k); } catch { /* diblokir */ } },
 };
 
 let nim = null;
@@ -26,6 +27,10 @@ let mine = {}; // screenId -> {values(encoded), t, sent, rejected, skipped}
 let drafts = {}; // screenId -> nilai formulir mentah
 let lastKey = '';
 let statusEl = null;
+let session = 0; // naik setiap login/keluar; pekerjaan async dari sesi lama dibuang
+let offTimer = null;
+let exiting = false;
+let stopPresence = null;
 
 const persist = () => { LS.set(`kl.mine.${nim}`, mine); LS.set(`kl.draft.${nim}`, drafts); };
 
@@ -44,6 +49,7 @@ function drawTop() {
       topbar.append(h('button', { class: 'link', type: 'button', onclick: () => { view = view === 'catatan' ? 'kelas' : 'catatan'; render(); } },
         view === 'catatan' ? 'Kembali' : 'Catatanku'));
     }
+    topbar.append(h('button', { class: 'link out', type: 'button', onclick: openExit }, 'Keluar'));
   }
 }
 
@@ -70,6 +76,7 @@ function viewLogin(msg) {
 async function login(value) {
   if (!NIM_RE.test(value)) return 'NIM tidak valid. Isi dengan angka NIM kamu.';
   try {
+    myUid = await B.signInAnon(); // akun anonim baru dibuat saat masuk, bukan saat halaman dibuka
     await B.claimNim(value);
   } catch (e) {
     return e.code === 'NIM_UNKNOWN'
@@ -78,6 +85,7 @@ async function login(value) {
   }
   nim = value;
   LS.set('kl.nim', nim);
+  view = 'kelas';
   startSession();
   return '';
 }
@@ -86,7 +94,8 @@ function startSession() {
   mine = LS.get(`kl.mine.${nim}`, {});
   drafts = LS.get(`kl.draft.${nim}`, {});
   takenOver = false;
-  B.startPresence();
+  session += 1;
+  stopPresence = B.startPresence();
   B.watchClaim(nim, (v) => {
     if (v && v !== myUid && !takenOver) { takenOver = true; render(); }
   });
@@ -96,13 +105,12 @@ function startSession() {
     if (key !== lastKey) { lastKey = key; render(); }
     flush();
   });
-  let offTimer = null;
+  clearTimeout(offTimer);
   B.watchConnected((on) => {
     clearTimeout(offTimer);
     if (on) { setBanner(''); flush(); }
     else offTimer = setTimeout(() => setBanner('Tidak ada koneksi. Jawabanmu disimpan di perangkat ini dan dikirim otomatis begitu tersambung.'), 2500);
   });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) flush(); });
   render();
 }
 
@@ -183,7 +191,11 @@ function viewClosed(sc) {
 
 // ---------- kirim ----------
 function submitAnswer(sc, values) {
+  const old = mine[sc.id];
   const e = { values: encode(sc, values), t: Date.now(), sent: false };
+  // simpan jawaban terkirim sebelumnya: kalau perubahan ini dibuang saat Keluar, yang lama kembali
+  const prev = old?.sent ? { values: old.values, t: old.t } : old?.prev;
+  if (prev) e.prev = prev;
   mine[sc.id] = e;
   drafts[sc.id] = values;
   persist();
@@ -195,10 +207,13 @@ async function push(id) {
   const e = mine[id];
   if (!e || e.skipped || e.sent) return;
   delete e.rejected;
+  const sid = session;
   try {
     await B.sendAnswer(id, nim, e.values);
-    if (mine[id] === e) { e.sent = true; delete e.rejected; }
+    if (sid !== session) return;
+    if (mine[id] === e) { e.sent = true; delete e.rejected; delete e.prev; }
   } catch (err) {
+    if (sid !== session) return;
     if (mine[id] === e && B.isDenied(err)) e.rejected = true; // layar sudah ditutup/ganti
   }
   persist();
@@ -246,6 +261,67 @@ function viewCatatan(penutup) {
   );
 }
 
+// ---------- Keluar ----------
+const pendingIds = () => Object.entries(mine).filter(([, e]) => e && e.values && !e.skipped && !e.sent && !e.rejected).map(([id]) => id);
+
+function openExit() {
+  if (!nim || exiting || document.querySelector('.modal-back')) return;
+  const opener = document.activeElement;
+  const hasCat = catatankuRows(nim, decodedMine(), SCREENS).length > 0;
+  const pend = pendingIds();
+  const close = () => { back.remove(); document.removeEventListener('keydown', onKey); opener?.focus?.(); };
+  const onKey = (ev) => { if (ev.key === 'Escape' && !exiting) close(); };
+  const cancel = h('button', { class: 'ghost', type: 'button', onclick: close }, 'Batal');
+  const go = h('button', { class: 'primary danger', type: 'button', onclick: async () => {
+    exiting = true; go.disabled = true; cancel.disabled = true; go.textContent = 'Keluar…';
+    document.removeEventListener('keydown', onKey);
+    await doLogout();
+    back.remove();
+    exiting = false;
+  } }, 'Keluar');
+  const back = h('div', { class: 'modal-back' },
+    h('div', { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'xt' },
+      h('h2', { id: 'xt' }, 'Keluar dari kelas?'),
+      h('p', {}, 'Jawaban yang sudah terkirim tetap tersimpan. Kamu bisa masuk lagi dengan NIM yang sama.'),
+      pend.length ? h('p', { class: 'warnbox', role: 'alert' }, 'Ada jawaban yang belum terkirim. Tunggu tersambung dulu, atau keluar dan jawaban itu hilang.') : null,
+      hasCat ? h('div', { class: 'xcat' }, h('p', {}, 'Catatanku ada di perangkat ini. Unduh CSV dulu?'),
+        h('button', { class: 'ghost', type: 'button', onclick: () => downloadText(csvFileName(nim), toCsv(catatankuRows(nim, decodedMine(), SCREENS))) }, 'Unduh CSV')) : null,
+      h('div', { class: 'actions xact' }, cancel, go)));
+  document.addEventListener('keydown', onKey);
+  document.body.append(back);
+  cancel.focus(); // fokus awal di Batal supaya tidak keluar tanpa sengaja
+}
+
+const withTimeout = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(r, ms))]);
+
+async function doLogout() {
+  const leaving = nim;
+  // 1. jawaban tertunda dibuang (peringatan sudah menyatakan hilang); yang sudah terkirim/ditolak tetap di Catatanku
+  for (const id of pendingIds()) {
+    const prev = mine[id].prev;
+    if (prev) { mine[id] = { values: prev.values, t: prev.t, sent: true }; drafts[id] = decode(SCREEN_BY_ID[id], prev.values); }
+    else { delete mine[id]; delete drafts[id]; }
+  }
+  persist();
+  session += 1; // hentikan kelanjutan async sesi ini
+  clearTimeout(offTimer);
+  // 2. lepas penanda hadir + kursi di Firebase (menunggu paling lama 3 dtk; offline tidak boleh menahan keluar)
+  try {
+    await withTimeout(Promise.allSettled([stopPresence?.(), B.releaseSeat()]), 3000);
+  } catch { /* abaikan */ }
+  stopPresence = null;
+  // 3. sign out, buang app lama beserta antrean tulisnya, mulai app bersih
+  try { await withTimeout(B.signOutNow(), 3000); } catch { /* abaikan */ }
+  await B.resetApp();
+  // 4. hapus sesi lokal (Catatanku `kl.mine.<nim>` TIDAK dihapus), kembali ke kotak NIM
+  LS.del('kl.nim');
+  nim = null; myUid = null; state = null; takenOver = false; view = 'kelas';
+  mine = {}; drafts = {}; lastKey = ''; statusEl = null;
+  setBanner('');
+  viewLogin();
+  void leaving;
+}
+
 // ---------- mulai ----------
 async function boot() {
   if (!B.ready) {
@@ -254,16 +330,10 @@ async function boot() {
     return;
   }
   B.init();
-  try {
-    myUid = await B.signInAnon();
-  } catch {
-    drawTop();
-    mount(main, h('div', { class: 'center' }, h('p', { class: 'big' }, 'Tidak bisa terhubung.'), h('p', {}, 'Periksa koneksi lalu muat ulang halaman.')));
-    return;
-  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) flush(); });
   const saved = LS.get('kl.nim', null);
   if (saved && NIM_RE.test(saved)) {
-    try { await B.claimNim(saved); nim = saved; startSession(); return; } catch { /* jatuh ke login */ }
+    try { myUid = await B.signInAnon(); await B.claimNim(saved); nim = saved; startSession(); return; } catch { /* jatuh ke login */ }
   }
   viewLogin();
 }
