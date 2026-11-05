@@ -92,6 +92,10 @@ export const setHidden = (id, nim, on) => (on ? F.set(R(`hidden/${id}/${nim}`), 
 export const watchSpot = (cb) => F.onValue(R('dosenState/spot'), (s) => cb(s.val()));
 export const setSpot = (v) => (v ? F.set(R('dosenState/spot'), v) : F.remove(R('dosenState/spot')));
 export const watchPresence = (cb) => F.onValue(R('presence'), (s) => cb(s.size));
+// Riwayat layar yang pernah dibuka dosen (pembagi kehadiran, doc 63). Di dosenState: Rules tidak berubah.
+export const markOpened = (id) => F.set(R(`dosenState/opened/${id}`), F.serverTimestamp());
+export const watchOpened = (cb) => F.onValue(R('dosenState/opened'), (s) => cb(s.val() || {}));
+export const clearOpened = () => F.remove(R('dosenState/opened'));
 export const watchPeak = (cb) => F.onValue(R('dosenState/peak'), (s) => cb(s.val() || 0));
 export const bumpPeak = (n) => F.runTransaction(R('dosenState/peak'), (cur) => ((cur || 0) >= n ? undefined : n));
 export const getRoster = async () => Object.keys((await F.get(R('roster'))).val() || {});

@@ -1,4 +1,4 @@
-# Peta cadangan Kelas Live → Zoom (25 layar)
+# Peta cadangan Kelas Live → Zoom (3 layar pengantar + 25 layar)
 
 Dipakai kalau Kelas Live mati atau tidak bisa dibuka mahasiswa. Cadangan resmi di skrip: **Zoom poll + contoh dari PPT worked example**.
 Kolom "Tambahan waktu" adalah **perkiraan saya, belum diukur**. Ukur saat latihan Kamis 5 Nov dan perbarui tabel ini.
@@ -9,6 +9,9 @@ Kolom "Tambahan waktu" adalah **perkiraan saya, belum diukur**. Ukur saat latiha
 
 | No | Layar | Waktu normal | Cadangan | Tambahan waktu (perkiraan) |
 |---|---|---|---|---|
+| I1 | Pengantar · Gojek 2014: masalah utama | 0.5 mnt | Zoom poll (pilihan tunggal, A/B/C). | +1 mnt |
+| I2 | Pengantar · Gojek vs GrabBike: di mana menang | 0.5 mnt | Zoom poll (pilihan tunggal, A/B/C/D). | +1 mnt |
+| I3 | Pengantar · Klaim 17 menit | 0.5 mnt | Zoom poll (pilihan tunggal, REAL/PLANNED/UNKNOWN). | +1 mnt |
 | 1 | Langkah 1 · Brand tanpa logo | 1 mnt | Chat Zoom: ketik 1 brand + dikenali dari apa. Dosen membacakan 5 yang paling sering. | +1 mnt |
 | 2 | Langkah 2c · Siapa pembuat | 0.3 mnt | Zoom poll (pilihan tunggal), disiapkan sebelum kelas. | +1 mnt |
 | 3 | Langkah 2e · Nama proyek | 0.3 mnt | Zoom poll (pilihan tunggal), disiapkan sebelum kelas. | +1 mnt |

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { SCREENS, SCREEN_BY_ID } from '../screens.js';
+import { SCREENS, SCREEN_BY_ID, matchFilter } from '../screens.js';
 import { validateScreen, validateField, encode, decode, NONE } from '../validate.js';
 import { aggregateScreen } from '../aggregate.js';
 import { markField } from '../flags.js';
@@ -72,14 +72,31 @@ test('_none: dihitung sebagai responden, bukan sebagai pilihan, dan tidak merusa
   assert.equal(markField(s6.fields[0], ['palet', 'siluet']).ok, true);
 });
 
-test('kehadiran: semua layar dihitung sama, tanpa ambang aktif', () => {
-  const ids = ['q1', 'poll1', 'poll2'];
-  const rows = attendanceRows(['2', '1', '3'], { q1: { 1: {}, 2: {} }, poll1: { 1: {} } }, ids);
-  assert.deepEqual(rows.map((r) => r.nim), ['1', '2', '3']);
-  assert.deepEqual(rows.map((r) => r.dijawab), [2, 1, 0]);
-  assert.equal(rows[0].dari, 3);
-  assert.equal(rows[2].q1, 0);
-  const csv = toCsvTable(attendanceColumns(ids), rows);
-  assert.ok(csv.includes('nim;dijawab;dari;q1;poll1;poll2'));
+test('kehadiran: pembagi = layar yang dibuka (buka 5 dari 28, jawab 3 -> 3/5), tanpa ambang aktif', () => {
+  const opened = { i1: 1, i2: 1, q1: 1, poll1: 1, 'h2-tebak': 1 };
+  const answers = {
+    i1: { N1: {} }, q1: { N1: {}, N2: {} }, poll1: { N1: {} },
+    gate3: { N1: {}, N2: {} }, // layar tidak dibuka: jawaban di sini tidak dihitung
+  };
+  const rows = attendanceRows(['N2', 'N1', 'N3'], answers, SCREENS, opened);
+  assert.deepEqual(rows.map((r) => r.nim), ['N1', 'N2', 'N3']);
+  assert.deepEqual(rows.map((r) => `${r.dijawab}/${r.dibuka}`), ['3/5', '1/5', '0/5']);
+  assert.deepEqual([rows[0].insight_dijawab, rows[0].insight_dibuka, rows[0].kelas_dijawab, rows[0].kelas_dibuka], [1, 2, 2, 3]);
+  const cols = attendanceColumns(SCREENS, opened);
+  assert.deepEqual(cols.slice(0, 7), ['nim', 'dibuka', 'dijawab', 'insight_dibuka', 'insight_dijawab', 'kelas_dibuka', 'kelas_dijawab']);
+  assert.deepEqual(cols.slice(7), ['i1 (S1 insight)', 'i2 (S2 insight)', 'q1 (S4 kelas)', 'poll1 (S4 kelas)', 'h2-tebak (S4 kelas)']);
+  assert.ok(!cols.some((c) => c.startsWith('gate3')));
+  const csv = toCsvTable(cols, rows);
+  assert.ok(csv.includes('N1;5;3;2;1;3;2;1;0;1;1;0'), csv);
   assert.ok(!/aktif/i.test(csv));
+});
+
+test('kehadiran: filter sesi × jenis membatasi pembagi dan kolom', () => {
+  const opened = { i1: 1, i2: 1, q1: 1 };
+  const ins = SCREENS.filter((s) => matchFilter(s, { jenis: 'insight' }));
+  const r = attendanceRows(['N1'], { i1: { N1: {} }, q1: { N1: {} } }, ins, opened)[0];
+  assert.equal(`${r.dijawab}/${r.dibuka}`, '1/2');
+  assert.deepEqual(attendanceColumns(ins, opened).slice(7), ['i1 (S1 insight)', 'i2 (S2 insight)']);
+  const none = attendanceRows(['N1'], { q1: { N1: {} } }, SCREENS, {})[0];
+  assert.equal(`${none.dijawab}/${none.dibuka}`, '0/0'); // riwayat dikosongkan: belum ada pembagi
 });

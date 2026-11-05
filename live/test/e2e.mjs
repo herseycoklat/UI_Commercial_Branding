@@ -65,6 +65,9 @@ check('dosen terdaftar masuk ke layar kendali', true);
 check('dosen: hasil sama sekali tidak tampil sebelum layar dibuka', !(await d.page.innerText('body')).includes('sudah masuk') || /0 dari 3 sudah masuk/.test(await d.page.innerText('#counter')));
 
 // ---------- 3. q1: buka -> jawab -> counter -> hasil tersembunyi -> tampilkan ----------
+const selOrder = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
+check('daftar layar dosen: I1 → I2 → I3 → Q1 → … (28 layar)', selOrder.slice(0, 4).join(',') === 'i1,i2,i3,q1' && selOrder.length === 28, selOrder.slice(0, 5).join(','));
+await d.page.selectOption('#sel', 'q1');
 await d.page.click('#btn-open');
 await s1.page.waitForSelector('fieldset[data-field="brand"]');
 check('mahasiswa melihat layar saat dosen membuka', true);
@@ -91,7 +94,7 @@ await s3.page.click('button:has-text("Kirim jawaban")');
 await bodyHas(s3.page, /Terkirim ✓/);
 
 check('penghitung "3 dari 3 sudah masuk"', await bodyHas(d.page, /3 dari 3 sudah masuk/));
-check('hasil tersembunyi sampai "Tampilkan hasil"', (await d.page.locator('.gate').count()) === 1 && !(await d.page.innerText('body')).includes('Gojek'));
+check('hasil tersembunyi sampai "Tampilkan hasil"', (await d.page.locator('.gate').count()) === 1 && (await d.page.locator('.btab, .cards, .bars').count()) === 0);
 await d.page.click('#btn-reveal');
 await d.page.waitForSelector('.btab');
 const firstRow = (await d.page.locator('.btab tbody tr').first().innerText()).replace(/\s+/g, ' ');
@@ -191,10 +194,10 @@ await d.page.click('#btn-att');
 await d.page.waitForSelector('#atab');
 const rows = await d.page.locator('#atab tbody tr').allInnerTexts();
 check('kehadiran: satu baris per NIM roster (3)', rows.length === 3, rows.join('|'));
-check('kehadiran: NIM1 menjawab q1, poll1, h2-terapkan = 3 dari 25', /2306000001\s+3 dari 25/.test(rows.join('\n').replace(/\t/g, ' ')), rows.join('|'));
+check('kehadiran: pembagi = layar dibuka; NIM1 menjawab q1, poll1, h2-terapkan = 3 dari 3', /2306000001\s+3 dari 3/.test(rows.join('\n').replace(/\t/g, ' ')), rows.join('|'));
 const [dl2] = await Promise.all([d.page.waitForEvent('download'), d.page.click('#btn-att-csv')]);
 const csv2 = readFileSync(await dl2.path(), 'utf8');
-check('kehadiran CSV: tanpa kolom/penanda aktif-tidak aktif', !/aktif/i.test(csv2) && csv2.split('\r\n')[0].startsWith('﻿nim;dijawab;dari;q1;poll1'));
+check('kehadiran CSV: kolom dibuka/dijawab + per jenis, kolom layar berlabel sesi·jenis, tanpa penanda aktif', !/aktif/i.test(csv2) && csv2.split('\r\n')[0] === '﻿nim;dibuka;dijawab;insight_dibuka;insight_dijawab;kelas_dibuka;kelas_dijawab;q1 (S4 kelas);poll1 (S4 kelas);h2-terapkan (S4 kelas)', csv2.split('\r\n')[0]);
 await d.page.click('button:has-text("Layar")');
 
 // ---------- 10b. Keluar ----------
@@ -308,6 +311,79 @@ await x.page.waitForSelector('fieldset[data-field="kena"]');
 check('masuk lagi setelah keluar-offline: jawaban lama (bukan yang tertunda) yang tampil', await x.page.evaluate(() => !document.querySelector('fieldset[data-field="kena"] input[value="tidak"]')?.checked && document.querySelectorAll('fieldset[data-field="kena"] input:checked').length === 1));
 
 check('Rules tidak berubah (database.rules.json sama dengan HEAD)', (() => { try { execSync('git diff --quiet HEAD -- database.rules.json'); return true; } catch { return false; } })());
+
+// ---------- 10c. Pengantar I1–I3, filter sesi × jenis, pembagi, kosongkan riwayat ----------
+await d.page.selectOption('#sel', 'i1');
+await d.page.click('#btn-open');
+check('I1 tampil di HP dengan teks doc 63', await bodyHas(x.page, /Akhir 2014, apa masalah utama Gojek\?/) && await bodyHas(x.page, /B\. Cara pesan tidak bisa membesar dan pelanggannya hanya korporat/));
+await opt(x.page, 'masalah', 'B\\. Cara pesan tidak bisa membesar dan pelanggannya hanya korporat').click();
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+const ctr = () => d.page.textContent('#counter');
+await until(d.page, () => /^1 dari/.test(document.querySelector('#counter')?.textContent || '')).catch(() => {});
+check('I1: hasil tersembunyi sampai Tampilkan hasil', (await d.page.locator('.gate').count()) === 1 && (await d.page.locator('.bars').count()) === 0 && /^1 dari \d+ sudah masuk/.test(await ctr()), await ctr());
+await d.page.click('#btn-reveal');
+check('I1: batang persentase + penanda kunci di B', await bodyHas(d.page, /B\. Cara pesan[^\n]*✓/) && await bodyHas(d.page, /1 \(100%\)/));
+check('I1: tanpa ⚠', !/⚠/.test(await d.page.innerText('body')));
+await d.page.selectOption('#sel', 'i2');
+await d.page.click('#btn-open');
+check('I2: "sekitar" di depan kedua harga', await bodyHas(x.page, /GrabBike sekitar Rp5\.000, Go-Jek sekitar Rp15\.000\. Kalau kalian tim Gojek, di mana kalian harus menang\?/));
+await x.page.screenshot({ path: `${SHOTS}/i2-360.png`, fullPage: true });
+check('360px: layar I2 tanpa geser ke samping', !(await x.page.evaluate(() => document.documentElement.scrollWidth > innerWidth)));
+await d.page.selectOption('#sel', 'i3');
+await d.page.click('#btn-open');
+check('I3: pilihan REAL / PLANNED / UNKNOWN', await bodyHas(x.page, /REAL[\s\S]*PLANNED[\s\S]*UNKNOWN/));
+await opt(x.page, 'status', 'UNKNOWN').click();
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+await d.page.click('#btn-reveal');
+check('I3: penanda kunci di UNKNOWN', await bodyHas(d.page, /UNKNOWN ✓/));
+await x.page.click('header.top button:has-text("Catatanku")');
+await bodyHas(x.page, /Catatanku/);
+const catTxt = await x.page.innerText('main');
+check('I1–I3 tidak masuk Catatanku', !/Akhir 2014|UNKNOWN|GrabBike/.test(catTxt) && /catatan rahasia N3|Brand Architecture Map/.test(catTxt), catTxt.slice(0, 200));
+await x.page.click('header.top button:has-text("Kembali")');
+
+// filter di daftar layar
+await d.page.selectOption('#f-jenis', 'insight');
+let opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
+check('filter jenis=insight: daftar layar hanya I1–I3', opts.join(',') === 'i1,i2,i3', opts.join(','));
+await d.page.selectOption('#f-jenis', '');
+await d.page.selectOption('#f-sesi', 'S4');
+opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
+check('filter sesi=S4: 25 layar kelas (ditambah layar terpilih bila di luar filter)', opts.filter((v) => !v.startsWith('i')).length === 25);
+await d.page.selectOption('#f-sesi', '');
+
+// kehadiran: pembagi = layar dibuka, rincian per jenis, filter, CSV
+await d.page.click('button:has-text("Kehadiran")');
+await d.page.click('#btn-att');
+await until(d.page, () => !/Memuat/.test(document.querySelector('#btn-att').textContent) && document.querySelector('#atab'));
+const opened = await admin('dosenState/opened');
+check('riwayat layar dibuka tercatat di dosenState/opened (6 layar)', Object.keys(opened || {}).sort().join(',') === 'h2-terapkan,i1,i2,i3,poll1,q1', JSON.stringify(opened));
+const waitRow = (re) => until(d.page, ([src, n]) => [...document.querySelectorAll('#atab tbody tr')].some((tr) => tr.innerText.replace(/\s+/g, ' ').startsWith(n) && new RegExp(src).test(tr.innerText.replace(/\s+/g, ' '))), [re.source, N3]).then(() => true, () => false);
+const rowN3 = async () => (await d.page.locator('#atab tbody tr').allInnerTexts()).find((t) => t.startsWith(N3))?.replace(/\s+/g, ' ');
+check('kehadiran semua: pembagi 6, insight N3 = 2/3', await waitRow(/dari 6 2\/3/), await rowN3());
+await d.page.selectOption('#f-jenis', 'insight');
+check('kehadiran filter insight: N3 = 2 dari 3', await waitRow(/^2306000003 2 dari 3 2\/3 0\/0/), await rowN3());
+const [dl3] = await Promise.all([d.page.waitForEvent('download'), d.page.click('#btn-att-csv')]);
+const csv3 = readFileSync(await dl3.path(), 'utf8').split('\r\n');
+check('CSV kehadiran (filter insight): nama berkas + kolom per layar berlabel', dl3.suggestedFilename() === 'kehadiran-insight.csv' && csv3[0] === '﻿nim;dibuka;dijawab;insight_dibuka;insight_dijawab;kelas_dibuka;kelas_dijawab;i1 (S1 insight);i2 (S2 insight);i3 (S3 insight)', `${dl3.suggestedFilename()} ${csv3[0]}`);
+check('CSV kehadiran (filter insight): baris N3 = 3;2;3;2;0;0;1;0;1', csv3.includes(`${N3};3;2;3;2;0;0;1;0;1`), csv3.join(' | '));
+await d.page.selectOption('#f-jenis', '');
+
+// kosongkan riwayat (sebelum kelas)
+await d.page.click('#btn-reset-opened');
+check('kosongkan riwayat: perlu klik kedua (konfirmasi)', await bodyHas(d.page, /Yakin\? Klik lagi untuk mengosongkan/) && !!(await admin('dosenState/opened')));
+await d.page.click('#btn-reset-opened');
+await until(d.page, () => /Belum ada layar dibuka/.test(document.body.innerText)).catch(() => {});
+check('kosongkan riwayat: dosenState/opened kosong, daftar "Belum ada layar dibuka"', (await admin('dosenState/opened')) === null && await bodyHas(d.page, /Riwayat layar dibuka: 0/));
+check('setelah dikosongkan: pembagi 0, jawaban lama tidak terhapus', await waitRow(/0 dari 0/) && !!(await admin(`answers/i1/${N3}`)), await rowN3());
+await d.page.click('button:has-text("Layar")');
+await d.page.selectOption('#sel', 'i2');
+await d.page.click('#btn-open');
+await d.page.click('button:has-text("Kehadiran")');
+check('layar yang dibuka setelah dikosongkan tercatat lagi (pembagi 1)', await waitRow(/dari 1 /), await rowN3());
+await d.page.click('button:has-text("Layar")');
 
 // ---------- 11. penutup ----------
 await d.page.click('#btn-end');

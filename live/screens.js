@@ -1,4 +1,4 @@
-// Kelas Live — 25 layar jawaban (Lampiran E skrip v3). Layar = data, bukan kode.
+// Kelas Live — 3 layar pengantar (I1–I3, doc 63) + 25 layar jawaban (Lampiran E skrip v3). Layar = data, bukan kode.
 // Teks pertanyaan dan opsi disalin dari Week3-Sesi4-skrip-final-v3-kelas-live.md.
 // Tipe bidang: single | multi | text | grid
 //   single : satu pilihan (dipakai juga untuk "kategori")
@@ -12,6 +12,8 @@
 //   catatanku : {halaman, bagian} bila jawaban masuk Catatanku; 'pengingat' bila hanya pengingat
 //   waktu     : detik yang disarankan (hanya petunjuk untuk dosen)
 //   key       : kunci jawaban (penanda, bukan ⚠). Aturan ⚠ ada di flags.js
+//   sesi      : 'S1' | 'S2' | 'S3' | 'S4'  (label filter, doc 63)
+//   jenis     : 'insight' (tebakan kasus Gojek di pengantar) | 'kelas' (materi Sesi 4)
 
 const o = (v, t, d) => (d ? { v, t, d } : { v, t });
 
@@ -98,7 +100,40 @@ const STATUS_GATE = [
   o('revision', 'Revision due', 'satu tes gagal'),
 ];
 
-export const SCREENS = [
+// Tiga tebakan pengantar Gojek (doc 63, keputusan Fai 5 Nov). Teks persis dari tabel doc 63; I2 memakai "sekitar" (Fai, 5 Nov).
+const PENGANTAR = [
+  {
+    id: 'i1', no: 'I1', segmen: 'Pengantar', judul: 'Gojek 2014: masalah utama', mode: 'tebak', waktu: 30, sesi: 'S1', jenis: 'insight',
+    fields: [
+      { id: 'masalah', type: 'single', label: 'Akhir 2014, apa masalah utama Gojek?', key: 'b', options: [
+        o('a', 'A. Logonya kurang menarik'),
+        o('b', 'B. Cara pesan tidak bisa membesar dan pelanggannya hanya korporat'),
+        o('c', 'C. Belum ada pesaing, jadi tidak perlu berubah'),
+      ] },
+    ],
+  },
+  {
+    id: 'i2', no: 'I2', segmen: 'Pengantar', judul: 'Gojek vs GrabBike: di mana menang', mode: 'tebak', waktu: 30, sesi: 'S2', jenis: 'insight',
+    fields: [
+      { id: 'menang', type: 'single', label: 'GrabBike sekitar Rp5.000, Go-Jek sekitar Rp15.000. Kalau kalian tim Gojek, di mana kalian harus menang?', key: 'b', options: [
+        o('a', 'A. Turunkan harga'),
+        o('b', 'B. Tambah layanan dalam satu aplikasi'),
+        o('c', 'C. Iklan lebih banyak'),
+        o('d', 'D. Tunggu GrabBike rugi'),
+      ] },
+    ],
+  },
+  {
+    id: 'i3', no: 'I3', segmen: 'Pengantar', judul: 'Klaim 17 menit', mode: 'tebak', waktu: 30, sesi: 'S3', jenis: 'insight',
+    fields: [
+      { id: 'status', type: 'single', label: 'Gojek bilang rata-rata pengemudi sampai dalam 17 menit. Itu…', key: 'unknown', options: [
+        o('real', 'REAL'), o('planned', 'PLANNED'), o('unknown', 'UNKNOWN'),
+      ] },
+    ],
+  },
+];
+
+const SESI4 = [
   // ---------- Pembukaan ----------
   {
     id: 'q1', no: 1, segmen: 'Langkah 1', judul: 'Q1 · Brand tanpa logo', mode: 'tebak', waktu: 60,
@@ -329,6 +364,12 @@ export const SCREENS = [
     ],
   },
 ];
+
+// Ke-25 layar lama: sesi S4, jenis kelas (doc 63). Urutan: I1 → I2 → I3 → Q1 → …
+export const SCREENS = [...PENGANTAR, ...SESI4.map((x) => ({ ...x, sesi: 'S4', jenis: 'kelas' }))];
+export const SESI_LIST = ['S1', 'S2', 'S3', 'S4'];
+export const JENIS_LIST = ['insight', 'kelas'];
+export const matchFilter = (s, f = {}) => (!f.sesi || s.sesi === f.sesi) && (!f.jenis || s.jenis === f.jenis);
 
 export const SCREEN_BY_ID = Object.fromEntries(SCREENS.map((s) => [s.id, s]));
 export const SCREEN_IDS = SCREENS.map((s) => s.id);

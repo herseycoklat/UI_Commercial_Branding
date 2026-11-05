@@ -25,19 +25,27 @@ export function toCsvTable(columns, rows, { sep = SEP, bom = true } = {}) {
 
 export const toCsv = (rows, opts) => toCsvTable(COLUMNS, rows, opts);
 
-// Laporan kehadiran per NIM: semua layar dihitung sama, tanpa ambang "aktif".
-export function attendanceRows(roster, answersByScreen, screenIds) {
+// Laporan kehadiran per NIM (doc 63): pembagi = layar yang benar-benar DIBUKA dosen, tanpa ambang "aktif".
+// screens: daftar layar (sudah difilter sesi × jenis); opened: { [screenId]: waktu } dari dosenState/opened.
+// Layar yang tidak pernah dibuka tidak memengaruhi apa pun, termasuk jawaban lama di layar itu.
+export function attendanceRows(roster, answersByScreen, screens, opened = {}) {
+  const used = screens.filter((s) => opened?.[s.id]);
   return [...roster].sort().map((nim) => {
-    const per = {};
-    let n = 0;
-    for (const id of screenIds) {
-      per[id] = answersByScreen?.[id]?.[nim] ? 1 : 0;
-      n += per[id];
+    const r = { nim, dibuka: used.length, dijawab: 0, insight_dibuka: 0, insight_dijawab: 0, kelas_dibuka: 0, kelas_dijawab: 0 };
+    for (const s of used) {
+      const ok = answersByScreen?.[s.id]?.[nim] ? 1 : 0;
+      r[colName(s)] = ok;
+      r.dijawab += ok;
+      r[`${s.jenis}_dibuka`] += 1;
+      r[`${s.jenis}_dijawab`] += ok;
     }
-    return { nim, dijawab: n, dari: screenIds.length, ...per };
+    return r;
   });
 }
-export const attendanceColumns = (screenIds) => ['nim', 'dijawab', 'dari', ...screenIds];
+export const colName = (s) => `${s.id} (${s.sesi} ${s.jenis})`;
+export const attendanceColumns = (screens, opened = {}) =>
+  ['nim', 'dibuka', 'dijawab', 'insight_dibuka', 'insight_dijawab', 'kelas_dibuka', 'kelas_dijawab',
+    ...screens.filter((s) => opened?.[s.id]).map(colName)];
 
 const optText = (f, v) => f.options?.find((o) => o.v === v)?.t ?? String(v);
 

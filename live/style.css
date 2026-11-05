@@ -137,3 +137,4 @@ textarea.txt { resize: vertical; }
   .counter { font-size: 1.6rem; }
 }
 @media (prefers-reduced-motion: reduce) { .bf { transition: none; } }
+.opened { border: 1px solid var(--line); border-radius: .6rem; padding: .6rem .8rem; margin: .6rem 0; }

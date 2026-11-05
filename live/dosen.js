@@ -1,6 +1,6 @@
 // Layar dosen: kendali layar, hasil anonim, kehadiran per NIM.
 import * as B from './backend.js';
-import { SCREENS, SCREEN_BY_ID, SCREEN_IDS } from './screens.js';
+import { SCREENS, SCREEN_BY_ID, SESI_LIST, JENIS_LIST, matchFilter } from './screens.js';
 import { h, clear } from './dom.js';
 import { aggregateScreen } from './aggregate.js';
 import { collectFlags, markSummary } from './flags.js';
@@ -14,6 +14,7 @@ const INIT_STATE = { active: '', open: false, revealed: false };
 const S = {
   user: null, state: null, sel: SCREENS[0].id, answers: {}, hidden: {}, spot: null,
   online: 0, peak: 0, lat: [], roster: null, tab: 'kelas', att: null, attBusy: false, confirmEnd: false, openHidden: false, err: '',
+  filter: { sesi: '', jenis: '' }, opened: {}, confirmReset: false, attAnswers: null,
 };
 const pct = (arr, q) => { const a = [...arr].sort((x, y) => x - y); return a[Math.max(0, Math.ceil(q * a.length) - 1)]; };
 let started = false;
@@ -96,15 +97,40 @@ function start() {
   B.watchPresence((n) => { S.online = n; if (n > S.peak) { S.peak = n; B.bumpPeak(n); } draw(); });
   B.watchPeak((p) => { S.peak = Math.max(S.peak, p); draw(); });
   B.watchSpot((v) => { S.spot = v; draw(); });
+  B.watchOpened((o) => { S.opened = o; recompute(); draw(); });
   watchSelected();
   draw();
 }
 
 // ---------- aksi ----------
 const act = (p) => B.updateState(p).catch((e) => { S.err = `Gagal menyimpan: ${e.code || e.message}`; draw(); });
-const openScreen = (id) => { B.setSpot(null); return act({ active: id, open: true, revealed: false, penutup: false }); };
+const openScreen = (id) => {
+  B.setSpot(null);
+  B.markOpened(id).catch((e) => { S.err = `Gagal mencatat layar dibuka: ${e.code || e.message}`; draw(); });
+  return act({ active: id, open: true, revealed: false, penutup: false });
+};
+const visible = () => SCREENS.filter((s) => matchFilter(s, S.filter));
 const select = (id) => { S.sel = id; S.openHidden = false; watchSelected(); draw(); };
-const step = (d) => select(SCREEN_IDS[Math.max(0, Math.min(SCREEN_IDS.length - 1, SCREEN_IDS.indexOf(S.sel) + d))]);
+const step = (d) => {
+  const ids = visible().map((s) => s.id);
+  if (!ids.length) return;
+  const i = ids.indexOf(S.sel);
+  select(ids[i < 0 ? 0 : Math.max(0, Math.min(ids.length - 1, i + d))]);
+};
+const setFilter = (k, v) => {
+  S.filter = { ...S.filter, [k]: v };
+  const ids = visible().map((s) => s.id);
+  if (S.tab === 'kelas' && ids.length && !ids.includes(S.sel)) select(ids[0]);
+  recompute(); draw();
+};
+const label = (s) => `${s.no}. ${s.judul}`;
+
+// Filter sesi × jenis: dipakai di daftar layar, laporan kehadiran, dan CSV kehadiran.
+function filterBar() {
+  const mk = (k, list, all) => h('select', { id: `f-${k}`, 'aria-label': `Filter ${k}`, onchange: (e) => setFilter(k, e.target.value) },
+    h('option', { value: '', selected: !S.filter[k] }, all), list.map((v) => h('option', { value: v, selected: S.filter[k] === v }, v)));
+  return h('div', { class: 'ctlrow wrap filt' }, h('span', { class: 'muted' }, 'Filter:'), mk('sesi', SESI_LIST, 'Semua sesi'), mk('jenis', JENIS_LIST, 'Semua jenis'));
+}
 
 // ---------- tampilan ----------
 function topbar() {
@@ -125,8 +151,10 @@ function controls() {
   const st = S.state;
   const sc = SCREEN_BY_ID[S.sel];
   const isActive = st.active === S.sel;
+  const list = visible();
+  if (!list.some((s) => s.id === S.sel)) list.unshift(sc); // layar terpilih tetap terlihat walau di luar filter
   const sel = h('select', { id: 'sel', 'aria-label': 'Pilih layar', onchange: (e) => select(e.target.value) },
-    SCREENS.map((s) => h('option', { value: s.id, selected: s.id === S.sel }, `${s.no}. ${s.judul}`)));
+    list.map((s) => h('option', { value: s.id, selected: s.id === S.sel }, `${label(s)}  [${s.sesi} · ${s.jenis}]`)));
   const btns = [];
   if (!isActive || !st.open) btns.push(h('button', { id: 'btn-open', class: 'primary', type: 'button', onclick: () => openScreen(S.sel) }, isActive ? 'Buka lagi' : 'Buka layar ini'));
   if (isActive && st.open) btns.push(h('button', { id: 'btn-close', class: 'primary', type: 'button', onclick: () => act({ open: false }) }, 'Tutup layar'));
@@ -139,9 +167,10 @@ function controls() {
   let status = 'Belum ada layar dibuka.';
   const act0 = SCREEN_BY_ID[st.active];
   if (st.penutup) status = 'Penutup: mahasiswa melihat Catatanku dan Unduh CSV.';
-  else if (act0) status = `Layar aktif: ${act0.no}. ${act0.judul} · ${st.open ? 'terbuka' : 'ditutup'}${st.revealed ? ' · hasil tampil' : ''}`;
+  else if (act0) status = `Layar aktif: ${label(act0)} · ${st.open ? 'terbuka' : 'ditutup'}${st.revealed ? ' · hasil tampil' : ''}`;
 
   return h('div', { class: 'ctl' },
+    filterBar(),
     h('div', { class: 'ctlrow' },
       h('button', { class: 'ghost sq', type: 'button', 'aria-label': 'Layar sebelumnya', onclick: () => step(-1) }, '◀'), sel,
       h('button', { class: 'ghost sq', type: 'button', 'aria-label': 'Layar berikutnya', onclick: () => step(1) }, '▶')),
@@ -159,7 +188,7 @@ function kelasView() {
   const gate = isActive && !st.revealed;
 
   const head = h('div', { class: 'qbox' },
-    h('div', { class: 'qmeta' }, `${sc.no} dari ${SCREENS.length} · ${sc.segmen} · ${sc.mode}`),
+    h('div', { class: 'qmeta' }, `${sc.no} · ${sc.sesi} · ${sc.jenis} · ${sc.segmen} · ${sc.mode}`),
     h('h2', {}, sc.judul),
     h('div', { class: 'qtext' }, sc.fields.map((f) => h('p', {}, f.label))));
 
@@ -189,23 +218,48 @@ async function loadAttendance() {
   try {
     const [roster, answers] = await Promise.all([B.getRoster(), B.getAllAnswers()]);
     S.roster = roster;
-    S.att = attendanceRows(roster, answers, SCREEN_IDS);
+    S.attAnswers = answers;
+    recompute();
   } catch (e) { S.err = `Gagal memuat kehadiran: ${e.code || e.message}`; }
   S.attBusy = false; draw();
+}
+// hitung ulang dari data yang sudah dimuat (filter berubah / riwayat layar dibuka berubah)
+function recompute() {
+  if (!S.attAnswers || !S.roster) return;
+  S.att = attendanceRows(S.roster, S.attAnswers, visible(), S.opened);
+}
+
+function resetOpened() {
+  if (!S.confirmReset) { S.confirmReset = true; draw(); setTimeout(() => { S.confirmReset = false; draw(); }, 5000); return; }
+  S.confirmReset = false;
+  B.clearOpened().catch((e) => { S.err = `Gagal mengosongkan: ${e.code || e.message}`; draw(); });
 }
 
 function hadirView() {
   const rows = S.att;
+  const openedList = SCREENS.filter((s) => S.opened[s.id]);
+  const shown = visible().filter((s) => S.opened[s.id]);
+  const f = S.filter;
+  const fname = `kehadiran${f.sesi ? '-' + f.sesi : ''}${f.jenis ? '-' + f.jenis : ''}.csv`;
   return [h('div', { class: 'ctl' },
+    filterBar(),
     h('div', { class: 'ctlrow wrap' },
       h('button', { id: 'btn-att', class: 'primary', type: 'button', disabled: S.attBusy, onclick: loadAttendance }, S.attBusy ? 'Memuat…' : rows ? 'Perbarui' : 'Muat kehadiran'),
-      h('button', { id: 'btn-att-csv', class: 'ghost', type: 'button', disabled: !rows, onclick: () => downloadText('kehadiran-sesi4.csv', toCsvTable(attendanceColumns(SCREEN_IDS), rows)) }, 'Unduh CSV')),
-    h('p', { class: 'muted' }, `Setiap NIM dihitung dari jumlah layar yang dijawab, dari ${SCREENS.length} layar. Tidak ada ambang "aktif".`),
+      h('button', { id: 'btn-att-csv', class: 'ghost', type: 'button', disabled: !rows,
+        onclick: () => downloadText(fname, toCsvTable(attendanceColumns(visible(), S.opened), rows)) }, 'Unduh CSV')),
+    h('p', { class: 'muted', id: 'att-info' }, `Pembagi = layar yang benar-benar dibuka di kelas ini (sesuai filter): ${shown.length} layar. Layar yang tidak dibuka tidak dihitung. Tidak ada ambang "aktif".`),
+    h('div', { class: 'opened' },
+      h('strong', {}, `Riwayat layar dibuka: ${openedList.length}`),
+      openedList.length ? h('p', { class: 'muted', id: 'opened-list' }, openedList.map(label).join(' · ')) : h('p', { class: 'muted', id: 'opened-list' }, 'Belum ada layar dibuka.'),
+      h('p', { class: 'muted' }, 'Sebelum kelas: kosongkan riwayat supaya layar yang dibuka saat uji tidak masuk pembagi. Jawaban uji tidak ikut terhapus; hapus node answers di Firebase console bila uji memakai NIM sungguhan.'),
+      h('button', { id: 'btn-reset-opened', class: 'ghost', type: 'button', onclick: resetOpened },
+        S.confirmReset ? 'Yakin? Klik lagi untuk mengosongkan' : 'Kosongkan riwayat layar dibuka')),
     S.err ? h('div', { class: 'err' }, S.err) : null),
   rows ? h('table', { class: 'atab', id: 'atab' },
-    h('thead', {}, h('tr', {}, h('th', {}, 'NIM'), h('th', {}, 'Dijawab'), h('th', {}, ''))),
-    h('tbody', {}, rows.map((r) => h('tr', {}, h('td', {}, r.nim), h('td', {}, `${r.dijawab} dari ${r.dari}`),
-      h('td', {}, h('div', { class: 'bt' }, h('div', { class: 'bf', style: `width:${(r.dijawab / r.dari) * 100}%` })))))))
+    h('thead', {}, h('tr', {}, h('th', {}, 'NIM'), h('th', {}, 'Dijawab'), h('th', {}, 'Insight'), h('th', {}, 'Kelas'), h('th', {}, ''))),
+    h('tbody', {}, rows.map((r) => h('tr', {}, h('td', {}, r.nim), h('td', {}, `${r.dijawab} dari ${r.dibuka}`),
+      h('td', {}, `${r.insight_dijawab}/${r.insight_dibuka}`), h('td', {}, `${r.kelas_dijawab}/${r.kelas_dibuka}`),
+      h('td', {}, h('div', { class: 'bt' }, h('div', { class: 'bf', style: `width:${r.dibuka ? (r.dijawab / r.dibuka) * 100 : 0}%` })))))))
     : h('p', { class: 'muted' }, 'Klik Muat kehadiran setelah kelas (atau kapan saja).')];
 }
 

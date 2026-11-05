@@ -1,15 +1,44 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { SCREENS, SCREEN_BY_ID } from '../screens.js';
+import { SCREENS, SCREEN_BY_ID, SESI_LIST, JENIS_LIST, matchFilter } from '../screens.js';
 import { aggregateScreen, groupBrands, normalizeBrand } from '../aggregate.js';
 import { flagsFor, collectFlags, markField, markSummary } from '../flags.js';
 import { toCsv, cell, guard, catatankuRows, answerText, BOM, COLUMNS } from '../csv.js';
 
 // ---------- screens ----------
-test('25 layar, id unik, nomor berurutan 1..25', () => {
-  assert.equal(SCREENS.length, 25);
-  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 25);
-  SCREENS.forEach((s, i) => assert.equal(s.no, i + 1));
+test('28 layar: I1–I3 lalu 25 layar lama bernomor 1..25, id unik', () => {
+  assert.equal(SCREENS.length, 28);
+  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 28);
+  assert.deepEqual(SCREENS.slice(0, 4).map((s) => s.id), ['i1', 'i2', 'i3', 'q1']);
+  SCREENS.slice(3).forEach((s, i) => assert.equal(s.no, i + 1));
+});
+
+test('label sesi × jenis: I1=S1, I2=S2, I3=S3 insight; 25 layar lama S4 kelas', () => {
+  assert.deepEqual(SCREENS.slice(0, 3).map((s) => `${s.sesi}/${s.jenis}`), ['S1/insight', 'S2/insight', 'S3/insight']);
+  for (const s of SCREENS.slice(3)) assert.equal(`${s.sesi}/${s.jenis}`, 'S4/kelas', s.id);
+  for (const s of SCREENS) assert.ok(SESI_LIST.includes(s.sesi) && JENIS_LIST.includes(s.jenis), s.id);
+});
+
+test('I1–I3: teks doc 63, kunci B/B/UNKNOWN, 30 detik, tidak masuk Catatanku', () => {
+  const [i1, i2, i3] = SCREENS;
+  assert.equal(i1.fields[0].label, 'Akhir 2014, apa masalah utama Gojek?');
+  assert.equal(i1.fields[0].key, 'b');
+  assert.equal(i2.fields[0].label, 'GrabBike sekitar Rp5.000, Go-Jek sekitar Rp15.000. Kalau kalian tim Gojek, di mana kalian harus menang?');
+  assert.equal(i2.fields[0].options.length, 4);
+  assert.equal(i2.fields[0].key, 'b');
+  assert.deepEqual(i3.fields[0].options.map((o) => o.t), ['REAL', 'PLANNED', 'UNKNOWN']);
+  assert.equal(i3.fields[0].key, 'unknown');
+  for (const s of [i1, i2, i3]) { assert.equal(s.waktu, 30); assert.equal(s.catatanku, undefined); assert.equal(s.fields.length, 1); assert.equal(s.fields[0].type, 'single'); }
+  assert.equal(markField(i3.fields[0], 'unknown').ok, true);
+  assert.equal(collectFlags(i1, { 1: { values: { masalah: 'a' } } }).length, 0); // tanpa ⚠
+});
+
+test('filter sesi × jenis', () => {
+  assert.equal(SCREENS.filter((s) => matchFilter(s, {})).length, 28);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { jenis: 'insight' })).length, 3);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S4' })).length, 25);
+  assert.deepEqual(SCREENS.filter((s) => matchFilter(s, { sesi: 'S2', jenis: 'insight' })).map((s) => s.id), ['i2']);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S1', jenis: 'kelas' })).length, 0);
 });
 
 test('setiap bidang punya tipe sah, opsi bila perlu, dan kunci mengacu ke opsi yang ada', () => {
