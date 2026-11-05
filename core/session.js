@@ -20,10 +20,38 @@
   }
   function byIdOf(pg) { var m = {}; pg.fields.forEach(function (f) { m[f.id] = f; }); return m; }
 
+  /* Fitur yang sengaja dimatikan (dokumen 64, 5 Nov 2026): panel "cek tiga tes" S4 hlm. 9 disembunyikan dari mahasiswa.
+   * Kodenya dan datanya (content/s4.js → tigaTes) tetap ada; nyalakan lagi dengan CB.FEATURES.tigaTes = true. */
+  CB.FEATURES = CB.FEATURES || { tigaTes: false };
+
+  /* Lipatan "Boleh dilewati": label kecil diredam + penanda "sudah ada isian" bila bagian itu sudah berisi.
+   * Tidak ada data yang dihapus atau disembunyikan dari file; hanya tampilan yang dilipat. */
+  function makeSkip(sessId, label, ids, node, cls) {
+    var det = U.el("details", { class: "skip " + (cls || "") });
+    var sm = U.el("summary");
+    sm.appendChild(U.el("span", { class: "skiptag", text: "Boleh dilewati" }));
+    if (label) sm.appendChild(U.el("span", { class: "skiplbl", text: label }));
+    var fb = U.el("span", { class: "skipfilled hidden", text: "sudah ada isian" });
+    sm.appendChild(fb);
+    sm.appendChild(U.el("span", { class: "skiphint", text: "klik untuk membuka" }));
+    det.appendChild(sm);
+    det.appendChild(node);
+    function upd() { fb.classList.toggle("hidden", !ids.some(function (id) { return CB.isFilled(CB.getField(sessId, id)); })); }
+    upd(); CB.on("change", upd);
+    return det;
+  }
+  /* Buka lipatan yang membungkus elemen target (tautan #pN, #cek, atau loncatan dari panel Hal inti). */
+  function openAround(el) {
+    var inner = el && el.querySelector && el.querySelector(":scope > details.skippage"); /* target = kartu halaman yang dilipat */
+    if (inner) inner.open = true;
+    for (var n = el; n && n !== document.body; n = n.parentElement) if (n.tagName === "DETAILS" && n.classList.contains("skip")) n.open = true;
+  }
+  CB.openAround = openAround;
   function renderField(sessId, f) {
-    var comp = CB.fields[f.type];
-    if (!comp) { var x = U.el("div", { class: "box" }); x.textContent = "[komponen " + f.type + " belum tersedia]"; return x; }
-    return comp(sessId, f);
+    var comp = CB.fields[f.type], node;
+    if (!comp) { node = U.el("div", { class: "box" }); node.textContent = "[komponen " + f.type + " belum tersedia]"; }
+    else node = comp(sessId, f);
+    return f.skip ? makeSkip(sessId, f.skipLabel || f.label || "", [f.id], node, "skipfield") : node;
   }
 
   /* ---------- contoh empat kasus ---------- */
@@ -132,7 +160,7 @@
    * Data: content.pages[9].tigaTes. Bukti diambil dari nilai contoh di content (bukan ditulis ulang) supaya tetap verbatim. */
   function renderTigaTes(sessId, spec, content, host) {
     var tg = content.pages[9] && content.pages[9].tigaTes;
-    if (!tg) return null;
+    if (!tg || !CB.FEATURES.tigaTes) return null;
     var card = U.el("section", { class: "tigates", id: "tigates" });
     card.appendChild(U.el("h3", { text: tg.title }));
     card.appendChild(U.el("p", { class: "tgintro", text: tg.intro }));
@@ -290,6 +318,56 @@
     host.appendChild(box);
   }
 
+  /* ---------- hal inti (dokumen 64) ---------- */
+  function coreItemsOf(spec) { return (spec.core && spec.core.items) || []; }
+  /* Status satu hal inti = baris cek kelengkapan kelompoknya (group === item.k) tidak ada yang "belum" (no) atau menunggu (pending).
+   * Baris "warn" (cek sendiri) tetap dihitung terisi: yang diminta hanya terisi, bukan benar. */
+  function coreStatus(rows, it) {
+    var mine = rows.filter(function (r) { return r.group === it.k; });
+    return mine.length > 0 && mine.every(function (r) { return r.state !== "no" && r.state !== "pending"; });
+  }
+  CB.coreStatus = function (sessId, built) {
+    var spec = CB.specs[sessId], fn = CB.checks[sessId]; if (!spec || !fn) return [];
+    var rows = fn(CB.data, built || builtPages(spec, CB.content[sessId] || { pages: {} }));
+    return coreItemsOf(spec).map(function (it) { return { n: it.n, k: it.k, label: it.label, page: it.page, done: coreStatus(rows, it) }; });
+  };
+  function renderCore(sessId, spec, built, host) {
+    var items = coreItemsOf(spec); if (!items.length) return null;
+    var card = U.el("section", { class: "card corecard", id: "inti" });
+    card.appendChild(U.el("h2", { text: "Hal inti Sesi " + spec.n }));
+    card.appendChild(U.el("p", { class: "lead coreintro", text: spec.core.intro }));
+    var list = U.el("div", { class: "corelist" });
+    var els = items.map(function (it) {
+      var row = U.el("a", { class: "corerow", href: "#p" + it.page });
+      var ic = U.el("span", { class: "coreic" });
+      var tx = U.el("span", { class: "coretx" });
+      tx.appendChild(U.el("b", { text: it.n + " · " + it.label }));
+      if (it.note) tx.appendChild(U.el("span", { class: "corenote", text: " (" + it.note + ")" }));
+      tx.appendChild(U.el("span", { class: "corewhere", text: it.where }));
+      var st = U.el("span", { class: "corest" });
+      row.appendChild(ic); row.appendChild(tx); row.appendChild(st);
+      row.addEventListener("click", function () { var t = document.getElementById("p" + it.page); if (t) openAround(t); });
+      list.appendChild(row);
+      return { it: it, row: row, ic: ic, st: st };
+    });
+    card.appendChild(list);
+    var sum = U.el("p", { class: "small muted coresum" }); card.appendChild(sum);
+    function draw() {
+      var fn = CB.checks[sessId]; var rows = fn ? fn(CB.data, built) : [];
+      var n = 0;
+      els.forEach(function (e) {
+        var done = coreStatus(rows, e.it); if (done) n++;
+        e.row.classList.toggle("done", done);
+        e.ic.textContent = done ? "✔" : "○";
+        e.st.textContent = done ? "terisi" : "belum";
+      });
+      sum.textContent = n + " dari " + els.length + " hal inti terisi.";
+    }
+    draw(); CB.on("change", draw);
+    host.appendChild(card);
+    return card;
+  }
+
   function renderPage(sessId, spec, pg, ct) {
     var card = U.el("section", { class: "card", id: "p" + pg.p });
     var head = U.el("div", { class: "pagehead" });
@@ -298,8 +376,16 @@
     ht.appendChild(U.el("h2", { text: pg.title }));
     ht.appendChild(U.el("span", { class: "pglabel", text: sessId + " · hlm. " + pg.p }));
     if (pg.tag) ht.appendChild(U.el("span", { class: "tag", text: pg.tag }));
+    var coreIt = coreItemsOf(spec).filter(function (it) { return it.page === pg.p; })[0];
+    if (coreIt) ht.appendChild(U.el("span", { class: "coretag", text: "Hal inti " + coreIt.n + (coreIt.where.indexOf("(") > 0 ? " · " + coreIt.where.slice(coreIt.where.indexOf("(") + 1, -1) : "") }));
+    if (pg.skip) ht.appendChild(U.el("span", { class: "skiptag pgskip", text: "Boleh dilewati" }));
     if (pg.sub) ht.appendChild(U.el("p", { class: "wbsub", text: pg.sub }));
     head.appendChild(ht); card.appendChild(head);
+    var host = card;
+    if (pg.skip) {
+      host = U.el("div", { class: "skipbody" });
+      card.appendChild(makeSkip(sessId, "Teori, isian, dan contoh halaman ini", pg.fields.map(function (f) { return f.id; }), host, "skippage"));
+    }
 
     // Teori
     var tb = U.el("div", { class: "theorybox" });
@@ -316,11 +402,11 @@
       nd.appendChild(U.el("div", { class: "nbody" }, CB.fill(ct.deeper.html, sessId)));
       det.appendChild(nd);
     }
-    tb.appendChild(det); card.appendChild(tb);
-    if (ct.callout) card.appendChild(U.el("div", { class: "callout" }, ct.callout));
+    tb.appendChild(det); host.appendChild(tb);
+    if (ct.callout) host.appendChild(U.el("div", { class: "callout" }, ct.callout));
 
     // Isian
-    renderCarry(sessId, pg, card);
+    renderCarry(sessId, pg, host);
     var wa = U.el("div", { class: "workarea" });
     if (pg.fields.length) wa.appendChild(U.el("div", { class: "wahead", text: pg.workLabel || "Workbook" }));
     if (pg.strip) { var sp = U.el("div", { class: "wbstrip" }); sp.appendChild(U.el("b", { text: pg.strip.head })); sp.appendChild(document.createTextNode("  " + pg.strip.text)); wa.appendChild(sp); }
@@ -347,18 +433,18 @@
         var gg = U.el("div", { class: "fgrid cols" + (gr.cols || 1) });
         gr.ids.forEach(function (id) { gg.appendChild(renderField(sessId, byId[id])); });
         sec.appendChild(gg);
-        wa.appendChild(sec);
+        wa.appendChild(gr.skip ? makeSkip(sessId, gr.skipLabel || gr.head, gr.ids, sec, "skipfield") : sec);
       });
     } else {
       pg.fields.forEach(function (f) { wa.appendChild(renderField(sessId, f)); });
     }
     if (pg.lowest) renderLowest(sessId, pg, wa);
     if (pg.footer) wa.appendChild(U.el("p", { class: "footrule", text: CB.fill(pg.footer, sessId) }));
-    card.appendChild(wa);
+    host.appendChild(wa);
 
-    renderReverse(sessId, ct, card);
-    if (ct.examples) renderExamples(sessId, pg, ct, card);
-    if (ct.tigaTes) card._tg = renderTigaTes(sessId, spec, { pages: CB.content[sessId].pages }, card);
+    renderReverse(sessId, ct, host);
+    if (ct.examples) renderExamples(sessId, pg, ct, host);
+    if (ct.tigaTes) card._tg = renderTigaTes(sessId, spec, { pages: CB.content[sessId].pages }, host);
     return card;
   }
 
@@ -400,7 +486,7 @@
     var hlm = parseInt(P.get("hlm"), 10) || 0;
     var isTg = P.get("panel") === "tigates";
     var pg = spec.pages.filter(function (x) { return x.p === hlm; })[0];
-    kb.appendChild(U.el("span", { class: "ktitle", text: "Mode kelas · Sesi " + spec.n + (isTg ? " · cek tiga tes" : pg ? " · hlm. " + hlm : "") }));
+    kb.appendChild(U.el("span", { class: "ktitle", text: "Mode kelas · Sesi " + spec.n + (pg && !isTg ? " · hlm. " + hlm : "") }));
     var ord = spec.fillOrder.filter(function (p) { return built.indexOf(p) >= 0; });
     var qk = function (extra) { return kelasUrl(sessId, (kasus ? "kasus=" + encodeURIComponent(kasus) + "&" : "") + extra); };
     if (pg && !isTg) {
@@ -408,7 +494,7 @@
       if (i > 0) klink("‹ hlm. " + ord[i - 1], qk("hlm=" + ord[i - 1]));
       if (i >= 0 && i < ord.length - 1) klink("hlm. " + ord[i + 1] + " ›", qk("hlm=" + ord[i + 1]));
     }
-    if (content.pages[9] && content.pages[9].tigaTes) klink("Cek tiga tes", qk("panel=tigates"));
+    if (CB.FEATURES.tigaTes && content.pages[9] && content.pages[9].tigaTes) klink("Cek tiga tes", qk("panel=tigates"));
     klink("Daftar tautan", kelasUrl(sessId, "").replace("kelas=1", "kelas=daftar"));
     klink("Keluar", sessId.toLowerCase() + ".html");
     main.appendChild(kb);
@@ -417,7 +503,7 @@
     var api = null, tg = null;
     if (isTg) {
       tg = renderTigaTes(sessId, spec, content, card);
-      if (!tg) { card.appendChild(U.el("p", { text: "Panel cek tiga tes belum tersedia." })); return; }
+      if (!tg) { card.appendChild(U.el("p", { text: "Halaman atau kasus tidak ditemukan. Buka daftar tautan." })); return; }
       if (kasus) tg.open(kasus);
       if (P.get("bagian")) tg.focusPart(P.get("bagian"));
     } else if (pg && content.pages[hlm] && content.pages[hlm].examples) {
@@ -448,8 +534,8 @@
   function renderChecks(sessId, built, host) {
     var fn = CB.checks[sessId]; if (!fn) return null;
     var card = U.el("section", { class: "card", id: "cek" });
-    card.appendChild(U.el("h2", { text: "Cek kelengkapan" + ({ S1: " — Gate 1", S2: " — bukti S2 (informasi)", S3: " — kesiapan Gate 2" }[sessId] || "") }));
-    card.appendChild(U.el("p", { class: "lead", text: "Ini pemeriksaan kelengkapan berbasis aturan, bukan penilaian. Keputusan Gate dibaca dari file yang kamu kumpulkan." }));
+    card.appendChild(U.el("h2", { text: "Cek kelengkapan — hal inti Sesi " + CB.specs[sessId].n }));
+    card.appendChild(U.el("p", { class: "lead", text: "Ini pemeriksaan kelengkapan berbasis aturan, bukan penilaian. Yang dihitung hanya hal inti; bagian yang boleh dilewati tidak pernah muncul sebagai kurang." }));
     var intro = CB.checkIntro && CB.checkIntro[sessId];
     if (intro) card.appendChild(U.el("p", { class: "small" }, intro));
     card.appendChild(U.el("p", { class: "small muted checklegend", text: "✓ terpenuhi · ✗ belum terpenuhi · ! cek lagi sendiri · … menunggu halaman lain · i informasi" }));
@@ -700,6 +786,7 @@
       var nim = CB.activeNim();
       CB.data = nim ? CB.loadLocal(nim) : null;
       if (!CB.data) { location.href = "index.html?perlu=identitas"; return; }
+      if (CB.applyShow) Object.keys(CB.specs).forEach(function (k) { CB.applyShow(CB.specs[k]); }); /* teks tampilan tanpa kata Gate (core/show.js) */
       var spec = CB.specs[sessId], content = CB.content[sessId] || { pages: {} };
       var cfg = CB.sessionCfg(sessId) || {};
       CB.renderTopbar(top, "Sesi " + spec.n + " · " + spec.title);
@@ -723,12 +810,15 @@
         var pg = spec.pages.filter(function (x) { return x.p === p; })[0];
         var ok = built.indexOf(p) >= 0;
         var a = U.el("a", { href: ok ? "#p" + p : "javascript:void(0)", class: ok ? "" : "pending" });
-        a.innerHTML = '<span class="ord">' + (i + 1) + ".</span>hlm. " + p + " · " + U.esc(pg.title) + (ok ? "" : " (menyusul)");
+        var ci = coreItemsOf(spec).filter(function (it) { return it.page === p; })[0];
+        a.innerHTML = '<span class="ord">' + (i + 1) + ".</span>hlm. " + p + " · " + U.esc(pg.title) + (ok ? "" : " (menyusul)") +
+          (ci ? ' <span class="navcore">hal inti</span>' : (pg.skip ? ' <span class="navskip">boleh dilewati</span>' : ""));
         nav.appendChild(a);
       });
       intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: " + spec.title }));
       intro.appendChild(nav);
       main.appendChild(intro);
+      renderCore(sessId, spec, built, main);
 
       spec.fillOrder.forEach(function (p) {
         if (built.indexOf(p) < 0) return;
@@ -766,7 +856,15 @@
           CB.modal({ title: "File sudah diunduh", paras: ["Nama file: <b>" + U.esc(name) + "</b>. Biasanya ada di folder Downloads.", CB.config.form_url ? "Kumpulkan lewat <a href='" + U.esc(CB.config.form_url) + "' target='_blank' rel='noopener'>Google Form</a>, pilih Minggu " + U.esc(cfg.week) + "." : "Kumpulkan lewat Google Form yang diumumkan dosen, pilih Minggu " + U.esc(cfg.week) + "."] });
         });
       };
-      if (location.hash) { var t = document.querySelector(location.hash); if (t) setTimeout(function () { t.scrollIntoView(); }, 50); }
+      /* tautan #pN / #cek ke bagian yang dilipat: buka dulu, baru gulir */
+      function goHash() { if (!location.hash) return; var t = null; try { t = document.querySelector(location.hash); } catch (e) { } if (t) { openAround(t); setTimeout(function () { t.scrollIntoView(); }, 50); } }
+      document.addEventListener("click", function (ev) {
+        var a = ev.target.closest && ev.target.closest('a[href^="#"]'); if (!a) return;
+        var t = null; try { t = document.querySelector(a.getAttribute("href")); } catch (e) { }
+        if (t) openAround(t);
+      });
+      window.addEventListener("hashchange", goHash);
+      goHash();
     }).catch(function (e) { CB.showError(main, e.message); });
   };
 })();

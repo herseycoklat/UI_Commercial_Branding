@@ -897,7 +897,7 @@
       if (!s.n) m = "Ringkasan muncul setelah penilai pertama memberi skor.";
       else if (!s.low.length) m = "Tidak ada kriteria dengan rata-rata 2 atau lebih rendah. Catat masukannya.";
       else if (s.low.length === 1) m = "Satu kriteria rendah (" + lowNames[0] + "): sebaiknya diperbaiki. Rencana tidak wajib.";
-      else m = s.low.length + " kriteria rendah (" + lowNames.join(", ") + "). Tulis rencana untuk masing-masing: apa, siapa, kapan. Rencana ini menjadi bagian kondisi Gate 2.";
+      else m = s.low.length + " kriteria rendah (" + lowNames.join(", ") + "). Tulis rencana untuk masing-masing: apa, siapa, kapan. Rencana ini ikut dibaca penilai.";
       if (s.n && s.n < 2) m += " Hasil masih sementara: baru " + s.n + " penilai.";
       msg.textContent = m;
       msg.className = "plmsg small " + (s.low.length >= 2 ? "warn" : "");

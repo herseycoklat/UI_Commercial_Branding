@@ -20,8 +20,16 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     wbCover: "SESSION 3 TEAM WORKBOOK",
     coverNote: "Each of you fills your own version in the HTML tool first, then syncs with your team. Every blank must trace back to Session 2. A promise with no proof isn't strategy — it's hope.",
     hideDue: true,
-    coverExtra: "Isi <b>versimu sendiri</b> dulu di HTML tool ini, lalu sync dengan tim (dengan bukti, bukan suara terbanyak). Belum sempat sync saat submit? Kumpulkan versi sendiri; Gate 2 dibaca per file. Kirim file JSON lewat Form yang sama seperti minggu lalu. <b>Tidak ada batas waktu unggah</b>; hari baca diumumkan di chat kelas, dan unggahan terakhir yang dibaca. Wawancara atau bukti baru minggu ini? Tambahkan di <b>Sesi 2</b> (hlm. 2 dan 9). Ikut terbaca saat Gate 2.",
+    coverExtra: "Isi <b>versimu sendiri</b> dulu di HTML tool ini, lalu sync dengan tim (dengan bukti, bukan suara terbanyak). Belum sempat sync saat submit? Kumpulkan versi sendiri; file dibaca per orang. Kirim file JSON lewat Form yang sama seperti minggu lalu. <b>Tidak ada batas waktu unggah</b>; hari baca diumumkan di chat kelas, dan unggahan terakhir yang dibaca. Wawancara atau bukti baru minggu ini? Tambahkan di <b>Sesi 2</b> (hlm. 2 dan 9). Ikut terbaca saat penilaian.",
     fillOrder: [3, 2, 4, 5, 6, 7],
+    /* Hal inti (dokumen 64). Lihat catatan di sessions/s1.js. */
+    core: {
+      intro: "This session has two must-dos: page 2 and the lower part of page 5. Other pages are optional.",
+      items: [
+        { n: 5, k: "i5", label: "Positioning", page: 2, where: "hlm. 2" },
+        { n: 6, k: "i6", label: "Promise → Proof", page: 5, where: "hlm. 5 (bagian bawah)" }
+      ]
+    },
     pages: [
       {
         p: 2, title: "Brand Positioning Statement",
@@ -39,6 +47,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
             previewTpl: "For {segment} who {insight} {name} is the {category} that {benefit} because {proof}." },
           { id: "s3.p2.sources", type: "sources", appOnly: true, label: "JEJAK SUMBER TIAP BLANK (tambahan app)", from: "s3.p2.draft",
             hint: "Tunjuk asal setiap blank. Pilih satu sumber per blank; tulis di catatan bagian mana yang dipakai. Blank tanpa sumber = belum bisa dipertahankan di Gate 2.",
+            show: { hint: "Tunjuk asal setiap blank. Pilih satu sumber per blank; tulis di catatan bagian mana yang dipakai. Blank tanpa sumber = belum bisa dipertahankan." },
             blanks: [
               { k: "segment", label: "[segment]", opts: [{ id: "s2.p4.primary", label: "PRIMARY AUDIENCE (S2 hlm. 4)" }] },
               { k: "insight", label: "[insight]", opts: [{ id: "s2.p5.insight", label: "INSIGHT SENTENCE (S2 hlm. 5)" }, { id: "s2.p5.pains", label: "CUSTOMER · PAINS (S2 hlm. 5)" }] },
@@ -51,7 +60,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 3, title: "Points of Parity & Points of Difference", layout: "grid", cols: 2,
+        p: 3, title: "Points of Parity & Points of Difference", skip: true, layout: "grid", cols: 2,
         sub: "Derive both columns from your Session 2 Competitor Matrix — not imagination.",
         footer: "First be good enough. THEN be different. A beautifully different product that fails the basics never gets a chance to be different.",
         carry: { title: "Bawaan dari Sesi 2 (hanya tampil, tidak disalin)", items: [
@@ -64,7 +73,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 4, title: "Brand Platform Canvas", layout: "grid", cols: 2,
+        p: 4, title: "Brand Platform Canvas", skip: true, layout: "grid", cols: 2,
         sub: "Eight boxes. Each 1–2 sentences — if it needs a paragraph, it isn't distilled yet.",
         footer: "Coherence check: pick any two boxes at random — can you explain how they connect?",
         carry: { title: "Bawaan dari halaman sebelumnya (hanya tampil, tidak disalin)", items: [
@@ -86,13 +95,13 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         p: 5, title: "Brand Personality Spectrum & Promise–Proof Matrix",
         sub: "Commit to a position on every slider — don't sit in the middle.",
         fields: [
-          { id: "s3.p5.sliders", type: "sliders",
+          { id: "s3.p5.sliders", skip: true, skipLabel: "Personality sliders", type: "sliders",
             pairs: [{ k: "playful_serious", left: "Playful", right: "Serious" }, { k: "mass_niche", left: "Mass", right: "Niche" }, { k: "warm_cool", left: "Warm", right: "Cool" },
               { k: "bold_safe", left: "Bold", right: "Safe" }, { k: "modern_classic", left: "Modern", right: "Classic" }] },
-          { id: "s3.p5.why_placed", type: "lines", pairsFrom: "s3.p5.sliders", label: "WHY WE PLACED IT THERE", hint: "One line per slider — tie it to your positioning statement." },
+          { id: "s3.p5.why_placed", skip: true, type: "lines", pairsFrom: "s3.p5.sliders", label: "WHY WE PLACED IT THERE", hint: "One line per slider — tie it to your positioning statement." },
           { id: "s3.p5.promise_proof", type: "list", label: "PROMISE → PROOF", addText: "+ Tambah promise",
             hint: "List every promise from your platform and its real, named proof. Mark each: REAL · PLANNED (owner + deadline) · UNKNOWN → shrink it until it is true (place · time · who · how much). Never delete it, never leave it standing.",
-            guide: "<p><b>Bukti yang baik:</b> <i>verifiable</i> (bisa dicek orang luar tanpa harus percaya pada kita), <i>specific</i> (angka, nama, dokumen, sesuatu yang bisa dicoba), <i>relevant</i> (membuktikan janji yang sama, bukan janji lain).</p><p><b>Status:</b> <b>REAL (nyata)</b> = lolos tiga syarat hari ini. <b>PLANNED</b> = akan ada; tulis <i>owner</i> dan <i>deadline</i>. <b>UNKNOWN</b> = belum ada; janji dikecilkan, bukan dihapus. Empat cara mengecilkan janji: <b>tempat, waktu, siapa, seberapa</b>.</p><p><b>Jenis bukti yang sah</b> (silabus §7): wawancara audiens, uji prototipe, data media sosial atau platform, ulasan komunitas, data pasar sekunder, analisis pesaing, penjualan atau pre-order, penilaian ahli, dan fakta produk yang bisa dicek. Bukti yang kuat untuk capstone biasanya <b>kecil tapi nyata</b>. Jenis dihitung dari caranya: lima wawancara tetap satu jenis (penting untuk Gate 2 Tes 1).</p><p>Setiap pilar Message House (hlm. 6) harus punya baris di tabel ini. Belum ada? Tambahkan barisnya dulu.</p>",
+            guide: "<p><b>Bukti yang baik:</b> <i>verifiable</i> (bisa dicek orang luar tanpa harus percaya pada kita), <i>specific</i> (angka, nama, dokumen, sesuatu yang bisa dicoba), <i>relevant</i> (membuktikan janji yang sama, bukan janji lain).</p><p><b>Status:</b> <b>REAL (nyata)</b> = lolos tiga syarat hari ini. <b>PLANNED</b> = akan ada; tulis <i>owner</i> dan <i>deadline</i>. <b>UNKNOWN</b> = belum ada; janji dikecilkan, bukan dihapus. Empat cara mengecilkan janji: <b>tempat, waktu, siapa, seberapa</b>.</p><p><b>Jenis bukti yang sah</b> (silabus §7): wawancara audiens, uji prototipe, data media sosial atau platform, ulasan komunitas, data pasar sekunder, analisis pesaing, penjualan atau pre-order, penilaian ahli, dan fakta produk yang bisa dicek. Bukti yang kuat untuk capstone biasanya <b>kecil tapi nyata</b>. Jenis dihitung dari caranya: lima wawancara tetap satu jenis (penting untuk penilai).</p><p>Setiap pilar Message House (hlm. 6) harus punya baris di tabel ini. Belum ada? Tambahkan barisnya dulu.</p>",
             emptyText: "Belum ada promise. Mulai dari kotak PROMISE di hlm. 4.",
             itemFields: [{ k: "promise", label: "Promise", type: "text" }, { k: "proof", label: "Proof (nyata, bernama)", type: "longtext" },
               { k: "status", label: "Status bukti", type: "select", empty: "— belum dipilih —", options: [{ v: "nyata", label: "REAL · nyata (bisa dicek orang luar hari ini)" }, { v: "planned", label: "PLANNED · akan ada (owner + deadline)" }, { v: "unknown", label: "UNKNOWN · belum ada (kecilkan janjinya)" }] },
@@ -102,7 +111,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 6, title: "Message House", layout: "groups",
+        p: 6, title: "Message House", skip: true, layout: "groups",
         sub: "This becomes your entire Session 6 campaign — build it well now.",
         footer: "Every pillar must trace back UP to the roof. A pillar that doesn't support the master message is a distraction.",
         carry: { title: "Bawaan dari halaman sebelumnya (hanya tampil, tidak disalin)", items: [
@@ -135,9 +144,10 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 7, title: "Strategic Critique — Gate 2 Check",
+        p: 7, title: "Strategic Critique — Gate 2 Check", skip: true,
         sub: "2+ classmates from OTHER groups score your positioning statement (page 2) — one form each, in the HTML tool.",
         footer: "GATE 2 CHECK:  This card is feedback, not the Gate. Each reviewer writes name, NIM, email and one reason per score; teammates can't review. Any criterion averaging 2 or lower is low. Two or more low criteria → write a plan for each (what, who, by when). It becomes part of your Gate 2 condition.",
+        show: { title: "Strategic Critique", footer: "This card is feedback. Each reviewer writes name, NIM, email and one reason per score; teammates can't review. Any criterion averaging 2 or lower is low. Two or more low criteria → write a plan for each (what, who, by when)." },
         carry: { title: "Yang dinilai (tampil saja)", items: [
           { id: "s3.p2.final", label: "POSITIONING STATEMENT (hlm. 2)" },
           { id: "s3.p5.promise_proof", label: "PROMISE → PROOF (hlm. 5), boleh dilihat untuk CREDIBLE" }

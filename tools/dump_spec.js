@@ -9,4 +9,8 @@ for (const f of [`sessions/s${n}.js`, `content/s${n}.js`]) {
   const p = path.join(root, f);
   if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, "utf8"), ctx, { filename: f });
 }
-process.stdout.write(JSON.stringify({ spec: ctx.CB.specs[sid], content: (ctx.CB.content || {})[sid] || null }));
+const raw = JSON.stringify(ctx.CB.specs[sid]);
+// Spec TAMPIL = spec setelah core/show.js diterapkan (teks yang benar-benar dilihat mahasiswa). Audit memakai spec MENTAH untuk parity PPT.
+const applyShow = require(path.join(root, "core", "show.js"));
+const shown = applyShow(JSON.parse(raw));
+process.stdout.write(JSON.stringify({ spec: JSON.parse(raw), shown: shown, content: (ctx.CB.content || {})[sid] || null }));

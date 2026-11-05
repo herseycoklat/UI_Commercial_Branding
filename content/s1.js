@@ -28,7 +28,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p><b>Urutan isi:</b> sisi kiri dulu (kotak 1, 3, 5), lalu sisi kanan (kotak 2, 4, 6). Setelah itu kotak 7, dan kotak 8 paling akhir.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini adalah bagian pertama Gate 1 Pack, bersama Commercial Readiness Scorecard (hlm. 6) dan tiga masalah di hlm. 7 atas. Gate 1 di silabus berbunyi <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Setiap masalah yang kamu tulis di hlm. 7 harus bisa ditunjuk asalnya, yaitu satu butir di kotak 8 atau satu skor rendah di hlm. 6. Kotak 8 yang kosong berarti masalahmu tidak punya jejak.</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini, bersama Commercial Readiness Scorecard (hlm. 6), adalah bahan untuk masalah di hlm. 7 atas. Silabus berbunyi <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Setiap masalah yang kamu tulis di hlm. 7 harus bisa ditunjuk asalnya, yaitu satu butir di kotak 8 atau satu skor rendah di hlm. 6. Kotak 8 yang kosong berarti masalahmu tidak punya jejak.</p>" +
           "<p>Halaman ini melatih CLO 1 — Market and Brand Diagnosis: <i>\"Analyse the market, audience, competition, cultural context, and commercial branding problems … using relevant evidence.\"</i> Isinya menjadi bagian <i>Product description</i> dan <i>Current brand condition</i> dari Commercial Brand Audit, output Sesi 1 yang masuk komponen Commercial Brand and Market Diagnostic.</p>" +
           "<p>Ke depan: kotak 4 dan 7 menjadi bahan Evidence Review di Sesi 2 (hlm. 2), tempat kamu memilah fakta, interpretasi, dan tebakan. Kotak 6 menjadi titik awal Competitor Benchmark Matrix di Sesi 2 (hlm. 6).</p>",
         deeper: {
@@ -482,7 +482,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini bagian kedua Gate 1 Pack. Skor 1–2 di sini adalah salah satu dari dua sumber jejak yang sah untuk tiga masalahmu di hlm. 7 (yang lain kotak 8 Canvas). Masalah tanpa jejak ke halaman ini atau kotak 8 adalah tebakan, dan tebakan tidak lolos Gate 1.</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini bahan kedua untuk masalah di hlm. 7. Skor 1–2 di sini adalah salah satu dari dua sumber jejak yang sah untuk tiga masalahmu di hlm. 7 (yang lain kotak 8 Canvas). Masalah tanpa jejak ke halaman ini atau kotak 8 adalah tebakan, dan tebakan bukan dasar yang kuat.</p>" +
           "<p>Scorecard juga harus konsisten dengan Canvas: kalau kotak 4 dan 7 berisi UNKNOWN dan sampel ramah, Evidence quality tidak mungkin 4.</p>",
         deeper: {
           summary: "Deeper read — kenapa skor tinggi tidak menutupi skor rendah",
@@ -574,19 +574,19 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
       7: {
         theory: {
           title: "Baca ini dulu",
-          src: "Silabus §13 (Gate 1) dan §15 (learning policies); Cagan (2017), Inspired",
+          src: "Silabus §13 dan §15 (learning policies); Cagan (2017), Inspired",
           html:
             "<p>Halaman ini mengubah diagnosis menjadi dua hal: <b>tiga masalah komersial-branding</b> (bagian atas) dan <b>permintaan ke stream lain</b> (bagian bawah).</p>" +
             "<p><b>Urutan isinya terbalik:</b> bagian bawah dulu, bagian atas terakhir. Permintaan lintas-stream menarik dari celah di semua halaman sebelumnya; tiga masalah adalah distilasi akhir dari semuanya.</p>" +
             "<ul>" +
             "<li><b>Masalah, bukan solusi.</b> \"We don't know if parents would pay\" adalah masalah. \"We will lower the price\" adalah solusi yang belum pantas kamu klaim.</li>" +
             "<li><b>Ambil dari jejak, bukan ide baru.</b> Lihat tiga skor terendah di hlm. 6 dan kotak 8 Canvas. Setiap masalah harus bisa ditunjuk asalnya; di app, centang sumbernya di bawah tiap masalah.</li>" +
-            "<li><b>Tanya \"kenapa komersial\" pada tiap masalah.</b> Kalau masalah itu selesai, apa yang berubah dalam keputusan orang membayar atau memilih? Kalau jawabannya hanya tampilan yang lebih bagus, tulis ulang. Ini uji pertama Gate 1; tidak ada kotak isian khusus, kalimat masalahmu sendiri yang dibaca penilai (lihat Cek kelengkapan di bawah halaman sesi).</li>" +
+            "<li><b>Tanya \"kenapa komersial\" pada tiap masalah.</b> Kalau masalah itu selesai, apa yang berubah dalam keputusan orang membayar atau memilih? Kalau jawabannya hanya tampilan yang lebih bagus, tulis ulang. Ini uji pertama; tidak ada kotak isian khusus, kalimat masalahmu sendiri yang dibaca penilai (lihat Cek kelengkapan di bawah halaman sesi).</li>" +
             "<li><b>Permintaan lintas-stream:</b> satu baris per stream, berisi APA yang dibutuhkan, KENAPA (celah mana yang diperbaiki), dan KAPAN. \"Tolong bantu\" bukan permintaan. Kamu mengidentifikasi kebutuhan informasi, bukan mendikte eksekusi kreatif.</li>" +
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> di sinilah Gate 1 diputuskan. Silabus: <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Setiap masalah diuji tiga hal:</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> di sinilah masalah komersialmu ditulis. Silabus: <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Setiap masalah diuji tiga hal:</p>" +
           "<ul><li><b>Komersial, bukan kreatif:</b> memperbaikinya mengubah apakah seseorang membayar atau memilih, bukan hanya bagaimana produk terlihat. Uji: <i>\"Would fixing this change whether someone pays, or just how it looks?\"</i></li>" +
           "<li><b>Didukung bukti dari halamanmu sendiri:</b> bisa ditunjuk ke kotak 8 Canvas atau ke skor rendah di Scorecard.</li>" +
           "<li><b>Ditulis sebagai masalah:</b> hal yang belum diketahui atau belum terbukti, bukan tindakan.</li></ul>" +

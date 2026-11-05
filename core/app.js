@@ -8,7 +8,8 @@
  * 2. File JSON versi lama harus selalu bisa dibuka oleh versi app yang baru.
  *    Semua perubahan bentuk data ditangani di migrate(), jangan di tempat lain.
  * 3. App mahasiswa tidak pernah menampilkan kata status Gate
- *    (APPROVED / APPROVED WITH A CONDITION / REVISION DUE).
+ *    (APPROVED / APPROVED WITH A CONDITION / REVISION DUE). Sejak v0.5.0 (dokumen 64, 5 Nov 2026)
+ *    kata "Gate" itu sendiri juga tidak tampil: mahasiswa hanya melihat checklist hal inti.
  * 4. Leadership Log (silabus §9D) disimpan di data.leadership_log, di luar data.sessions,
  *    dan punya halaman sendiri (leadership.html). Mengubah Log TIDAK mengubah status
  *    atau versi sesi mana pun. Decision Log S1 (field s1.p8.log) adalah field biasa
@@ -20,7 +21,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.4.1";
+  var APP_VERSION = "0.5.0";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
@@ -301,6 +302,17 @@
   CB.pageLabel = function (id) {
     var m = /^s(\d+)\.p(\d+)/.exec(id);
     return m ? "S" + m[1] + " · hlm. " + m[2] : id;
+  };
+
+  /* ---------- isian terisi? (penanda "sudah ada isian" di bagian yang boleh dilewati) ---------- */
+  CB.isFilled = function isFilled(v) {
+    if (v == null) return false;
+    if (typeof v === "string") return v.trim() !== "";
+    if (typeof v === "number") return isFinite(v);
+    if (typeof v === "boolean") return v;
+    if (Array.isArray(v)) return v.some(isFilled);
+    if (typeof v === "object") return Object.keys(v).some(function (k) { return k !== "id" && isFilled(v[k]); });
+    return false;
   };
 
   /* ---------- field ---------- */
