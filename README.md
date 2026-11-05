@@ -19,6 +19,8 @@ Situs statis (tanpa server, tanpa build step, tanpa library CDN). Mahasiswa meng
 
 **Mengoreksi typo konten.** Teks halaman ada di `content/sN.js`; label kotak di `sessions/sN.js` (label harus persis workbook — jalankan audit setelah mengubah).
 
+**Hal inti dan "Boleh dilewati" (v0.5.0).** Hal inti per sesi ada di `core.items` pada `sessions/sN.js`; halaman atau kotak yang boleh dilewati diberi `skip: true` (dilipat default, tidak pernah dihitung kurang). Cek kelengkapan di `core/checks.js` hanya memuat baris hal inti (`group` = kunci hal inti). Teks tampil tanpa kata "Gate" diatur lewat `show: { … }` di spec (`core/show.js`), supaya teks workbook PPT di spec tetap utuh untuk audit. Panel "cek tiga tes" S4 dimatikan lewat `CB.FEATURES.tigaTes = false` di `core/session.js`.
+
 **Rollback.** Di GitHub: *Commits* → pilih commit sebelum masalah → *Revert*.
 
 ## Struktur
@@ -30,7 +32,7 @@ s1.html …             satu halaman per sesi (shell tipis)
 core/app.js           data, autosave, versi, submit/impor, rilis
 core/session.js       render halaman sesi dari spec + konten, cetak PDF
 core/fields.js        komponen isian
-core/checks.js        cek kelengkapan (rule-based); S1 disusun mengikuti tiga uji Gate 1
+core/checks.js        cek kelengkapan (rule-based); hanya menghitung hal inti sesi
 core/hub.js           halaman utama
 core/leadership.js    halaman Leadership Log: panduan sembilan butir §9D + entri
 sessions/sN.js        SPEC: halaman, label persis workbook, ID field

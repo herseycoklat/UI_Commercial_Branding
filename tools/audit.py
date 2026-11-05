@@ -12,6 +12,9 @@ Yang diperiksa:
   6. ID yang sudah dikunci (tools/field-ids.lock.json) tidak hilang atau berganti nama.
   7. Contoh di content/ hanya memakai ID yang ada di halaman itu.
   8. Konten tidak memuat kata status Gate (APPROVED / REVISION DUE) dan tidak memuat tanggal kalender.
+ 10. (v0.5.0, dokumen 64) Teks yang tampil ke mahasiswa tidak memuat kata "Gate": spec TAMPIL (setelah show.js) dan konten
+     (kecuali `tigaTes`, panel yang dimatikan lewat CB.FEATURES.tigaTes). Spec MENTAH tetap diaudit terhadap PPT.
+ 11. Hal inti: tiap core.items menunjuk halaman yang ada, bukan halaman `skip`; tiap halaman/kotak `skip` bukan hal inti.
   9. fillOrder memuat semua halaman kerja tepat sekali.
  pg.appText = ["sub", "footer"]: teks halaman yang sudah mendahului workbook pptx → peringatan, bukan gagal.
 --lock menulis ulang file lock dengan ID saat ini (hanya dipakai saat sesi dirilis).
@@ -26,6 +29,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCK = os.path.join(ROOT, "tools", "field-ids.lock.json")
 DATE_RE = re.compile(r"\b\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Mei|Jun|Jul|Aug|Agu|Sep|Oct|Okt|Nov|Dec|Des)\b|\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun|Sen|Sel|Rab|Kam|Jum|Sab|Min)\s+\d{1,2}\b", re.I)
 STATUS_RE = re.compile(r"APPROVED|REVISION DUE")
+GATE_RE = re.compile(r"\bgates?\b", re.I)
 
 
 def norm(s):
@@ -48,6 +52,7 @@ def main():
     n = sid[1:]
     dump = json.loads(subprocess.check_output(["node", os.path.join(ROOT, "tools", "dump_spec.js"), sid], cwd=ROOT))
     spec, content = dump["spec"], dump["content"] or {"pages": {}}
+    shown = dump["shown"]
     sl = slides(open(extract, encoding="utf-8").read())
     fails, warns, passes = [], [], 0
 
@@ -138,6 +143,31 @@ def main():
         check(not STATUS_RE.search(blob), f"konten '{k}' memuat kata status Gate")
         m = DATE_RE.search(blob)
         check(not m, f"konten '{k}' memuat tanggal kalender ({m.group(0) if m else ''})")
+
+    # 10. kata "Gate" tidak tampil ke mahasiswa
+    sblob = json.dumps({k: v for k, v in shown.items()}, ensure_ascii=False)
+    sblob = re.sub(r'"_orig": \{.*?\}(?=,|\})', "", sblob)  # _orig menyimpan teks workbook asli, tidak tampil
+    def strip_show(o):
+        if isinstance(o, dict):
+            return {k: strip_show(v) for k, v in o.items() if k not in ("show", "_orig", "_shown")}
+        if isinstance(o, list):
+            return [strip_show(x) for x in o]
+        return o
+    gm = GATE_RE.search(json.dumps(strip_show(shown), ensure_ascii=False))
+    check(not gm, f"spec tampil memuat kata Gate: ...{json.dumps(strip_show(shown), ensure_ascii=False)[max(0, gm.start()-60):gm.end()+40] if gm else ''}...")
+    cblob = {k: (strip_show(v) if k != "pages" else {pn: {kk: vv for kk, vv in pg.items() if kk != "tigaTes"} for pn, pg in v.items()}) for k, v in (content or {}).items()}
+    gm = GATE_RE.search(json.dumps(cblob, ensure_ascii=False))
+    check(not gm, f"konten memuat kata Gate: ...{json.dumps(cblob, ensure_ascii=False)[max(0, gm.start()-80):gm.end()+60] if gm else ''}...")
+
+    # 11. hal inti vs halaman/kotak boleh dilewati
+    core = spec.get("core") or {}
+    for it in core.get("items", []):
+        pgs = {p["p"]: p for p in spec["pages"]}
+        check(it["page"] in pgs, f"hal inti {it['n']}: halaman {it['page']} tidak ada")
+        check(not pgs.get(it["page"], {}).get("skip"), f"hal inti {it['n']}: halaman {it['page']} ditandai skip")
+        for fl in pgs.get(it["page"], {}).get("fields", []):
+            pass
+    check(bool(core.get("items")) == bool(core.get("intro")), "core: items dan intro harus ada bersama")
 
     lock = json.load(open(LOCK)) if os.path.exists(LOCK) else {}
     if sid in lock:

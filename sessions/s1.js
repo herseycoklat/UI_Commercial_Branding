@@ -13,9 +13,14 @@ CB.specs.S1 = {
   coverNote: "Facts only, present tense. UNKNOWN is a legal answer — zero UNKNOWNs means you're bluffing.",
   // Urutan isi yang diajarkan di kelas (Bedah Mendalam S1 v5): 2 → 3 → 5 → 4 → 6 → 7 bawah → 7 atas → 8
   fillOrder: [2, 3, 5, 4, 6, 7, 8],
+  /* Hal inti (dokumen 64, 5 Nov 2026). Halaman/kotak ber-`skip` boleh dilewati: tetap ada, dilipat, tidak pernah dihitung "kurang". */
+  core: {
+    intro: "This session has one must-do: your main commercial problem, at the top of page 7. Other pages are optional.",
+    items: [{ n: 1, k: "i1", label: "Masalah komersial utama", note: "cukup satu", page: 7, where: "hlm. 7 (atas)" }]
+  },
   pages: [
     {
-      p: 2, title: "Brand Audit Canvas", tag: "GATE 1 PACK",
+      p: 2, title: "Brand Audit Canvas", tag: "GATE 1 PACK", show: { tag: "" }, skip: true,
       sub: "Fill INSIDE first (left), then OUTSIDE (right). Box 8 is the output.",
       layout: "canvas2",
       columns: [
@@ -34,7 +39,7 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 3, title: "Product-to-Brand Map", layout: "grid", cols: 3,
+      p: 3, title: "Product-to-Brand Map", layout: "grid", cols: 3, skip: true,
       sub: "Trace the chain left to right, in order — no skipping. You may not fill box 5 before box 3.",
       footer: "Money follows feeling — not the other way around.",
       fields: [
@@ -47,7 +52,7 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 4, title: "Stakeholder Map", layout: "grid", cols: 2,
+      p: 4, title: "Stakeholder Map", layout: "grid", cols: 2, skip: true,
       sub: "For every name: what do they WANT from this project, and what POWER do they have to help or block it?",
       footer: "The most-forgotten box: who could give this project money — or stop it from launching?",
       fields: [
@@ -58,7 +63,7 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 5, title: "Brand Touchpoint Inventory",
+      p: 5, title: "Brand Touchpoint Inventory", skip: true,
       sub: "One row per touchpoint. 'Doesn't exist' is neutral. 'Exists and looks abandoned' is a withdrawal — revive it or take it down.",
       fields: [
         { id: "s1.p5.touchpoints", type: "table",
@@ -73,7 +78,7 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 6, title: "Commercial Readiness Scorecard", tag: "GATE 1 PACK", lowest: 3,
+      p: 6, title: "Commercial Readiness Scorecard", tag: "GATE 1 PACK", show: { tag: "" }, skip: true, lowest: 3,
       sub: "Score 1–5. Every score needs a one-line justification — the justification matters more than the number. At least one score must be a 1 or 2.",
       footer: "YOUR THREE LOWEST SCORES:  these become your stage-one priorities on page 7  →",
       fields: [
@@ -86,23 +91,23 @@ CB.specs.S1 = {
       ]
     },
     {
-      p: 7, title: "Stage-One Commitment & Cross-Stream Requests", tag: "GATE 1 PACK: TOP HALF", layout: "groups",
+      p: 7, title: "Stage-One Commitment & Cross-Stream Requests", tag: "GATE 1 PACK: TOP HALF", show: { tag: "" }, layout: "groups",
       groups: [
         { head: "OUR THREE PRIORITY COMMERCIAL-BRANDING PROBLEMS", ids: ["s1.p7.problem1", "s1.p7.problem2", "s1.p7.problem3"], badge: "isi terakhir" },
-        { head: "WHAT WE NEED FROM OTHER STREAMS  ·  what / why (which gap it fixes) / by when", ids: ["s1.p7.req_designer", "s1.p7.req_engineer", "s1.p7.req_content"], cols: 3, badge: "isi dulu" }
+        { head: "WHAT WE NEED FROM OTHER STREAMS  ·  what / why (which gap it fixes) / by when", ids: ["s1.p7.req_designer", "s1.p7.req_engineer", "s1.p7.req_content"], cols: 3, badge: "isi dulu", skip: true, skipLabel: "WHAT WE NEED FROM OTHER STREAMS" }
       ],
       sub: "Problems, not solutions. 'We don't know if parents would pay' is a problem. 'We will lower the price' is a solution you haven't earned yet.",
       fields: [
         { id: "s1.p7.problem1", type: "trace", label: "PROBLEM 1", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
-        { id: "s1.p7.problem2", type: "trace", label: "PROBLEM 2", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
-        { id: "s1.p7.problem3", type: "trace", label: "PROBLEM 3", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
+        { id: "s1.p7.problem2", skip: true, type: "trace", label: "PROBLEM 2", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
+        { id: "s1.p7.problem3", skip: true, type: "trace", label: "PROBLEM 3", hint: "— one sentence, about audience or money, testable —", traceFrom: ["s1.p2.b8_gaps", "s1.p6.*<=2"] },
         { id: "s1.p7.req_designer", type: "longtext", label: "From our DESIGNER / ARTIST", hint: "what / why (which gap it fixes) / by when" },
         { id: "s1.p7.req_engineer", type: "longtext", label: "From our ENGINEER / TECHNICAL", hint: "what / why (which gap it fixes) / by when" },
         { id: "s1.p7.req_content", type: "longtext", label: "From our CONTENT / PRODUCTION", hint: "what / why (which gap it fixes) / by when" }
       ]
     },
     {
-      p: 8, title: "Decision Log", workLabel: "Log-mu · Decision Log S1",
+      p: 8, title: "Decision Log", skip: true, workLabel: "Log-mu · Decision Log S1",
       sub: "One line per decision, starting today.",
       footer: "Duplicate this page when it fills up. It will fill up — that's the point.",
       // Kontrak v3.3: hlm. 8 kembali menjadi field biasa di sessions.S1, diisi di akhir Sesi 1.

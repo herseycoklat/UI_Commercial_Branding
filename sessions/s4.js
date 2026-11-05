@@ -31,11 +31,20 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     wbCover: "SESSION 4 TEAM WORKBOOK",
     coverNote: "Fill this in as a team after class, in the Session 4 HTML tool; these nine pages mirror it. Everything here gets read and executed by someone OUTSIDE your team: write for a stranger. Upload the JSON file from the tool through the Form. The last upload is the one read.",
     hideDue: true,
-    coverExtra: "Semua halaman (hlm. 2–9) ada di satu file. Batas unggah diumumkan dosen di kelas dan di grup kelas. Gate 3 dibaca dari file ini.",
+    coverExtra: "Semua halaman (hlm. 2–9) ada di satu file. Batas unggah diumumkan dosen di kelas dan di grup kelas.",
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
+    /* Hal inti (dokumen 64). Urutan kartu = urutan tabel umpan balik: 7 Touchpoint (hlm. 8), 8 Brand codes (hlm. 6), 9 Brief (hlm. 5). */
+    core: {
+      intro: "This session has three must-dos: pages 8, 6 and 5. Other pages are optional.",
+      items: [
+        { n: 7, k: "i7", label: "Touchpoint (Everywhere)", page: 8, where: "hlm. 8" },
+        { n: 8, k: "i8", label: "Brand codes (Like yourself)", page: 6, where: "hlm. 6" },
+        { n: 9, k: "i9", label: "Brief (Looking)", page: 5, where: "hlm. 5" }
+      ]
+    },
     pages: [
       {
-        p: 2, title: "Brand Architecture Map",
+        p: 2, title: "Brand Architecture Map", skip: true,
         sub: "Draw the lines where trust flows — not where legal ownership sits.",
         footer: "If your studio released something bad tomorrow, would this title be damaged? If yes, they're connected — draw the line. If the diagram looks like an org chart, redraw it.",
         carry: { title: "Bawaan dari sesi sebelumnya (hanya tampil, tidak disalin)", items: [
@@ -62,7 +71,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 3, title: "Naming Evaluation Matrix",
+        p: 3, title: "Naming Evaluation Matrix", skip: true,
         sub: "Score 1–5 on every criterion, with one line of reason. A name that is already locked still gets scored.",
         footer: "A low score you cannot fix is exactly what justifies paying to fix it another way. Scoring your own locked name 4s and 5s produces nothing usable.",
         carry: { title: "Yang dinilai dan dasarnya (hanya tampil, tidak disalin)", items: [
@@ -79,7 +88,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 4, title: "Trademark Preliminary Checklist",
+        p: 4, title: "Trademark Preliminary Checklist", skip: true,
         sub: "A first pass. Mark every source CLEAR, TAKEN, or UNKNOWN — never guess.",
         footer: "This is an introduction so you know when to ask a professional. It is not legal advice, and a first-pass search is not a clearance.",
         carry: { title: "Nama yang dicek (hanya tampil, tidak disalin)", items: [
@@ -139,7 +148,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 7, title: "Multisensory Identity Map", layout: "grid", cols: 2,
+        p: 7, title: "Multisensory Identity Map", skip: true, layout: "grid", cols: 2,
         sub: "Six channels. Where one isn't needed, write “not needed, because…” — never blank.",
         footer: "Filling all six enthusiastically is usually wishful thinking rather than ambition. Name who makes each one and when — that's what separates a plan from a wish.",
         carry: { title: "Bawaan dari halaman sebelumnya (hanya tampil, tidak disalin)", items: [
@@ -179,9 +188,10 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 9, title: "Creative Approval Checklist — Gate 3 Check",
+        p: 9, title: "Creative Approval Checklist — Gate 3 Check", skip: true,
         sub: "5–7 binary criteria; two checkers, same answer. Mark YES, NO, or UNKNOWN.",
         strip: { head: "HOW TO PICK THEM", text: "collect 10–15 rules from pp. 2–8 → strike what is not yes/no → rank by “cost if wrong and already printed” → keep 5–7 → label each with its source page and Gate 3 test. If every criterion comes from one test, write why the other two have none." },
+        show: { title: "Creative Approval Checklist", strip: { head: "HOW TO PICK THEM", text: "collect 10–15 rules from pp. 2–8 → strike what is not yes/no → rank by “cost if wrong and already printed” → keep 5–7 → label each with its source page and test. If every criterion comes from one test, write why the other two have none." } },
         carry: { title: "Bahan kriteria (hanya tampil, tidak disalin)", items: [
           { id: "s4.p5.mandatory", label: "MANDATORY ELEMENTS (hlm. 5)" },
           { id: "s4.p5.prohibited", label: "PROHIBITED ELEMENTS (hlm. 5)" },
@@ -194,11 +204,12 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
             itemFields: [
               { k: "src_page", label: "SOURCE PAGE", type: "pages", pages: [2, 3, 4, 5, 6, 7, 8] },
               { k: "q", label: "YES/NO QUESTION", type: "longtext" },
-              { k: "test", label: "GATE 3 TEST", type: "select", empty: "— pilih tes —", options: [{ v: "architecture", label: "architecture (hlm. 2)" }, { v: "naming", label: "naming (hlm. 3–4)" }, { v: "brief", label: "brief (hlm. 5–9)" }] },
+              { k: "test", label: "GATE 3 TEST", show: { label: "TEST" }, type: "select", empty: "— pilih tes —", options: [{ v: "architecture", label: "architecture (hlm. 2)" }, { v: "naming", label: "naming (hlm. 3–4)" }, { v: "brief", label: "brief (hlm. 5–9)" }] },
               { k: "pass_on", label: "Jawaban yang lolos", type: "select", empty: "— pilih —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }], appOnly: true },
               { k: "answer", label: "ANSWER", type: "select", empty: "— belum dijawab —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }, { v: "unknown", label: "UNKNOWN (belum dicek)" }] }] },
           { id: "s4.p9.creative_question", type: "creativeq", label: "QUESTION FROM YOUR CREATIVE STREAM",
             hint: "Send the brief (p. 5) to your creative stream; bring back one question. Gate 3 reads it in test 3: filled, or UNKNOWN with owner and date.",
+            show: { hint: "Send the brief (p. 5) to your creative stream; bring back one question. It is filled, or UNKNOWN with owner and date." },
             subLabels: ["THE QUESTION", "WHO ASKED (name, stream role)", "AMBIGUOUS SECTION (pp. 2–8)"],
             roles: [{ v: "designer_artist", label: "DESIGNER / ARTIST" }, { v: "engineer_technical", label: "ENGINEER / TECHNICAL" }, { v: "content_production", label: "CONTENT / PRODUCTION" }, { v: "other_stream", label: "Stream lain (tulis di nama)" }],
             pages: [2, 3, 4, 5, 6, 7, 8] }

@@ -17,9 +17,18 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     coverNote: "Fill this together as a team, outside class. Customer side before product side. Past behaviour beats stated intention. A guess in italics is not a fact.",
     coverExtra: "Lima wawancara boleh menyusul sampai <b>{{interviews_due}}</b> (ikut file Minggu 2).",
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
+    /* Hal inti (dokumen 64). Lihat catatan di sessions/s1.js. */
+    core: {
+      intro: "This session has three must-dos: pages 4, 5 and 6. Other pages are optional.",
+      items: [
+        { n: 2, k: "i2", label: "Audiens utama", page: 4, where: "hlm. 4" },
+        { n: 3, k: "i3", label: "Insight dan kebutuhan", page: 5, where: "hlm. 5" },
+        { n: 4, k: "i4", label: "Kompetitor", page: 6, where: "hlm. 6" }
+      ]
+    },
     pages: [
       {
-        p: 2, title: "Evidence Review", layout: "grid", cols: 1, // ditumpuk ke bawah (Fai, 22 Okt) supaya teks panjang terbaca
+        p: 2, title: "Evidence Review", skip: true, layout: "grid", cols: 1, // ditumpuk ke bawah (Fai, 22 Okt) supaya teks panjang terbaca
         sub: "Sort what you gathered since Session 1. Be brutal — most first drafts are mostly guesses.",
         footer: "Each claim goes into exactly ONE column — not the same claim walked across all three. A claim with no named source and no number is never a FACT, however confidently it was said out loud. An empty FACT column is honest: write 0 as a fact, e.g. “0 interviews so far.”",
         fields: [
@@ -38,7 +47,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 3, title: "Segmentation Matrix",
+        p: 3, title: "Segmentation Matrix", skip: true,
         sub: "2–4 candidate segments — real groups that would change your decisions.",
         footer: "A segment is only real if it would change what you design. If not — delete the column.",
         fields: [
@@ -57,10 +66,10 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         sub: "Score each segment 1–5. Highest total = your primary audience candidate.",
         footer: "Add each row up before you name the primary. The total decides which segment you design for — not which one the team likes talking about.",
         fields: [
-          { id: "s2.p4.scores", type: "segscore", from: "s2.p3.segments", rowLabel: "SEGMENT",
+          { id: "s2.p4.scores", skip: true, skipLabel: "Skor Audience Priority", type: "segscore", from: "s2.p3.segments", rowLabel: "SEGMENT",
             criteria: [{ k: "attractive", label: "ATTRACTIVE" }, { k: "accessible", label: "ACCESSIBLE" }, { k: "strategic_fit", label: "STRATEGIC FIT" }, { k: "revenue_potential", label: "REVENUE POTENTIAL" }] },
           { id: "s2.p4.primary", type: "longtext", label: "PRIMARY AUDIENCE (highest total):", hint: "— write it here —", output: true },
-          { id: "s2.p4.secondary", type: "longtext", label: "SECONDARY AUDIENCE (runner-up, to activate later):", hint: "— write it here. If two segments tie, write the reason you broke the tie —" }
+          { id: "s2.p4.secondary", skip: true, type: "longtext", label: "SECONDARY AUDIENCE (runner-up, to activate later):", hint: "— write it here. If two segments tie, write the reason you broke the tie —" }
         ]
       },
       {
@@ -99,7 +108,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 7, title: "Perceptual (Positioning) Map",
+        p: 7, title: "Perceptual (Positioning) Map", skip: true,
         sub: "Axes must be things the AUDIENCE cares about — not things that flatter you.",
         footer: "An empty quadrant is only an opportunity if the audience wants what's there. Empty because valuable, or empty because unwanted?",
         fields: [
@@ -110,7 +119,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 8, title: "Assumption-Risk Matrix", layout: "grid", cols: 2,
+        p: 8, title: "Assumption-Risk Matrix", skip: true, layout: "grid", cols: 2,
         sub: "The top-left box is the only one that matters today — it's your validation plan.",
         footer: "Which single assumption, if wrong, kills the whole project? That's the one you test this week.",
         fields: [
@@ -121,7 +130,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         ]
       },
       {
-        p: 9, title: "Interview Guide & Validation Plan", layout: "groups",
+        p: 9, title: "Interview Guide & Validation Plan", skip: true, layout: "groups",
         sub: "6–8 questions. No pitching. No ‘would you’. Past behaviour only.",
         footer: "FIELDWORK DUE {{interviews_due}}: 5 interviews minimum, with people who are NOT your friends. Raw notes, not summaries.",
         groups: [

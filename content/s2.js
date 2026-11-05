@@ -32,7 +32,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p>Di app, tiap FACT punya isian <b>Sumber</b>, <b>Angka</b>, dan <b>Jenis bukti</b> (daftar silabus §7), supaya jenis buktimu terhitung.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> Sesi 2 tidak memeriksa Gate, tapi menyiapkan separuh bukti untuk Gate 2: <i>\"sufficient audience evidence and a defendable positioning\"</i>. Ambangnya: bukti menyentuh segmen primer, minimal <b>dua jenis bukti</b> dari daftar §7, salah satunya dari audiens primer di luar lingkar tim. Kolom FACT inilah tempat kamu menghitungnya dengan jujur.</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> Sesi 2 menyiapkan separuh bukti untuk positioning di Sesi 3 (silabus §13): <i>\"sufficient audience evidence and a defendable positioning\"</i>. Ambangnya: bukti menyentuh segmen primer, minimal <b>dua jenis bukti</b> dari daftar §7, salah satunya dari audiens primer di luar lingkar tim. Kolom FACT inilah tempat kamu menghitungnya dengan jujur.</p>" +
           "<p>Bahan halaman ini datang dari kotak 4 dan 7 Brand Audit Canvas di Sesi 1. Kebiasaan memilah fakta dari tebakan dipakai lagi di sesi-sesi berikutnya, terutama saat menulis angka pendapatan.</p>",
         deeper: {
           summary: "Deeper read — kolom FACT yang pendek itu normal",
@@ -620,7 +620,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> lima wawancara dengan orang di luar tim adalah minimum yang direkomendasikan silabus §7, dan jenis bukti dari audiens primer di luar lingkar tim yang diminta Gate 2. Lima wawancara dengan teman sekelas tidak memenuhi ambang itu (Lie 1). Catatan wawancara boleh dipakai bersama dalam satu grup, tapi tiap orang menulis interpretasinya sendiri. Wawancara boleh menyusul sampai {{interviews_due}}, ikut file Minggu 2.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> lima wawancara dengan orang di luar tim adalah minimum yang direkomendasikan silabus §7, dan jenis bukti dari audiens primer di luar lingkar tim yang diminta silabus untuk positioning di Sesi 3. Lima wawancara dengan teman sekelas tidak memenuhi ambang itu (Lie 1). Catatan wawancara boleh dipakai bersama dalam satu grup, tapi tiap orang menulis interpretasinya sendiri. Wawancara boleh menyusul sampai {{interviews_due}}, ikut file Minggu 2.</p>",
         deeper: {
           summary: "Deeper read — pertanyaan yang tidak menyebut produkmu",
           html:
