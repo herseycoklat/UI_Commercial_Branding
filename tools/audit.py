@@ -17,7 +17,8 @@ Yang diperiksa:
  11. Hal inti: tiap core.items menunjuk halaman yang ada, bukan halaman `skip`; tiap halaman/kotak `skip` bukan hal inti.
   9. fillOrder memuat semua halaman kerja tepat sekali.
  pg.appText = ["sub", "footer"]: teks halaman yang sudah mendahului workbook pptx → peringatan, bukan gagal.
---lock menulis ulang file lock dengan ID saat ini (hanya dipakai saat sesi dirilis).
+--lock menulis ulang file lock dengan ID saat ini (hanya dipakai saat sesi dirilis), sekaligus kunci bentuk data.
+--lock-tipe hanya menulis kunci bentuk data (tools/field-types.lock.json) untuk ID yang sudah terkunci.
 """
 import json
 import os
@@ -27,6 +28,14 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCK = os.path.join(ROOT, "tools", "field-ids.lock.json")
+# Kunci bentuk data (8 Nov 2026): file terpisah supaya format field-ids.lock.json tidak berubah.
+# Yang dikunci adalah KELUARGA bentuk data, bukan nama komponen: semua tipe yang menyimpan string
+# dianggap satu keluarga ("teks"), jadi text <-> longtext tidak dianggap rusak. Tipe lain menyimpan
+# objek dengan bentuk khas komponennya, jadi nama tipenya sendiri yang dikunci.
+TYPELOCK = os.path.join(ROOT, "tools", "field-types.lock.json")
+STRING_TYPES = {"text", "longtext", "copytext", "enum"}
+def shape_family(t):
+    return "teks" if t in STRING_TYPES else t
 DATE_RE = re.compile(r"\b\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Mei|Jun|Jul|Aug|Agu|Sep|Oct|Okt|Nov|Dec|Des)\b|\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun|Sen|Sel|Rab|Kam|Jum|Sab|Min)\s+\d{1,2}\b", re.I)
 STATUS_RE = re.compile(r"APPROVED|REVISION DUE")
 GATE_RE = re.compile(r"\bgates?\b", re.I)
@@ -173,10 +182,23 @@ def main():
     if sid in lock:
         gone = [i for i in lock[sid] if i not in ids]
         check(not gone, f"ID terkunci hilang/berganti nama: {gone}")
+    fam = {f["id"]: shape_family(f["type"]) for pg in spec["pages"] for f in pg["fields"]}
+    tlock = json.load(open(TYPELOCK)) if os.path.exists(TYPELOCK) else {}
+    if sid in tlock:
+        changed = [f"{i}: {tlock[sid][i]} -> {fam[i]}" for i in tlock[sid] if i in fam and fam[i] != tlock[sid][i]]
+        check(not changed, f"Bentuk data field terkunci berubah (isian lama mahasiswa tidak terbaca): {changed}. "
+                           f"Kalau memang perlu: buat ID baru + migrasi di migrate(), jangan ganti tipe ID lama.")
+    elif sid in lock:
+        check(False, f"{sid} terkunci ID-nya tetapi bentuk datanya belum: jalankan audit dengan --lock-tipe", warn=True)
     if do_lock:
         lock[sid] = ids
         json.dump(lock, open(LOCK, "w"), indent=2)
         print(f"Lock ditulis: {len(ids)} ID {sid}")
+    if do_lock or "--lock-tipe" in sys.argv:
+        locked_ids = set(lock.get(sid, ids))
+        tlock[sid] = {i: fam[i] for i in ids if i in locked_ids}
+        json.dump(tlock, open(TYPELOCK, "w"), indent=2, sort_keys=True)
+        print(f"Kunci bentuk data ditulis: {len(tlock[sid])} field {sid}")
 
     built = sorted(int(k) for k in content["pages"])
     print(f"Audit {sid}: {passes} cek lolos · {len(fails)} gagal · {len(warns)} peringatan · halaman berkonten: {built}")
