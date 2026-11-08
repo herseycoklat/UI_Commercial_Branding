@@ -46,13 +46,13 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 </ol>
 <p>Proyekmu tidak punya studio? Tulis nama studio kerja timmu. Brand yang sudah ada (milik klien atau orang lain) dibaca sebagai audit: arsitektur yang sekarang, apakah konsisten, dan apa rekomendasimu.</p>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> ini bagian <b>Brand architecture</b>. Silabus §13: <i>"The brand architecture, naming direction, and identity brief are strategically coherent."</i> Brief yang sangat baik di atas arsitektur yang tidak koheren tetap tidak lolos. Lolos kalau model ditulis dalam satu kalimat, garis punya alasan kepercayaan atau kerusakan, dan sisi OUT menyebut nama yang konkret.</p>
-<p>Keputusan di sini dipakai terus: nama siapa yang dinilai di hlm. 3, apakah logo induk wajib muncul di brief hlm. 5, dan di Sesi 5 (partnership dan IP) siapa yang memegang merek apa. CLO 3 (Cross-Stream Brand Integration) dimulai dari sini.</p>`,
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati minggu ini. Silabus §13: <i>"The brand architecture, naming direction, and identity brief are strategically coherent."</i> Brief yang bagus di atas arsitektur yang tidak koheren tetap membingungkan stream lain. Kalau diisi, yang dibaca: model ditulis dalam satu kalimat, garis punya alasan kepercayaan atau kerusakan, dan sisi OUT menyebut nama yang konkret.</p>
+<p>Keputusan di sini dipakai terus: nama siapa yang dinilai di hlm. 3, apakah logo induk wajib muncul di brief hlm. 5, dan di Sesi 5 keputusan ini dipakai di baris legal Risk Register (siapa pemilik nama dan aset utama). CLO 3 (Cross-Stream Brand Integration) dimulai dari sini.</p>`,
         deeper: {
           summary: "Deeper read — arsitektur internal boleh lebih besar daripada yang dilihat audiens",
           html: `
 <p>Contoh Marvel mengajarkan satu hal yang sering salah ditiru. Studio bisa punya peta internal yang besar (rencana film berikutnya, sebuah universe), tetapi yang ditunjukkan ke audiens hanya satu film. Itu sah. Yang <b>tidak</b> sah: meminta audiens percaya pada sebuah universe sebelum mereka percaya pada satu film.</p>
-<p>Kalau proyekmu punya lapisan seperti itu (seri, musim berikutnya, karakter lain), tulis lapisannya di peta, dan tulis juga <b>aturan</b> apa yang boleh dilihat audiens, di aset mana, sampai kapan. Lapisan yang aturannya masih niat (belum tertulis) adalah celah di Tes 1, bukan di brief.</p>
+<p>Kalau proyekmu punya lapisan seperti itu (seri, musim berikutnya, karakter lain), tulis lapisannya di peta, dan tulis juga <b>aturan</b> apa yang boleh dilihat audiens, di aset mana, sampai kapan. Lapisan yang aturannya masih niat (belum tertulis) adalah celah di arsitektur, bukan di brief.</p>
 <p>Satu tanda bahaya lagi: tim yang menjawab "tidak ada yang rusak" untuk semua pasangan nama. Bisa benar-benar house of brands, bisa juga belum memikirkannya; di kertas keduanya sama. Tanyakan: <i>"Then what is the studio name doing on this page?"</i></p>`
         },
         reverse: {
@@ -139,7 +139,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <li>Semua 4 dan 5? Kemungkinan besar kamu sedang membela, bukan menilai. Kalibrasi: nilai satu nama pesaing dengan matriks yang sama, lalu bandingkan.</li>
 </ol>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> hlm. 3 dan 4 adalah bagian <b>Naming direction</b>. Lolos kalau lima kriteria dinilai dengan alasan dan setiap skor 1–2 punya mitigasi yang bisa dianggarkan. Skor rendah tidak membuat gagal; skor rendah <b>tanpa mitigasi</b> yang membuat gagal.</p>
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> hlm. 3 dan 4 (naming direction) boleh dilewati minggu ini. Kalau diisi, yang dibaca: lima kriteria dinilai dengan alasan, dan setiap skor 1–2 punya mitigasi yang bisa dianggarkan. Skor rendah bukan masalah; skor rendah <b>tanpa mitigasi</b> yang jadi catatan.</p>
 <p>Mitigasi di sini punya harga, dan harga itu masuk ke Sesi 5 (model bisnis dan biaya). Contoh: nama yang tidak distinctive berarti anggaran pencarian berbayar lebih besar. Nama yang tidak protectable berarti merek berstilir, bukan kata saja.</p>`,
         deeper: {
           summary: "Deeper read — kenapa skor rendah justru berguna",
@@ -229,8 +229,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <li>Untuk setiap TAKEN atau UNKNOWN, tulis <b>satu tindakan</b> di kotak bawah: owner, kapan, dan uji penutupan (selesai kalau apa).</li>
 </ol>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> bagian kedua dari <b>Naming direction</b>. Lolos kalau kelas yang dicek disebut, dan setiap UNKNOWN atau TAKEN punya owner, tanggal, dan uji penutupan. <b>UNKNOWN itu jawaban sah.</b> UNKNOWN tanpa tindakan yang tidak sah: ia akan tetap UNKNOWN sampai Sesi 8.</p>
-<p>Di Sesi 5 (IP logic), UNKNOWN di halaman ini muncul lagi sebagai lubang: lini merchandise tidak bisa dijual di kelas barang yang belum dicek.</p>`,
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> bagian kedua dari naming direction, boleh dilewati minggu ini. Kalau diisi, yang dibaca: kelas yang dicek disebut, dan setiap UNKNOWN atau TAKEN punya owner, tanggal, dan uji penutupan. <b>UNKNOWN itu jawaban sah.</b> UNKNOWN tanpa tindakan yang tidak sah: ia akan tetap UNKNOWN sampai Sesi 8.</p>
+<p>Di Sesi 5, UNKNOWN di halaman ini menjadi kandidat baris legal Risk Register (siapa pemilik nama): lini merchandise tidak bisa dijual di kelas barang yang belum dicek.</p>`,
         deeper: {
           summary: "Deeper read — kelas barang/jasa yang biasanya relevan",
           html: `
@@ -323,8 +323,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <li><b>Rejected → rewrote</b> — satu baris yang tadinya menyebut solusi, dan versi persyaratannya. Keduanya tetap terlihat.</li>
 </ul>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> ini pusat bagian <b>Identity brief</b> dan inti <b>CLO 3</b>: menerjemahkan strategi menjadi brief yang bisa dieksekusi stream lain. Lolos kalau kedelapan bagian terisi dan minimal satu baris ditolak lalu ditulis ulang.</p>
-<p>Setelah halaman ini selesai, kirim brief-nya ke creative stream (atau satu orang di luar timmu) dan catat satu pertanyaan yang mereka ajukan. <i>"A brief that raises no questions probably wasn't read."</i> Pertanyaan itu menunjukkan bagian mana yang ambigu. Brief ini masuk Dossier Sesi 8 (butir 12–14).</p>`,
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> hal inti 9 dan inti <b>CLO 3</b>: menerjemahkan strategi menjadi brief yang bisa dieksekusi stream lain. Brief merangkum audiens (Sesi 2), positioning (Sesi 3), brand codes (hlm. 6), dan touchpoint (hlm. 8). Terisi kalau kedelapan bagian terisi dan minimal satu baris ditolak lalu ditulis ulang.</p>
+<p>Kalau sempat, kirim brief-nya ke creative stream (atau satu orang di luar timmu) dan catat satu pertanyaan yang mereka ajukan (di hlm. 9, boleh dilewati). <i>"A brief that raises no questions probably wasn't read."</i> Pertanyaan itu menunjukkan bagian mana yang ambigu. Brief adalah ujung rantai Sesi 1–4: deliverable untuk creative stream. Di Sesi 8 ia tampil lagi di layar Tinjauan akhir, dan kotak Personality &amp; Tone ikut dirakit ke Brand Platform satu halaman.</p>`,
         deeper: {
           summary: "Deeper read — menerjemahkan solusi menjadi persyaratan",
           html: `
@@ -417,7 +417,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 </ol>
 <p><b>Maksimal lima.</b> Halaman ini seharusnya makin <b>pendek</b> saat dikerjakan. Daftar yang makin panjang berarti uji tanpa-logo belum diterapkan.</p>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> bagian dari <b>Identity brief</b>: kode maksimal lima, masing-masing dengan pemilik. Kode adalah kosakata; hlm. 7 menempatkan kosakata itu di enam kanal, dan hlm. 9 biasanya punya satu kriteria yang memakainya ("identitas memakai minimal dua kode bernama"). Urutannya tidak bisa dibalik.</p>
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> hal inti 8: kode maksimal lima, masing-masing dengan pemilik. Kode adalah kosakata yang dipakai lagi: di brief (hlm. 5), di Sesi 5 (baris legal Risk Register: siapa pemilik aset utama), dan di Sesi 7.</p>
 <p>Di Sesi 7 (governance), pemilik kode di halaman ini menjadi bahan aturan siapa yang boleh mengubah apa setelah peluncuran.</p>`,
         deeper: {
           summary: "Deeper read — kenapa \"lolos lemah\" tetap ditulis",
@@ -492,8 +492,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 </ol>
 <p>Hati-hati dua arah. Mengisi keenam kanal dengan antusias biasanya angan-angan. Menulis "not needed" di empat kotak biasanya sedang menggambarkan <b>anggaran</b>, bukan medium. Kalau memang soal anggaran, tulis "tidak ada anggaran" dengan kata-kata itu, karena dua alasan itu menghasilkan keputusan berbeda di Sesi 5.</p>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> bagian dari <b>Identity brief</b>: enam kanal terisi atau beralasan. Output silabus butir 6 (<i>sonic, motion, interactive, or spatial requirements where relevant</i>) ada di halaman ini.</p>
-<p>Di Sesi 6 (go-to-market), kanal yang dibutuhkan di sini menjadi rencana kanal dan jadwal aktivasi. Kanal yang ditulis "dibutuhkan" tanpa pembuat dan waktu akan muncul lagi di sana sebagai baris yang tidak bisa dijadwalkan.</p>`,
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati minggu ini dan tidak dipakai lagi di sesi berikutnya. Kalau diisi: enam kanal terisi atau beralasan. Output silabus butir 6 (<i>sonic, motion, interactive, or spatial requirements where relevant</i>) ada di halaman ini.</p>
+<p>Kanal yang ditulis "dibutuhkan" tanpa pembuat dan waktu adalah keinginan, bukan rencana.</p>`,
         deeper: {
           summary: "Deeper read — sonic dan motion untuk proyek kecil",
           html: `
@@ -568,7 +568,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           title: "Baca ini dulu",
           src: "Wheeler (2017), brand touchpoints; silabus Sesi 4 (packaging and merchandise; user-interface and product-experience consistency)",
           html: `
-<p>Touchpoint = setiap tempat orang bertemu brand-mu. Janji brand (panel atas: Promise dan Master Message Sesi 3) dikatakan sekali, tetapi <b>ditepati atau dilanggar</b> di enam tempat ini.</p>
+<p>Touchpoint = setiap tempat orang bertemu brand-mu. Janji brand diambil dari Promise → Proof Sesi 3 (panel atas; baris pertama = janji di kalimat positioning-mu). Promise (S3 hlm. 4) dan Master Message (S3 hlm. 6) ikut tampil bila kamu mengisinya. Janji itu dikatakan sekali, tetapi <b>ditepati atau dilanggar</b> di enam tempat ini.</p>
 <ol>
 <li>Untuk tiap baris, tulis bagaimana janji itu <b>benar-benar</b> muncul di sana: wujudnya, aturannya, yang tidak boleh terjadi. "Jaga konsistensi brand" bukan isi baris, itu harapan.</li>
 <li>Tulis <b>siapa yang bertanggung jawab</b> di tiap baris. Baris tanpa nama tidak akan pernah diperiksa.</li>
@@ -576,8 +576,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 </ol>
 <p>Ada touchpoint lain yang penting untuk proyekmu (mis. layanan pelanggan, kemasan pengiriman)? Tambahkan baris.</p>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> bagian dari <b>Identity brief</b>: minimal satu touchpoint dibuat orang luar, dan tiap baris punya penanggung jawab. Ini output silabus butir 8 (<i>touchpoint consistency criteria</i>) dan menjawab Session Learning Outcome: <i>"a consistent system of product and communication touchpoints."</i></p>
-<p>Di Sesi 6, baris-baris ini menjadi titik aktivasi go-to-market; di Sesi 7, penanggung jawabnya menjadi bahan aturan governance.</p>`,
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> hal inti 7: janji dari Promise → Proof Sesi 3 diuji di enam tempat; minimal satu touchpoint dibuat orang luar, dan tiap baris punya penanggung jawab. Ini output silabus butir 8 (<i>touchpoint consistency criteria</i>) dan menjawab Session Learning Outcome: <i>"a consistent system of product and communication touchpoints."</i></p>
+<p>Baris-baris ini dipakai di brief (hlm. 5) dan menjadi bahan Customer Journey Map di Sesi 6 (hlm. 4).</p>`,
         deeper: {
           summary: "Deeper read — komunitas tidak bisa dikendalikan, tapi bisa dibekali",
           html: `
@@ -657,7 +657,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <p>Halaman ini mengubah selera menjadi sesuatu yang bisa diperiksa. Tulis <b>5–7 kriteria biner</b> (ya/tidak) untuk menerima atau menolak hasil kerja kreatif. <i>"Anyone can have taste. Only a brief makes taste checkable."</i></p>
 <ol>
 <li><b>Uji dua-pemeriksa:</b> dua orang memeriksa terpisah, apakah jawabannya sama? "Apakah terasa premium?" gagal. "Apakah wordmark terbaca hitam-putih pada lebar 120 piksel?" lolos. Kriteria yang dijawab berbeda belum biner.</li>
-<li>Tulis <b>source page</b>: halaman 2–8 tempat aturan itu tertulis (boleh lebih dari satu). Lalu tandai kriteria itu milik <b>tes</b> yang mana: architecture, naming, atau brief. Kebanyakan kriteria biasanya milik brief; satu kriteria arsitektur (mis. "logo induk wajib ada di depan kemasan") membuat bagian arsitektur bisa diperiksa. Kalau semua kriteriamu berasal dari satu tes, tulis kenapa dua tes lainnya tidak punya.</li>
+<li>Tulis <b>source page</b>: halaman 2–8 tempat aturan itu tertulis (boleh lebih dari satu). Lalu tandai kriteria itu milik <b>bagian</b> yang mana: architecture, naming, atau brief. Kebanyakan kriteria biasanya milik brief; satu kriteria arsitektur (mis. "logo induk wajib ada di depan kemasan") membuat bagian arsitektur bisa diperiksa. Kalau semua kriteriamu berasal dari satu bagian, tulis kenapa dua bagian lainnya tidak punya.</li>
 <li>Tulis <b>jawaban yang lolos</b>. Untuk kriteria larangan ("Apakah ada elemen yang hanya mengandalkan warna?"), jawaban yang lolos adalah NO.</li>
 <li>Jawab hari ini: YES, NO, atau UNKNOWN. Yang belum bisa dicek (belum ada karya, belum diuji ke orang luar) ditulis UNKNOWN, bukan dicentang. Checklist yang semuanya tercentang biasanya ditulis setelah karyanya jadi.</li>
 </ol>
@@ -674,7 +674,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <li><b>Bagian 2 · Naming direction (hlm. 3–4).</b> Lima kriteria dinilai dengan alasan; setiap skor 1–2 punya mitigasi yang bisa dianggarkan; kelas yang dicek disebut; setiap UNKNOWN atau TAKEN punya owner, tanggal, dan uji penutupan.</li>
 <li><b>Bagian 3 · Identity brief (hlm. 5–9).</b> Delapan bagian brief terisi dengan minimal satu baris ditolak dan ditulis ulang; kode maksimal lima dengan pemilik; enam kanal terisi atau beralasan; minimal satu touchpoint dibuat orang luar (ditandai di hlm. 8); 5–7 kriteria biner yang lolos uji dua-pemeriksa; kotak pertanyaan creative stream terisi, atau UNKNOWN dengan pemilik dan tanggal.</li>
 </ul>
-<p>Kenapa brief ini ada sebelum Sesi 5 dan 6: silabus §13 melarang masuk produksi berbiaya tinggi atau eksekusi promosi sebelum keputusan strategis utama disetujui. Brief yang tidak koheren membuat semua uang yang dikeluarkan setelahnya terbuang.</p>`
+<p>Kenapa brief ini ada sebelum Sesi 5 dan 6: produksi dan promosi berbiaya tinggi baru masuk akal setelah strategi dan brief jelas. Brief yang tidak koheren membuat semua uang yang dikeluarkan setelahnya terbuang.</p>`
         },
         callout: "<b>Kamu menulis kriteria, jawabannya, dan satu pertanyaan dari creative stream.</b> Penilai membaca isinya dari file yang kamu kumpulkan. Contoh di bawah menampilkan isi halaman untuk tiap kasus, bukan penilaiannya.",
         tigaTes: {
@@ -927,7 +927,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           jumbo: {
             name: "Jumbo", sub: "Five pass — a NO is the passing answer on 4 and 5. Two stay open, and that is honest.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "AREA", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
                 ["1", "p. 5", "Does the wordmark stay legible in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
                 ["2", "p. 5", "Does the character element work with the wordmark removed?", "BRIEF", "YES · PASS"],
                 ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
@@ -943,7 +943,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           gojek: {
             name: "Gojek / GoFood", sub: "Five pass — a NO is the passing answer on 4 and 5. Two stay open because they need real riders.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "AREA", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
                 ["1", "pp. 5, 8", "Does the GoFood entry on the home screen stay recognisable in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
                 ["2", "pp. 5–6", "Does a GoFood screen still read as Gojek with the logo covered?", "BRIEF", "YES · PASS"],
                 ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
@@ -959,7 +959,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           marvel: {
             name: "Disney/Marvel (Iron Man)", sub: "Five pass — a NO is the passing answer on 4 and 5. Two stay open, and that is honest.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "AREA", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
                 ["1", "p. 5", "Does the title lockup stay legible in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
                 ["2", "pp. 5–6", "Does the helmet silhouette work with the wordmark removed?", "BRIEF", "YES · PASS"],
                 ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
@@ -975,7 +975,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           lego: {
             name: "LEGO Technic", sub: "Five pass — a NO is the passing answer on 4. Two stay open, and that is honest.", caveat: CAVEAT,
             values: {
-              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "TEST", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
+              "s4.p9.criteria": { cols: ["NO.", "SOURCE PAGE", "YES/NO QUESTION", "AREA", "ANSWER"], keys: ["c1", "c2", "c3", "c4", "c5", "c6", "c7"], rows: [
                 ["1", "p. 5", "Does the Technic wordmark stay legible in black and white at 120 pixels wide?", "BRIEF", "YES · PASS"],
                 ["2", "pp. 5–6", "Does the liftarm beam shape work with the wordmark removed?", "BRIEF", "YES · PASS"],
                 ["3", "p. 6", "Does the identity use at least two of our named brand codes?", "BRIEF", "YES · PASS"],
