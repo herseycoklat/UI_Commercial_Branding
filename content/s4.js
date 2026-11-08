@@ -316,7 +316,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <li><b>Objective</b> — apa yang perlu dibuat, dan harus mencapai apa.</li>
 <li><b>Audience</b> — dari Sesi 2 (panel atas). Jangan menulis audiens baru di sini.</li>
 <li><b>Positioning to express</b> — kalimat Sesi 3, <b>persis</b>, tidak diparafrase. Tombol "Salin" mengambilnya dari hlm. 2 Sesi 3; tambahkan bagian mana yang wajib dibawa identitas.</li>
-<li><b>Personality &amp; tone of voice</b> — dari Personality Spectrum Sesi 3, ditulis sebagai <b>pasangan</b>: "warm, not sweet". Tiga kata sifat ("fun, bold, friendly") dibaca lima cara oleh lima penulis; pasangan menutup ruang tafsir dengan menyebut tetangga terdekat yang salah. Tambahkan satu kalimat yang benar dan satu yang salah.</li>
+<li><b>Personality &amp; tone of voice</b> — dari Personality Spectrum Sesi 3 kalau kamu mengisinya (boleh dilewati di Sesi 3); kalau tidak, putuskan di sini dari kalimat positioning-mu. Ditulis sebagai <b>pasangan</b>: "warm, not sweet". Tiga kata sifat ("fun, bold, friendly") dibaca lima cara oleh lima penulis; pasangan menutup ruang tafsir dengan menyebut tetangga terdekat yang salah. Tambahkan satu kalimat yang benar dan satu yang salah.</li>
 <li><b>Mandatory</b> — persyaratan yang harus benar di jawaban apa pun.</li>
 <li><b>Prohibited</b> — yang tidak boleh muncul, <b>dengan alasan strategisnya</b>. Larangan tanpa alasan adalah selera.</li>
 <li><b>Accessibility</b> — kontras, terbaca di thumbnail, warna tidak pernah satu-satunya pembawa makna, takarir. Bagian brief yang sepenuhnya biner, jadi tulis dengan angka atau kondisi yang bisa dicek.</li>

@@ -273,7 +273,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p><b>Insight sentence</b> ditulis terakhir: [Who] wants [motivation] — BUT [barrier] — SO [opportunity]. Insight bukan fakta, ia <b>tension</b>. BUT-nya wajib salah satu pain di kotak kiri. <b>The BUT is where the business lives.</b></p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> insight sentence menjadi blank <i>[insight]</i> di Positioning Statement Sesi 3. Kalau BUT-nya berasal dari pain yang diucapkan orang, kalimat positioningmu berdiri di atas bukti. Kalau dari asumsi, itu tetap jujur, asal ditandai, dan diuji lewat wawancara di hlm. 9.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> insight sentence menjadi blank <i>[insight]</i> di Positioning Statement Sesi 3. Kalau BUT-nya berasal dari pain yang diucapkan orang, kalimat positioningmu berdiri di atas bukti. Kalau dari asumsi, itu tetap jujur, asal ditandai, dan diuji lewat wawancara (hlm. 9, boleh dilewati).</p>",
         deeper: {
           summary: "Deeper read — kalimat insight yang bisa dilacak ke halaman",
           html:
@@ -374,7 +374,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p><b>Baris \"Who exactly?\" tidak opsional:</b> sebut brand yang nyata di setiap kolom. Kolom yang tidak bisa kamu sebut namanya adalah kategori yang belum kamu riset. Tulis UNKNOWN di sel yang belum kamu cek; sel kosong terbaca lupa, UNKNOWN terbaca jujur. Untuk kolom US, jangan tulis asumsi positif tentang dirimu sendiri.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> matriks ini adalah <i>competitor analysis</i>, salah satu jenis bukti di silabus §7 dan bagian dari minimum yang direkomendasikan (\"one competitor or comparable-brand analysis\"). Points of Parity dan Points of Difference di Sesi 3 diturunkan langsung dari matriks ini, termasuk kolom indirect dan substitute. Semua nama di baris pertama harus muncul lagi di Perceptual Map (hlm. 7).</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> matriks ini adalah <i>competitor analysis</i>, salah satu jenis bukti di silabus §7 dan bagian dari minimum yang direkomendasikan (\"one competitor or comparable-brand analysis\"). Points of Parity dan Points of Difference di Sesi 3 diturunkan langsung dari matriks ini, termasuk kolom indirect dan substitute. Kalau kamu mengisi Perceptual Map (hlm. 7, boleh dilewati), semua nama di baris pertama muncul lagi di sana.</p>",
         deeper: {
           summary: "Deeper read — benchmark sering dikira pesaing",
           html:

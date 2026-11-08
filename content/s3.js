@@ -51,7 +51,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 <p>Naikkan POD di tangga, jangan naikkan POP. Pertanyaan pengeceknya: <i>"Kalau kami berhasil melakukan ini dengan sempurna, apakah seseorang benar-benar mengubah keputusannya?"</i> Jawaban "ya" di anak tangga 3 atau 4 biasanya langsung memunculkan positioning yang sesungguhnya.</p>
 <p>Contoh LEGO Technic: fitur = mekanisme yang bergerak; fungsional = bisa dibangun dan dijalankan; emosional = kepuasan menyelesaikan sesuatu yang benar-benar sulit; sosial = "saya paham cara kerja mesin". Harga premium dibayar di dua anak tangga atas.</p>`
         },
-        callout: "<b>Urutan kerja yang diajarkan di kelas:</b> hlm. 3 (kolom difference memasok blank [benefit]) → kotak <a href='#p4'><b>PURPOSE</b> di hlm. 4</a> → halaman ini → sisa hlm. 4 → hlm. 5 → 6 → 7. Nomor halaman bukan urutan pengerjaan.<br><b>Wawancara atau bukti baru minggu ini?</b> Tambahkan di Sesi 2 (hlm. 2 dan 9). Ikut terbaca saat penilaian.",
+        callout: "<b>Urutan kerja minimum:</b> halaman ini dulu (hal inti 5), lalu PROMISE → PROOF di hlm. 5 bagian bawah (hal inti 6). Kalau tim punya waktu, hlm. 3 (kolom difference membantu blank [benefit]) dan <a href='#p4'>hlm. 4</a> memperkuat kalimatmu; keduanya boleh dilewati. Nomor halaman bukan urutan pengerjaan.<br><b>Wawancara atau bukti baru minggu ini?</b> Tambahkan di Sesi 2 (hlm. 2 dan 9). Ikut terbaca saat penilaian.",
         reverse: {
           title: "Cek terbalik sebelum lanjut",
           items: [
@@ -302,22 +302,22 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           title: "Baca ini dulu",
           src: "Aaker (2014), Aaker on Branding (diadaptasi); Keller & Swaminathan (2020)",
           html: `
-<p>Halaman ini memuat <b>dua alat</b>. Keduanya diturunkan dari hlm. 4, bukan dikarang baru.</p>
+<p>Halaman ini memuat <b>dua alat</b>. Yang wajib hanya yang kedua, <b>Promise–Proof</b> (bagian bawah), dan ia turun dari kalimat positioning-mu di hlm. 2. Personality Spectrum (bagian atas) boleh dilewati.</p>
 <p><b>1. Personality Spectrum — komitmen, bukan rata-rata.</b> Lima pasangan slider berlawanan (playful–serious, mass–niche, warm–cool, bold–safe, modern–classic) mengubah kata kabur seperti "seru" atau "modern" menjadi instruksi yang bisa dipakai desainer. Alat ini praktis dan <b>terinspirasi</b> dari gagasan brand personality Aaker; ia bukan reproduksi lima dimensi Aaker (1997), jadi jangan menyebutnya kerangka Aaker 1997.</p>
 <ul>
 <li>Aturan utama: <b>pilih posisi, jangan parkir di tengah</b>. Brand yang "agak playful, agak serius, agak hangat, agak dingin" tidak punya kepribadian; ia punya rata-rata.</li>
 <li>Slider yang belum kamu sentuh di app ditampilkan pucat dan dihitung <b>belum dipilih</b>. Pilih, jangan biarkan di tengah.</li>
 <li>Lalu tulis <b>kenapa</b> di kotak "WHY WE PLACED IT THERE", satu baris per slider, dikaitkan ke positioning statement di hlm. 2. Slider yang dekat tengah wajib punya baris yang menjelaskan kenapa belum diputuskan.</li>
 </ul>
-<p><b>2. Promise–Proof Matrix.</b> Daftar setiap janji dari platform-mu (kotak PROMISE, kalimat positioning, klaim lain di kanvas), dan di sebelahnya bukti yang <b>nyata dan bernama</b> untuk tiap janji. <i>A promise with no proof isn't strategy — it's hope.</i></p>
+<p><b>2. Promise–Proof Matrix.</b> <b>Baris pertama = janji di kalimat positioning-mu</b>, yaitu bagian “that [benefit]” di hlm. 2. Setelah itu boleh tambah janji lain (dari kanvas hlm. 4 atau pilar Message House, kalau kamu mengisinya) selama tidak bertentangan dengan positioning. Di sebelahnya, bukti yang <b>nyata dan bernama</b> untuk tiap janji. <i>A promise with no proof isn't strategy — it's hope.</i></p>
 <ul>
 <li>Bukti yang baik lolos tiga syarat: <b>verifiable</b> (orang asing bisa mengeceknya tanpa percaya pada kita), <b>specific</b> (angka, nama, dokumen, sesuatu yang bisa dicoba), <b>relevant</b> (kalau bukti ini benar, janjinya ikut benar).</li>
 <li>Setiap janji diberi satu <b>status</b>: <b>Nyata</b> (lolos tiga syarat hari ini), <b>PLANNED</b> (akan ada; wajib <i>owner</i> dan <i>deadline</i>, kalau tidak hanya niat), atau <b>UNKNOWN</b> (belum ada, belum ada rencana). Hati-hati bukti nyata yang hanya terlihat dari dalam: bagi audiens itu belum ada.</li>
 <li>Janji UNKNOWN <b>dikecilkan sampai jadi benar</b>, bukan dihapus dan bukan dibiarkan. Empat cara: <b>tempat</b> (di mana sudah benar?), <b>waktu</b> (kapan akan benar?), <b>siapa</b> (untuk siapa sudah benar?), <b>seberapa</b> (bagian mana yang sudah benar?).</li>
-<li>Setiap pilar Message House (hlm. 6) harus punya baris di tabel ini. Kalau belum ada, tambahkan barisnya.</li>
+<li>Bukti di bagian “because” kalimat positioning harus muncul sebagai baris REAL atau PLANNED. Kalau ternyata UNKNOWN, kalimat itu masih klaim, bukan positioning.</li>
 </ul>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> Personality Spectrum tidak bisa diisi jujur sebelum kotak PERSONALITY di hlm. 4 ada, dan Promise–Proof Matrix secara harfiah butuh daftar promise dari hlm. 4 sebagai kolom kirinya. Keduanya adalah audit atas kanvas.</p>
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> Promise–Proof Matrix menguji janji di kalimat positioning-mu: baris pertamanya adalah bagian “that [benefit]” dari hlm. 2, jadi janji terpenting pasti diuji buktinya. Personality Spectrum (boleh dilewati) adalah audit atas kotak PERSONALITY di hlm. 4.</p>
 <p>Hasil slider menjadi bahan brief identitas Sesi 4. Matriks promise–proof langsung dibaca di bagian <b>Platform</b>: Promise yang tidak punya bukti bernama harus sudah diperkecil, bukan dibiarkan.</p>`,
         deeper: {
           summary: "Deeper read — posisi \"tengah\" vs \"mendekati tengah\", dan tiga pilihan untuk promise tanpa bukti",
@@ -337,7 +337,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           items: [
             "Kelima slider sudah kamu sentuh dan tidak ada yang parkir di tengah tanpa alasan?",
             "Tiap baris WHY WE PLACED IT THERE terkait ke kalimat positioning di hlm. 2?",
-            "Setiap promise dari kotak PROMISE di hlm. 4 muncul di PROMISE → PROOF?",
+            "Janji di kalimat positioning-mu (“that [benefit]”) adalah baris pertama PROMISE → PROOF?",
             "Tiap bukti bernama (siapa, apa, di mana), bukan sekadar mengulang promise?",
             "Promise yang belum punya bukti sudah diperkecil, bukan dihapus dan bukan dibiarkan?",
             "Setiap baris punya status; PLANNED punya owner dan deadline; UNKNOWN punya janji yang dikecilkan?"

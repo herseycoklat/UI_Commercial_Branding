@@ -93,7 +93,7 @@ CB.specs.S1 = {
     {
       p: 7, title: "Stage-One Commitment & Cross-Stream Requests", tag: "GATE 1 PACK: TOP HALF", show: { tag: "" }, layout: "groups",
       groups: [
-        { head: "OUR THREE PRIORITY COMMERCIAL-BRANDING PROBLEMS", ids: ["s1.p7.problem1", "s1.p7.problem2", "s1.p7.problem3"], badge: "isi terakhir" },
+        { head: "OUR THREE PRIORITY COMMERCIAL-BRANDING PROBLEMS", show: { head: "OUR PRIORITY COMMERCIAL-BRANDING PROBLEM — ONE IS ENOUGH (PROBLEMS 2 AND 3 ARE OPTIONAL)" }, ids: ["s1.p7.problem1", "s1.p7.problem2", "s1.p7.problem3"], badge: "isi terakhir" },
         { head: "WHAT WE NEED FROM OTHER STREAMS  ·  what / why (which gap it fixes) / by when", ids: ["s1.p7.req_designer", "s1.p7.req_engineer", "s1.p7.req_content"], cols: 3, badge: "isi dulu", skip: true, skipLabel: "WHAT WE NEED FROM OTHER STREAMS" }
       ],
       sub: "Problems, not solutions. 'We don't know if parents would pay' is a problem. 'We will lower the price' is a solution you haven't earned yet.",

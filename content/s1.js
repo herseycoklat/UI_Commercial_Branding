@@ -576,19 +576,19 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           title: "Baca ini dulu",
           src: "Silabus §13 dan §15 (learning policies); Cagan (2017), Inspired",
           html:
-            "<p>Halaman ini mengubah diagnosis menjadi dua hal: <b>tiga masalah komersial-branding</b> (bagian atas) dan <b>permintaan ke stream lain</b> (bagian bawah).</p>" +
-            "<p><b>Urutan isinya terbalik:</b> bagian bawah dulu, bagian atas terakhir. Permintaan lintas-stream menarik dari celah di semua halaman sebelumnya; tiga masalah adalah distilasi akhir dari semuanya.</p>" +
+            "<p>Halaman ini mengubah diagnosis menjadi dua hal: <b>masalah komersial-branding utama</b> (bagian atas, hal inti; satu sudah cukup, masalah 2 dan 3 boleh dilewati) dan <b>permintaan ke stream lain</b> (bagian bawah, boleh dilewati).</p>" +
+            "<p><b>Yang wajib hanya bagian atas:</b> satu masalah utama. Kalau tim punya waktu, isi juga permintaan lintas-stream; masalah utamamu adalah distilasi dari apa yang kamu ketahui tentang brand ini.</p>" +
             "<ul>" +
             "<li><b>Masalah, bukan solusi.</b> \"We don't know if parents would pay\" adalah masalah. \"We will lower the price\" adalah solusi yang belum pantas kamu klaim.</li>" +
-            "<li><b>Ambil dari jejak, bukan ide baru.</b> Lihat tiga skor terendah di hlm. 6 dan kotak 8 Canvas. Setiap masalah harus bisa ditunjuk asalnya; di app, centang sumbernya di bawah tiap masalah.</li>" +
-            "<li><b>Tanya \"kenapa komersial\" pada tiap masalah.</b> Kalau masalah itu selesai, apa yang berubah dalam keputusan orang membayar atau memilih? Kalau jawabannya hanya tampilan yang lebih bagus, tulis ulang. Ini uji pertama; tidak ada kotak isian khusus, kalimat masalahmu sendiri yang dibaca penilai (lihat Cek kelengkapan di bawah halaman sesi).</li>" +
-            "<li><b>Permintaan lintas-stream:</b> satu baris per stream, berisi APA yang dibutuhkan, KENAPA (celah mana yang diperbaiki), dan KAPAN. \"Tolong bantu\" bukan permintaan. Kamu mengidentifikasi kebutuhan informasi, bukan mendikte eksekusi kreatif.</li>" +
+            "<li><b>Ambil dari jejak, bukan ide baru.</b> Kalau kamu mengisi hlm. 6 atau kotak 8 Canvas (keduanya boleh dilewati), lihat skor terendah dan celahnya, lalu centang sumbernya di bawah masalah. Kalau tidak, tulis masalah yang bisa kamu tunjuk buktinya.</li>" +
+            "<li><b>Tanya \"kenapa komersial\" pada masalahmu.</b> Kalau masalah itu selesai, apa yang berubah dalam keputusan orang membayar atau memilih? Kalau jawabannya hanya tampilan yang lebih bagus, tulis ulang. Ini uji pertama; tidak ada kotak isian khusus, kalimat masalahmu sendiri yang dibaca penilai (lihat Cek kelengkapan di bawah halaman sesi).</li>" +
+            "<li><b>Permintaan lintas-stream (boleh dilewati):</b> satu baris per stream, berisi APA yang dibutuhkan, KENAPA (celah mana yang diperbaiki), dan KAPAN. \"Tolong bantu\" bukan permintaan. Kamu mengidentifikasi kebutuhan informasi, bukan mendikte eksekusi kreatif.</li>" +
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> di sinilah masalah komersialmu ditulis. Silabus: <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Setiap masalah diuji tiga hal:</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> di sinilah masalah komersialmu ditulis. Silabus: <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Masalahmu dibaca dengan tiga pertanyaan:</p>" +
           "<ul><li><b>Komersial, bukan kreatif:</b> memperbaikinya mengubah apakah seseorang membayar atau memilih, bukan hanya bagaimana produk terlihat. Uji: <i>\"Would fixing this change whether someone pays, or just how it looks?\"</i></li>" +
-          "<li><b>Didukung bukti dari halamanmu sendiri:</b> bisa ditunjuk ke kotak 8 Canvas atau ke skor rendah di Scorecard.</li>" +
+          "<li><b>Didukung bukti:</b> bisa ditunjuk asalnya (mis. kotak 8 Canvas atau skor rendah di Scorecard, kalau kamu mengisinya).</li>" +
           "<li><b>Ditulis sebagai masalah:</b> hal yang belum diketahui atau belum terbukti, bukan tindakan.</li></ul>" +
           "<p>Halaman ini juga mengisi tiga bagian Commercial Brand Audit: <i>Key commercial problem</i>, <i>Three strategic priorities</i>, dan <i>Cross-stream responsibility map</i>.</p>",
         deeper: {
@@ -603,10 +603,10 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         reverse: {
           title: "Cek terbalik sebelum submit",
           items: [
-            "Ketiga masalah terdengar seperti \"We don't know if…\", bukan \"We will…\"?",
-            "Tiap masalah tercentang ke kotak 8 atau ke skor 1–2?",
-            "Di Cek kelengkapan, tiap masalah punya satu kalimat kenapa memperbaikinya mengubah apakah orang membayar atau memilih?",
-            "Tiap permintaan punya apa, kenapa, dan kapan, dan bisa dikerjakan orang asing tanpa menebak?"
+            "Masalah utamamu terdengar seperti \"We don't know if…\", bukan \"We will…\"?",
+            "Masalahmu bisa ditunjuk asalnya (kotak 8 atau skor 1–2, kalau kamu mengisi halaman itu)?",
+            "Bisa kamu jawab dalam satu kalimat: kalau masalah ini selesai, apa yang berubah dalam keputusan orang membayar atau memilih?",
+            "Kalau kamu menulis permintaan ke stream lain: tiap permintaan punya apa, kenapa, dan kapan?"
           ]
         },
         examples: {

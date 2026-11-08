@@ -169,6 +169,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         sub: "One row per touchpoint. How does the promise actually show up there?",
         footer: "At least one row must be a touchpoint built later by someone outside this room. That's the row where brands actually break.",
         carry: { title: "Bawaan (hanya tampil, tidak disalin)", items: [
+          { id: "s3.p5.promise_proof", label: "PROMISE → PROOF (S3 hlm. 5) — janji yang harus terasa di tiap touchpoint" },
           { id: "s3.p4.promise", label: "PROMISE (S3 hlm. 4)" },
           { id: "s3.p6.roof", label: "MASTER MESSAGE (S3 hlm. 6)" },
           { id: "s1.p5.touchpoints", label: "TOUCHPOINT INVENTORY (S1 hlm. 5)" }

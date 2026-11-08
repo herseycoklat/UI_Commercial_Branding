@@ -296,6 +296,17 @@
   }
 
   /* Panel bawaan: nilai dari sesi/halaman sebelumnya ditampilkan, TIDAK disalin diam-diam. */
+  /* Field di halaman/kotak `skip` (boleh dilewati)? Dipakai agar bawaan kosong dari bagian opsional tidak terbaca sebagai perintah. */
+  function isOptionalField(id) {
+    var m = /^s(\d+)\.p(\d+)\./.exec(id); if (!m) return false;
+    var sp = CB.specs["S" + m[1]]; if (!sp) return false;
+    var pg = sp.pages.filter(function (p) { return p.p === +m[2]; })[0]; if (!pg) return false;
+    if (pg.skip) return true;
+    var f = (pg.fields || []).filter(function (x) { return x.id === id; })[0];
+    if (f && f.skip) return true;
+    return (pg.groups || []).some(function (g) { return g.skip && g.ids.indexOf(id) >= 0; });
+  }
+  CB.isOptionalField = isOptionalField;
   function renderCarry(sessId, pg, host) {
     var c = pg.carry; if (!c) return;
     var box = U.el("div", { class: "carry" });
@@ -311,7 +322,9 @@
         row.appendChild(U.el("b", { text: it.label }));
         row.appendChild(U.el("span", { class: "small muted", text: " · " + CB.pageLabel(it.id) }));
         var val = (txt && f && f.type === "table") ? carryTable(f, v)
-          : U.el("div", { class: "carryval" + (txt ? "" : " empty"), text: txt || "Belum diisi di " + CB.pageLabel(it.id) + ". Kembali dan isi dulu; halaman ini harus bisa ditelusuri ke sana." });
+          : U.el("div", { class: "carryval" + (txt ? "" : " empty"), text: txt || (isOptionalField(it.id)
+            ? "Belum diisi di " + CB.pageLabel(it.id) + " (boleh dilewati). Tidak wajib; isi kalau membantu."
+            : "Belum diisi di " + CB.pageLabel(it.id) + ". Kembali dan isi dulu; halaman ini harus bisa ditelusuri ke sana.") });
         row.appendChild(val); body.appendChild(row);
       });
     }
@@ -340,8 +353,9 @@
       var ic = U.el("span", { class: "coreic" });
       var tx = U.el("span", { class: "coretx" });
       tx.appendChild(U.el("span", { class: "coremust", text: "MUST-DO · " + it.n + " of " + CB.CORE_TOTAL }));
-      tx.appendChild(U.el("b", { text: it.label }));
-      if (it.note) tx.appendChild(U.el("span", { class: "corenote", text: " (" + it.note + ")" }));
+      tx.appendChild(U.el("b", { text: it.chain || it.label })); /* nama rantai = peta beranda (doc 74); nama Indonesia = tabel umpan balik (doc 64) */
+      var sub = [it.chain && it.chain !== it.label ? it.label : "", it.note || ""].filter(Boolean).join(", ");
+      if (sub) tx.appendChild(U.el("span", { class: "corenote", text: " · " + sub }));
       tx.appendChild(U.el("span", { class: "corewhere", text: it.where }));
       var st = U.el("span", { class: "corest" });
       row.appendChild(ic); row.appendChild(tx); row.appendChild(st);
