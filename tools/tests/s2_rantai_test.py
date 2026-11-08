@@ -18,7 +18,7 @@ OLD_GONE = ["separuh bukti untuk positioning", "Ambangnya", "tidak memenuhi amba
 NEW_S2 = ["kotak AUDIENCE di brief Sesi 4 hlm. 5", "Customer Journey Map dan KPI Tree Sesi 6", "baris <b>Price</b>".replace("<b>","").replace("</b>",""),
           "reference price", "THE TEST", "Sesi 3 hlm. 3 (bila diisi)", "Not made in Indonesia", "Silabus menganjurkan 5 per proyek",
           "Wawancara di hlm. 9 boleh dilewati", "Cek terbalik (kalau halaman ini diisi)", "Kalau skor diisi:",
-          "uji di Sesi 7 menambah jenis kedua", "kategori diambil dari matriks hlm. 6"]
+          "uji Concept Card di Sesi 7 bisa menjadi jenis kedua", "di samping kolom Reference Price", "kategori diambil dari matriks hlm. 6"]
 NEW_S3 = ["General blockbuster moviegoers: the ones who don't read comics.", "Existing Technic hobbyists.", "narrowed to 'animated family film'"]
 gate = lambda t: len(re.findall(r"\bGate\b", t))
 try:
