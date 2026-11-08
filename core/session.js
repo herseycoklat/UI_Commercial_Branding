@@ -51,6 +51,7 @@
     var comp = CB.fields[f.type], node;
     if (!comp) { node = U.el("div", { class: "box" }); node.textContent = "[komponen " + f.type + " belum tersedia]"; }
     else node = comp(sessId, f);
+    if (f.tip) { var tw = U.el("div", { class: "fieldtip-wrap" }); tw.appendChild(U.el("p", { class: "fieldtip", text: f.tip })); tw.appendChild(node); node = tw; }
     return f.skip ? makeSkip(sessId, f.skipLabel || f.label || "", [f.id], node, "skipfield") : node;
   }
 
@@ -322,10 +323,7 @@
   function coreItemsOf(spec) { return (spec.core && spec.core.items) || []; }
   /* Status satu hal inti = baris cek kelengkapan kelompoknya (group === item.k) tidak ada yang "belum" (no) atau menunggu (pending).
    * Baris "warn" (cek sendiri) tetap dihitung terisi: yang diminta hanya terisi, bukan benar. */
-  function coreStatus(rows, it) {
-    var mine = rows.filter(function (r) { return r.group === it.k; });
-    return mine.length > 0 && mine.every(function (r) { return r.state !== "no" && r.state !== "pending"; });
-  }
+  function coreStatus(rows, it) { return CB.coreDone(rows, it); }
   CB.coreStatus = function (sessId, built) {
     var spec = CB.specs[sessId], fn = CB.checks[sessId]; if (!spec || !fn) return [];
     var rows = fn(CB.data, built || builtPages(spec, CB.content[sessId] || { pages: {} }));
@@ -341,7 +339,8 @@
       var row = U.el("a", { class: "corerow", href: "#p" + it.page });
       var ic = U.el("span", { class: "coreic" });
       var tx = U.el("span", { class: "coretx" });
-      tx.appendChild(U.el("b", { text: it.n + " · " + it.label }));
+      tx.appendChild(U.el("span", { class: "coremust", text: "MUST-DO · " + it.n + " of " + CB.CORE_TOTAL }));
+      tx.appendChild(U.el("b", { text: it.label }));
       if (it.note) tx.appendChild(U.el("span", { class: "corenote", text: " (" + it.note + ")" }));
       tx.appendChild(U.el("span", { class: "corewhere", text: it.where }));
       var st = U.el("span", { class: "corest" });
@@ -352,6 +351,7 @@
     });
     card.appendChild(list);
     var sum = U.el("p", { class: "small muted coresum" }); card.appendChild(sum);
+    card.appendChild(U.el("p", { class: "small muted" }, "Sembilan hal inti Sesi 1–4 adalah satu rantai yang dipakai lagi di Sesi 5–8. <a href='index.html#rantai'>Lihat petanya di beranda</a>."));
     function draw() {
       var fn = CB.checks[sessId]; var rows = fn ? fn(CB.data, built) : [];
       var n = 0;
@@ -377,7 +377,8 @@
     ht.appendChild(U.el("span", { class: "pglabel", text: sessId + " · hlm. " + pg.p }));
     if (pg.tag) ht.appendChild(U.el("span", { class: "tag", text: pg.tag }));
     var coreIt = coreItemsOf(spec).filter(function (it) { return it.page === pg.p; })[0];
-    if (coreIt) ht.appendChild(U.el("span", { class: "coretag", text: "Hal inti " + coreIt.n + (coreIt.where.indexOf("(") > 0 ? " · " + coreIt.where.slice(coreIt.where.indexOf("(") + 1, -1) : "") }));
+    if (coreIt) ht.appendChild(U.el("span", { class: "coretag", text: "MUST-DO · " + coreIt.n + " of " + CB.CORE_TOTAL + (coreIt.where.indexOf("(") > 0 ? " · " + coreIt.where.slice(coreIt.where.indexOf("(") + 1, -1) : "") }));
+    if (coreIt) card.classList.add("mustpage");
     if (pg.skip) ht.appendChild(U.el("span", { class: "skiptag pgskip", text: "Boleh dilewati" }));
     if (pg.sub) ht.appendChild(U.el("p", { class: "wbsub", text: pg.sub }));
     head.appendChild(ht); card.appendChild(head);
@@ -812,7 +813,8 @@
         var a = U.el("a", { href: ok ? "#p" + p : "javascript:void(0)", class: ok ? "" : "pending" });
         var ci = coreItemsOf(spec).filter(function (it) { return it.page === p; })[0];
         a.innerHTML = '<span class="ord">' + (i + 1) + ".</span>hlm. " + p + " · " + U.esc(pg.title) + (ok ? "" : " (menyusul)") +
-          (ci ? ' <span class="navcore">hal inti</span>' : (pg.skip ? ' <span class="navskip">boleh dilewati</span>' : ""));
+          (ci ? ' <span class="navcore">MUST-DO · ' + ci.n + " of " + CB.CORE_TOTAL + "</span>" : (pg.skip ? ' <span class="navskip">boleh dilewati</span>' : ""));
+        if (ci) a.classList.add("navmust"); else if (pg.skip) a.classList.add("navopt");
         nav.appendChild(a);
       });
       intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: " + spec.title }));

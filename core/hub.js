@@ -188,6 +188,8 @@
     how.appendChild(ir);
     main.appendChild(how);
 
+    chainMap(main);
+
     // Sesi
     var sc = U.el("section", { class: "card" });
     sc.appendChild(U.el("h2", { text: "Sesi" }));
@@ -236,6 +238,33 @@
     main.appendChild(lg);
   }
 
+  /* Peta rantai 9 hal inti S1–S4 (v0.6.0, doc 74 butir 1; urutan = doc 73 §2). Sesi yang belum dirilis tidak tampil. */
+  function chainMap(main) {
+    if (!CB.coreChain) return;
+    var items = CB.coreChain(CB.data);
+    if (!items.length) return;
+    var card = U.el("section", { class: "card chaincard", id: "rantai" });
+    card.appendChild(U.el("h2", { text: "9 must-dos, Sessions 1–4" }));
+    card.appendChild(U.el("p", { class: "lead", text: "Sembilan hal inti ini satu rantai: tiap halaman memakai kalimat dari halaman sebelumnya, dan rantai ini dipakai lagi di Sesi 5–8. Halaman lain di Sesi 1–4 boleh dilewati." }));
+    var ol = U.el("ol", { class: "chain" });
+    var done = 0;
+    items.forEach(function (it) {
+      if (it.done) done++;
+      var li = U.el("li", { class: "chainitem" + (it.done ? " done" : "") });
+      var a = U.el("a", { href: it.sid.toLowerCase() + ".html#p" + it.page });
+      a.appendChild(U.el("span", { class: "chainic", text: it.done ? "✔" : String(it.n) }));
+      var tx = U.el("span", { class: "chaintx" });
+      tx.appendChild(U.el("b", { text: it.chain }));
+      tx.appendChild(U.el("span", { class: "chainwhere", text: "Sesi " + it.sid.slice(1) + " · " + it.where }));
+      a.appendChild(tx);
+      a.appendChild(U.el("span", { class: "chainst", text: it.done ? "terisi" : "belum" }));
+      li.appendChild(a); ol.appendChild(li);
+    });
+    card.appendChild(ol);
+    card.appendChild(U.el("p", { class: "small muted", text: done + " dari " + items.length + " terisi" + (items.length < 9 ? " · hal inti sesi berikutnya muncul saat sesinya dibuka." : ".") }));
+    main.appendChild(card);
+  }
+
   function render(notice) {
     var top = document.getElementById("topbar"), main = document.getElementById("main");
     main.innerHTML = "";
@@ -249,6 +278,9 @@
 
   CB.bootHub = function () {
     var main = document.getElementById("main");
-    CB.loadConfig().then(function () { render(); }).catch(function (e) { CB.showError(main, e.message); });
+    CB.loadConfig().then(function () {
+      render();
+      if (location.hash) { var t = null; try { t = document.querySelector(location.hash); } catch (e) { } if (t) setTimeout(function () { t.scrollIntoView(); }, 50); }
+    }).catch(function (e) { CB.showError(main, e.message); });
   };
 })();

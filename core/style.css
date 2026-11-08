@@ -514,3 +514,25 @@ details.skip > .skipbody, details.skip > .box, details.skip > div:not(.skipbody)
 details.skippage{margin:12px 0 0;}
 .sessnav .navcore{font-size:10.5px; font-weight:bold; color:#fff; background:var(--ok); border-radius:8px; padding:0 6px; margin-left:4px;}
 .sessnav .navskip{font-size:10.5px; color:var(--muted); margin-left:4px; font-style:italic;}
+
+/* ---- v0.6.0 (doc 74): penanda MUST-DO, peta rantai di beranda, petunjuk Promise–Proof ---- */
+.pagehead .coretag{font-size:12.5px; padding:3px 11px; letter-spacing:.6px;}
+.card.mustpage{border-left:5px solid var(--ok);}
+.corerow .coremust{display:block; font-size:11px; font-weight:bold; letter-spacing:.5px; color:var(--ok);}
+.sessnav a.navmust{border-color:var(--ok); border-width:2px; font-weight:bold; background:#eef4ef;}
+.sessnav a.navopt{opacity:.62;}
+.sessnav .navcore{letter-spacing:.3px;}
+.fieldtip{margin:0 0 10px; padding:9px 12px; border-left:4px solid var(--ok); background:#eef4ef; border-radius:6px; font-size:14px; font-weight:bold; color:var(--deep);}
+.chaincard{border-left:5px solid var(--ok);}
+ol.chain{list-style:none; margin:12px 0 6px; padding:0; display:flex; flex-direction:column; gap:0;}
+ol.chain li{position:relative; padding-bottom:14px;}
+ol.chain li:not(:last-child)::after{content:"↓"; position:absolute; left:14px; bottom:-2px; font-size:13px; color:var(--muted); line-height:1;}
+ol.chain li a{display:flex; align-items:center; gap:12px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; background:#fff; text-decoration:none; color:var(--ink);}
+ol.chain li a:hover{border-color:var(--ok);}
+.chainic{flex:0 0 auto; width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; border:2px solid var(--line); color:var(--muted); font-size:13px; font-weight:bold;}
+ol.chain li.done .chainic{border-color:var(--ok); background:var(--ok); color:#fff;}
+.chaintx{flex:1 1 auto;}
+.chaintx b{color:var(--deep);}
+.chainwhere{display:block; font-size:12px; color:var(--muted);}
+.chainst{flex:0 0 auto; font-size:12.5px; font-weight:bold; color:var(--muted);}
+ol.chain li.done .chainst{color:var(--ok);}
