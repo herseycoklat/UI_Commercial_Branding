@@ -24,10 +24,10 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     fillOrder: [3, 2, 4, 5, 6, 7],
     /* Hal inti (dokumen 64). Lihat catatan di sessions/s1.js. */
     core: {
-      intro: "This session has two must-dos: page 2 and the lower part of page 5. Other pages are optional.",
+      intro: "This session has 2 must-dos: pages 2 and 5 (lower part). Other pages are optional.",
       items: [
-        { n: 5, k: "i5", label: "Positioning", page: 2, where: "hlm. 2" },
-        { n: 6, k: "i6", label: "Promise → Proof", page: 5, where: "hlm. 5 (bagian bawah)" }
+        { n: 5, k: "i5", chain: "Positioning", label: "Positioning", page: 2, where: "hlm. 2" },
+        { n: 6, k: "i6", chain: "Promise → Proof", label: "Promise → Proof", page: 5, where: "hlm. 5 (bagian bawah)" }
       ]
     },
     pages: [
@@ -99,7 +99,8 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
             pairs: [{ k: "playful_serious", left: "Playful", right: "Serious" }, { k: "mass_niche", left: "Mass", right: "Niche" }, { k: "warm_cool", left: "Warm", right: "Cool" },
               { k: "bold_safe", left: "Bold", right: "Safe" }, { k: "modern_classic", left: "Modern", right: "Classic" }] },
           { id: "s3.p5.why_placed", skip: true, type: "lines", pairsFrom: "s3.p5.sliders", label: "WHY WE PLACED IT THERE", hint: "One line per slider — tie it to your positioning statement." },
-          { id: "s3.p5.promise_proof", type: "list", label: "PROMISE → PROOF", addText: "+ Tambah promise",
+          { id: "s3.p5.promise_proof", type: "list", label: "PROMISE → PROOF",
+            tip: "Your first promise is the 'that [benefit]' part of your positioning statement — write it as the first row. The Brand Platform page is optional.", /* doc 74 butir 4 (doc 67 + 71); teks app, bukan workbook */ addText: "+ Tambah promise",
             hint: "List every promise from your platform and its real, named proof. Mark each: REAL · PLANNED (owner + deadline) · UNKNOWN → shrink it until it is true (place · time · who · how much). Never delete it, never leave it standing.",
             guide: "<p><b>Bukti yang baik:</b> <i>verifiable</i> (bisa dicek orang luar tanpa harus percaya pada kita), <i>specific</i> (angka, nama, dokumen, sesuatu yang bisa dicoba), <i>relevant</i> (membuktikan janji yang sama, bukan janji lain).</p><p><b>Status:</b> <b>REAL (nyata)</b> = lolos tiga syarat hari ini. <b>PLANNED</b> = akan ada; tulis <i>owner</i> dan <i>deadline</i>. <b>UNKNOWN</b> = belum ada; janji dikecilkan, bukan dihapus. Empat cara mengecilkan janji: <b>tempat, waktu, siapa, seberapa</b>.</p><p><b>Jenis bukti yang sah</b> (silabus §7): wawancara audiens, uji prototipe, data media sosial atau platform, ulasan komunitas, data pasar sekunder, analisis pesaing, penjualan atau pre-order, penilaian ahli, dan fakta produk yang bisa dicek. Bukti yang kuat untuk capstone biasanya <b>kecil tapi nyata</b>. Jenis dihitung dari caranya: lima wawancara tetap satu jenis (penting untuk penilai).</p><p>Setiap pilar Message House (hlm. 6) harus punya baris di tabel ini. Belum ada? Tambahkan barisnya dulu.</p>",
             emptyText: "Belum ada promise. Mulai dari kotak PROMISE di hlm. 4.",

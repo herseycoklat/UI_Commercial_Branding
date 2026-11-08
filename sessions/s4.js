@@ -35,11 +35,11 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
     /* Hal inti (dokumen 64). Urutan kartu = urutan tabel umpan balik: 7 Touchpoint (hlm. 8), 8 Brand codes (hlm. 6), 9 Brief (hlm. 5). */
     core: {
-      intro: "This session has three must-dos: pages 8, 6 and 5. Other pages are optional.",
+      intro: "This session has 3 must-dos: pages 8, 6 and 5. Other pages are optional.",
       items: [
-        { n: 7, k: "i7", label: "Touchpoint (Everywhere)", page: 8, where: "hlm. 8" },
-        { n: 8, k: "i8", label: "Brand codes (Like yourself)", page: 6, where: "hlm. 6" },
-        { n: 9, k: "i9", label: "Brief (Looking)", page: 5, where: "hlm. 5" }
+        { n: 7, k: "i7", chain: "Touchpoints", label: "Touchpoint (Everywhere)", page: 8, where: "hlm. 8" },
+        { n: 8, k: "i8", chain: "Brand codes", label: "Brand codes (Like yourself)", page: 6, where: "hlm. 6" },
+        { n: 9, k: "i9", chain: "Brief", label: "Brief (Looking)", page: 5, where: "hlm. 5" }
       ]
     },
     pages: [

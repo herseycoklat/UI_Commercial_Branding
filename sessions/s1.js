@@ -15,8 +15,8 @@ CB.specs.S1 = {
   fillOrder: [2, 3, 5, 4, 6, 7, 8],
   /* Hal inti (dokumen 64, 5 Nov 2026). Halaman/kotak ber-`skip` boleh dilewati: tetap ada, dilipat, tidak pernah dihitung "kurang". */
   core: {
-    intro: "This session has one must-do: your main commercial problem, at the top of page 7. Other pages are optional.",
-    items: [{ n: 1, k: "i1", label: "Masalah komersial utama", note: "cukup satu", page: 7, where: "hlm. 7 (atas)" }]
+    intro: "This session has 1 must-do: page 7 (top part). Other pages are optional.",
+    items: [{ n: 1, k: "i1", chain: "Main problem", label: "Masalah komersial utama", note: "cukup satu", page: 7, where: "hlm. 7 (atas)" }]
   },
   pages: [
     {

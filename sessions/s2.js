@@ -19,11 +19,11 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
     /* Hal inti (dokumen 64). Lihat catatan di sessions/s1.js. */
     core: {
-      intro: "This session has three must-dos: pages 4, 5 and 6. Other pages are optional.",
+      intro: "This session has 3 must-dos: pages 4, 5 and 6. Other pages are optional.",
       items: [
-        { n: 2, k: "i2", label: "Audiens utama", page: 4, where: "hlm. 4" },
-        { n: 3, k: "i3", label: "Insight dan kebutuhan", page: 5, where: "hlm. 5" },
-        { n: 4, k: "i4", label: "Kompetitor", page: 6, where: "hlm. 6" }
+        { n: 2, k: "i2", chain: "Primary audience", label: "Audiens utama", page: 4, where: "hlm. 4" },
+        { n: 3, k: "i3", chain: "Insight", label: "Insight dan kebutuhan", page: 5, where: "hlm. 5" },
+        { n: 4, k: "i4", chain: "Competitors", label: "Kompetitor", page: 6, where: "hlm. 6" }
       ]
     },
     pages: [

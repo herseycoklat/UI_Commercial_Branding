@@ -21,6 +21,8 @@ Situs statis (tanpa server, tanpa build step, tanpa library CDN). Mahasiswa meng
 
 **Hal inti dan "Boleh dilewati" (v0.5.0).** Hal inti per sesi ada di `core.items` pada `sessions/sN.js`; halaman atau kotak yang boleh dilewati diberi `skip: true` (dilipat default, tidak pernah dihitung kurang). Cek kelengkapan di `core/checks.js` hanya memuat baris hal inti (`group` = kunci hal inti). Teks tampil tanpa kata "Gate" diatur lewat `show: { … }` di spec (`core/show.js`), supaya teks workbook PPT di spec tetap utuh untuk audit. Panel "cek tiga tes" S4 dimatikan lewat `CB.FEATURES.tigaTes = false` di `core/session.js`.
 
+**Penanda MUST-DO dan peta rantai (v0.6.0).** Tiap hal inti punya `chain` (nama di peta beranda) dan nomor `n` 1–9; halaman wajib berlabel "MUST-DO · n of 9" dan disorot di navigasi. `CB.coreChain()` di `core/checks.js` menghitung status rantai untuk beranda (sesi yang belum dirilis tidak ikut). Petunjuk satu baris di atas kotak memakai properti spec `tip` (teks app, bukan workbook).
+
 **Rollback.** Di GitHub: *Commits* → pilih commit sebelum masalah → *Revert*.
 
 ## Struktur

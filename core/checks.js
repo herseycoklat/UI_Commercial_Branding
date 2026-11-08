@@ -181,3 +181,29 @@
     return out;
   };
 })();
+
+/* ---------- status hal inti, dipakai panel sesi dan peta rantai di beranda (v0.6.0, doc 74) ---------- */
+(function () {
+  "use strict";
+  var CB = window.CB;
+  CB.CORE_TOTAL = 9;
+  /* Satu hal inti terisi = baris cek kelompoknya tidak ada yang "no" atau "pending". "warn" tetap dihitung terisi. */
+  CB.coreDone = function (rows, it) {
+    var mine = rows.filter(function (r) { return r.group === it.k; });
+    return mine.length > 0 && mine.every(function (r) { return r.state !== "no" && r.state !== "pending"; });
+  };
+  /* Rantai sembilan hal inti S1–S4 berurutan (n 1…9), hanya sesi yang dirilis (atau mode pratinjau). */
+  CB.coreChain = function (data) {
+    var out = [];
+    ["S1", "S2", "S3", "S4"].forEach(function (sid) {
+      var spec = (CB.specs || {})[sid], fn = CB.checks[sid];
+      if (!spec || !spec.core || !fn || (CB.isReleased && !CB.isReleased(sid))) return;
+      var rows = fn(data || CB.data, spec.pages.map(function (p) { return p.p; }));
+      spec.core.items.forEach(function (it) {
+        out.push({ sid: sid, n: it.n, k: it.k, chain: it.chain || it.label, label: it.label, page: it.page, where: it.where, done: CB.coreDone(rows, it) });
+      });
+    });
+    return out.sort(function (a, b) { return a.n - b.n; });
+  };
+})();
+
