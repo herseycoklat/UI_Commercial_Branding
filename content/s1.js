@@ -28,9 +28,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p><b>Urutan isi:</b> sisi kiri dulu (kotak 1, 3, 5), lalu sisi kanan (kotak 2, 4, 6). Setelah itu kotak 7, dan kotak 8 paling akhir.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini, bersama Commercial Readiness Scorecard (hlm. 6), adalah bahan untuk masalah di hlm. 7 atas. Silabus berbunyi <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Setiap masalah yang kamu tulis di hlm. 7 harus bisa ditunjuk asalnya, yaitu satu butir di kotak 8 atau satu skor rendah di hlm. 6. Kotak 8 yang kosong berarti masalahmu tidak punya jejak.</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, ia bersama Commercial Readiness Scorecard (hlm. 6) menjadi bahan untuk masalah di hlm. 7 atas, yang wajib. Silabus berbunyi <i>\"The team has defined a valid commercial-branding problem and priority.\"</i> Masalah yang kamu tulis di hlm. 7 sebaiknya bisa ditunjuk asalnya, yaitu satu butir di kotak 8 atau satu skor rendah di hlm. 6. Kalau kamu tidak mengisi keduanya, tulis masalah yang buktinya bisa kamu tunjuk dengan cara lain.</p>" +
           "<p>Halaman ini melatih CLO 1 — Market and Brand Diagnosis: <i>\"Analyse the market, audience, competition, cultural context, and commercial branding problems … using relevant evidence.\"</i> Isinya menjadi bagian <i>Product description</i> dan <i>Current brand condition</i> dari Commercial Brand Audit, output Sesi 1 yang masuk komponen Commercial Brand and Market Diagnostic.</p>" +
-          "<p>Ke depan: kotak 4 dan 7 menjadi bahan Evidence Review di Sesi 2 (hlm. 2), tempat kamu memilah fakta, interpretasi, dan tebakan. Kotak 6 menjadi titik awal Competitor Benchmark Matrix di Sesi 2 (hlm. 6).</p>",
+          "<p>Ke depan, bila diisi: kotak 4 dan 7 menjadi bahan Evidence Review di Sesi 2 (hlm. 2, juga boleh dilewati), tempat kamu memilah fakta, interpretasi, dan tebakan. Kotak 6 menjadi titik awal Competitor Benchmark Matrix di Sesi 2 hlm. 6, yang wajib.</p>",
         deeper: {
           summary: "Deeper read — empat jebakan yang membuat Canvas terlihat lebih sehat dari kenyataannya",
           html:
@@ -167,7 +167,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         },
         callout: "<b>Catatan produk:</b> Produkmu bisa berupa barang, layanan, event, kampanye, atau dokumen riset. Kalau dokumen riset: tulis siapa yang membacanya, apa yang kamu dapat darinya, berapa biayanya, dan bagaimana kamu tahu itu tercapai.",
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> silabus Sesi 1 meminta kamu memetakan <i>core product, user experience, emotional benefit, social benefit, commercial objective, and potential brand meaning</i>. Ini cara paling langsung melihat hubungan antara strategi produk dan strategi brand: di titik mana benda yang kamu buat berubah menjadi alasan orang membayar.</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, ia membantu menjawab apa yang silabus Sesi 1 minta: memetakan <i>core product, user experience, emotional benefit, social benefit, commercial objective, and potential brand meaning</i>. Ini cara paling langsung melihat hubungan antara strategi produk dan strategi brand: di titik mana benda yang kamu buat berubah menjadi alasan orang membayar.</p>" +
           "<p>Peta ini juga menjaga kamu dari kesalahan paling mahal di mata kuliah ini, yaitu melompat dari \"ini fiturnya\" ke \"begini kami dapat uang\" tanpa pernah tahu apa yang dirasakan audiens. Kotak 5 di sini yang nanti kamu uji di Commercial viability (hlm. 6).</p>",
         deeper: {
           summary: "Deeper read — tiga bentuk kotak 5 dan 6 yang berbeda di empat kasus",
@@ -276,7 +276,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p>Kalau kuadran eksternal-tinggi memang belum bisa kamu isi, tulis UNKNOWN, dan bawa celah itu ke kotak 8 Canvas (hlm. 2).</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> Stakeholder map adalah bagian ke-4 Commercial Brand Audit, output Sesi 1. Lebih dari itu, ia menunjukkan siapa yang benar-benar menentukan nasib komersial proyekmu. Tim yang lupa pemegang uang biasanya merancang produk yang disukai audiens tapi tidak pernah sampai ke mereka.</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, Stakeholder map adalah bagian ke-4 Commercial Brand Audit, output Sesi 1. Lebih dari itu, ia menunjukkan siapa yang benar-benar menentukan nasib komersial proyekmu. Tim yang lupa pemegang uang biasanya merancang produk yang disukai audiens tapi tidak pernah sampai ke mereka.</p>" +
           "<p>Nama-nama di kuadran eksternal-tinggi akan muncul lagi saat kamu membahas mitra dan distribusi di sesi-sesi berikutnya.</p>",
         deeper: {
           summary: "Deeper read — siapa \"kritikus\" yang benar-benar berkuasa",
@@ -368,7 +368,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p>Halaman ini sengaja diisi sebelum Stakeholder Map (hlm. 4): konkret dan mudah, sebagai pemanasan.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> Touchpoint inventory adalah bagian ke-5 Commercial Brand Audit. Kotak 5 di Brand Audit Canvas adalah ringkasannya; halaman ini rinciannya. Satu akun yang ditinggalkan bisa merusak kepercayaan lebih cepat daripada akun yang belum ada, jadi halaman ini juga daftar pekerjaan rumah tercepatmu.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, Touchpoint inventory adalah bagian ke-5 Commercial Brand Audit. Kotak 5 di Brand Audit Canvas adalah ringkasannya; halaman ini rinciannya. Satu akun yang ditinggalkan bisa merusak kepercayaan lebih cepat daripada akun yang belum ada, jadi halaman ini juga daftar pekerjaan rumah tercepatmu. Inventaris yang lebih lengkap dibangun di Sesi 4 hlm. 8 (Touchpoint Consistency Matrix, wajib).</p>",
         deeper: {
           summary: "Deeper read — konteks yang menentukan deposit atau withdrawal",
           html:
@@ -482,7 +482,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini bahan kedua untuk masalah di hlm. 7. Skor 1–2 di sini adalah salah satu dari dua sumber jejak yang sah untuk tiga masalahmu di hlm. 7 (yang lain kotak 8 Canvas). Masalah tanpa jejak ke halaman ini atau kotak 8 adalah tebakan, dan tebakan bukan dasar yang kuat.</p>" +
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, ia bahan kedua untuk masalah di hlm. 7. Skor 1–2 di sini adalah salah satu dari dua sumber jejak yang sah untuk masalahmu (yang lain kotak 8 Canvas). Masalah tanpa jejak ke halaman ini atau kotak 8 harus punya bukti lain; kalau tidak, ia tebakan, dan tebakan bukan dasar yang kuat.</p>" +
           "<p>Scorecard juga harus konsisten dengan Canvas: kalau kotak 4 dan 7 berisi UNKNOWN dan sampel ramah, Evidence quality tidak mungkin 4.</p>",
         deeper: {
           summary: "Deeper read — kenapa skor tinggi tidak menutupi skor rendah",
@@ -590,7 +590,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
           "<ul><li><b>Komersial, bukan kreatif:</b> memperbaikinya mengubah apakah seseorang membayar atau memilih, bukan hanya bagaimana produk terlihat. Uji: <i>\"Would fixing this change whether someone pays, or just how it looks?\"</i></li>" +
           "<li><b>Didukung bukti:</b> bisa ditunjuk asalnya (mis. kotak 8 Canvas atau skor rendah di Scorecard, kalau kamu mengisinya).</li>" +
           "<li><b>Ditulis sebagai masalah:</b> hal yang belum diketahui atau belum terbukti, bukan tindakan.</li></ul>" +
-          "<p>Halaman ini juga mengisi tiga bagian Commercial Brand Audit: <i>Key commercial problem</i>, <i>Three strategic priorities</i>, dan <i>Cross-stream responsibility map</i>.</p>",
+          "<p>Masalah 1 adalah hal inti pertama dari sembilan hal inti Sesi 1–4, dan kalimatnya dipakai lagi: di Sesi 5 ia tampil di atas Value Propositions di Business Model Canvas, dan di Tinjauan akhir Sesi 8 kamu mengecek apakah audiens utama Sesi 2 adalah orang yang terjebak di masalah ini, dan apakah BMC-mu menjawabnya. Tulis satu kalimat yang masih kamu pegang sampai akhir kursus.</p>" +
+          "<p>Halaman ini juga bahan tiga bagian Commercial Brand Audit: <i>Key commercial problem</i>, <i>Three strategic priorities</i>, dan <i>Cross-stream responsibility map</i>. Dua yang terakhir terisi bila kamu mengisi masalah 2–3 dan permintaan lintas-stream, yang boleh dilewati.</p>",
         deeper: {
           summary: "Deeper read — permintaan termurah yang menguji pertanyaan sebenarnya",
           html:
@@ -698,7 +699,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> Decision Log membuat keputusan Sesi 1 bisa dilacak. Pembaca bisa melihat bahwa tiga masalah di hlm. 7 lahir dari bukti, bukan dari selera. Log yang ditulis dari ingatan berminggu-minggu kemudian adalah tebakan, jadi tulis selagi alasannya masih segar.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, Decision Log membuat keputusan Sesi 1 bisa dilacak. Pembaca bisa melihat bahwa masalah di hlm. 7 lahir dari bukti, bukan dari selera. Log yang ditulis dari ingatan berminggu-minggu kemudian adalah tebakan, jadi tulis selagi alasannya masih segar.</p>",
         deeper: {
           summary: "Deeper read — log yang meyakinkan vs log yang hanya ada",
           html:
