@@ -858,18 +858,25 @@
       sb.onclick = function () {
         var rows = getChecks ? getChecks() : [];
         var range = CB.submittedRange(sessId);
+        /* Label Form = sesi file ini (Tahap 1 mencocokkan label dengan nama file). Bila sudah ada sesi
+         * yang lebih baru, arahkan Submit ke halaman sesi itu: file-nya memuat semua sesi, termasuk revisi ini. */
+        var label = CB.formWeekLabel(sessId) || ("Minggu " + cfg.week);
+        var latest = CB.latestOpenSession(), lcfg = latest && CB.sessionCfg(latest);
+        var newer = lcfg && lcfg.week > cfg.week ? latest : null;
+        var newerPara = newer ? "<b>Sesi " + U.esc(newer.slice(1)) + " sudah dibuka.</b> Kalau kamu sedang mengerjakannya, Submit dari halaman <a href='" + newer.toLowerCase() + ".html'>Sesi " + U.esc(newer.slice(1)) + "</a> dan pilih <b>" + U.esc(CB.formWeekLabel(newer)) + "</b> di Form: file itu juga memuat revisi " + U.esc(sessId) + " ini, jadi cukup satu file. Submit dari halaman ini hanya bila kamu memang mengirim revisi " + U.esc(sessId) + " saja." : "";
         CB.modal({
           title: "Submit " + sessId,
           paras: [
-            "File ini berisi workbook " + U.esc(range) + " dan seluruh isi tab Leadership Log-mu sampai hari ini (Leadership Log tidak perlu dikumpulkan terpisah). Simpan file ini — ini satu-satunya salinan kerjamu, dan minggu depan kamu melanjutkan dari file ini. Kumpulkan file TERBARU saja lewat Google Form, pilih Minggu " + U.esc(cfg.week) + ".",
+            "File ini berisi workbook " + U.esc(range) + " dan seluruh isi tab Leadership Log-mu sampai hari ini (Leadership Log tidak perlu dikumpulkan terpisah). Simpan file ini — ini satu-satunya salinan kerjamu, dan minggu depan kamu melanjutkan dari file ini. Kumpulkan file TERBARU saja lewat Google Form, pilih <b>" + U.esc(label) + "</b>.",
+          ].concat(newerPara ? [newerPara] : []).concat([
             "<span class='small muted'>Cek kelengkapan saat ini: " + U.esc(CB.checkSummary(rows)) + "</span>"
-          ],
+          ]),
           buttons: [{ label: "Batal", value: false, cls: "ghost" }, { label: "Unduh file", value: true, cls: "primary" }]
         }).then(function (go) {
           if (!go) return;
           var name = CB.submitSession(sessId, { rows: rows });
           st.textContent = "File diunduh: " + name;
-          CB.modal({ title: "File sudah diunduh", paras: ["Nama file: <b>" + U.esc(name) + "</b>. Biasanya ada di folder Downloads.", CB.config.form_url ? "Kumpulkan lewat <a href='" + U.esc(CB.config.form_url) + "' target='_blank' rel='noopener'>Google Form</a>, pilih Minggu " + U.esc(cfg.week) + "." : "Kumpulkan lewat Google Form yang diumumkan dosen, pilih Minggu " + U.esc(cfg.week) + "."] });
+          CB.modal({ title: "File sudah diunduh", paras: ["Nama file: <b>" + U.esc(name) + "</b>. Biasanya ada di folder Downloads.", CB.config.form_url ? "Kumpulkan lewat <a href='" + U.esc(CB.config.form_url) + "' target='_blank' rel='noopener'>Google Form</a>, pilih <b>" + U.esc(label) + "</b>." : "Kumpulkan lewat Google Form yang diumumkan dosen, pilih <b>" + U.esc(label) + "</b>."] });
         });
       };
       /* tautan #pN / #cek ke bagian yang dilipat: buka dulu, baru gulir */

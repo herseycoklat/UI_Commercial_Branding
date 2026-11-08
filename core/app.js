@@ -21,7 +21,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.6.4";
+  var APP_VERSION = "0.6.5";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
@@ -278,6 +278,24 @@
     if (CB.preview) return true;
     var t = Date.parse(c.release);
     return !isNaN(t) && Date.now() >= t;
+  };
+  /* Sesi yang halamannya sudah ada di repo (hub dan modal Submit memakai daftar yang sama). */
+  CB.LIVE_PAGES = ["S1", "S2", "S3", "S4"];
+  /* Label pilihan minggu di Google Form, mis. "Week 1 - S1 + S2", "Week 3 - S4" (dibangun dari config). */
+  CB.formWeekLabel = function (sid) {
+    var c = CB.sessionCfg(sid); if (!c) return "";
+    var all = (CB.config && CB.config.sessions) || {};
+    var ids = Object.keys(all).filter(function (k) { return all[k].week === c.week; }).sort();
+    return "Week " + c.week + " - " + ids.join(" + ");
+  };
+  /* Sesi terbaru yang sudah dibuka (urutan minggu). Dipakai untuk mengarahkan Submit ke file minggu berjalan. */
+  CB.latestOpenSession = function () {
+    var best = null;
+    CB.LIVE_PAGES.forEach(function (sid) {
+      var c = CB.sessionCfg(sid);
+      if (c && CB.isReleased(sid) && (!best || c.week >= CB.sessionCfg(best).week)) best = sid;
+    });
+    return best;
   };
   CB.fill = function (text, sessId) {
     // Placeholder tanggal dari config. Konten tidak pernah memuat tanggal kalender.

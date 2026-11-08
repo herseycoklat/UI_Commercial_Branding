@@ -20,6 +20,7 @@ NEW_S2 = ["kotak AUDIENCE di brief Sesi 4 hlm. 5", "Customer Journey Map dan KPI
           "Wawancara di hlm. 9 boleh dilewati", "Cek terbalik (kalau halaman ini diisi)", "Kalau skor diisi:",
           "uji Concept Card di Sesi 7 bisa menjadi jenis kedua", "di samping kolom Reference Price", "kategori diambil dari matriks hlm. 6"]
 NEW_S3 = ["General blockbuster moviegoers: the ones who don't read comics.", "Existing Technic hobbyists.", "narrowed to 'animated family film'"]
+EXPECT = re.search(r'APP_VERSION = "([^"]+)"', open(os.path.join(root, "core/app.js")).read()).group(1)
 gate = lambda t: len(re.findall(r"\bGate\b", t))
 try:
   with sync_playwright() as p:
@@ -45,7 +46,7 @@ try:
         ok(f"{u}: Gate 0 (halaman+cek)", gate(t) == 0, gate(t))
         if u == "index.html":
             ok("hub: panel 9 must-dos tampil", "9 must-dos, Sessions 1–4" in t)
-            ver = pg.evaluate("()=>window.CB && CB.APP_VERSION"); ok("versi 0.6.4", ver == "0.6.4", ver)
+            ver = pg.evaluate("()=>window.CB && CB.APP_VERSION"); ok("versi " + EXPECT, ver == EXPECT, ver)
         if u == "s2.html":
             for s in OLD_GONE: ok("S2 teks lama hilang: " + s, s not in t)
             for s in NEW_S2: ok("S2 teks baru ada: " + s, s in t)

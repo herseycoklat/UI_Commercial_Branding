@@ -375,7 +375,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             name: "Disney/Marvel (Iron Man)", sub: "Written for a designer who has never met the team — including the line the team had to reject.", caveat: CAVEAT,
             values: {
               "s4.p5.objective": "Give the design, trailer and key-art teams enough direction to introduce Iron Man to people who have never read the comic — without dictating the artwork or mentioning the wider universe.",
-              "s4.p5.audience": "General moviegoers who don’t know the character (primary, Session 2). Secondary: comic readers, who arrive anyway and must never feel talked down to.",
+              "s4.p5.audience": "General blockbuster moviegoers who don’t know the character (primary, Session 2). Secondary: comic readers, who arrive anyway and must never feel talked down to.",
               "s4.p5.positioning": "“…the superhero film that works completely on its own” (Session 3 sentence, unchanged). The identity must carry BOTH halves: complete in itself, and a lead worth watching.",
               "s4.p5.tone": "Witty, not silly. Grounded, not solemn. Self-aware, not smug. RIGHT: “Start here. No homework.” WRONG: “Fans have waited decades for this.”",
               "s4.p5.mandatory": "Legible in black and white at thumbnail size · helmet works without the wordmark · studio endorsement line on every asset · needs no comic knowledge · works on a poster AND a 40mm tag.",
