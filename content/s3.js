@@ -37,7 +37,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
 </ul>
 <p>Satu kalimat, satu gagasan. Kalau bukti yang kamu tulis belum ada, jangan disamarkan: tandai <b>PLANNED</b> atau <b>UNKNOWN</b> di dalam kalimat.</p>`
         },
-        why: `<p><b class='k'>Kenapa halaman ini penting:</b> kalimat yang kamu kunci di sini menjadi <i>"team constitution"</i>. Janjinya menjadi baris pertama Promise → Proof (hlm. 5), lalu kalimat ini dipakai lagi di brief Sesi 4, Business Model Canvas dan harga Sesi 5, pesan Sesi 6, dan Tinjauan akhir Sesi 8.</p>
+        why: `<p><b class='k'>Kenapa halaman ini penting:</b> kalimat yang kamu kunci di sini menjadi <i>"team constitution"</i>. Janjinya menjadi baris pertama Promise → Proof (hlm. 5), lalu kalimat ini dipakai lagi di brief Sesi 4, Business Model Canvas dan harga Sesi 5, pesan Sesi 6, Brand Governance Sesi 7, dan Tinjauan akhir Sesi 8.</p>
 <p>Menurut silabus §13 (<i>"The team has sufficient audience evidence and a defendable positioning"</i>), halaman ini adalah inti bagian <b>Positioning</b>: setiap blank harus bisa ditelusuri ke Sesi 1–2, kalimat lolos uji pesaing, dan memuat satu gagasan. Itu sebabnya panel di atas menampilkan hasil Sesi 2-mu: kalau sebuah blank tidak ketemu di sana, jangan diada-adakan, kembali ke bukti.</p>`,
         deeper: {
           summary: "Deeper read — Tangga Manfaat (Aaker, 2014): mesin pengisi blank [benefit]",
