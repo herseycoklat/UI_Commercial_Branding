@@ -21,11 +21,12 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.6.6";
+  var APP_VERSION = "0.6.7";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
   var KEY_EXPORTED = "cb_exported_";
+  var KEY_BACKUP = "cb_backup_"; // cadangan otomatis sebelum data browser ditimpa (maks. 3 per NIM)
   var FORBIDDEN_WORDS = /\b(APPROVED WITH A CONDITION|APPROVED|REVISION DUE)\b/;
 
   var CB = (window.CB = window.CB || {});
@@ -177,7 +178,12 @@
   function saveNow() {
     if (!CB.data) return;
     CB.data.saved_at = isoLocal();
-    var ok = lsSet(KEY_PREFIX + CB.data.identifier.nim, JSON.stringify(CB.data));
+    var nim = CB.data.identifier.nim, txt = JSON.stringify(CB.data);
+    var ok = lsSet(KEY_PREFIX + nim, txt);
+    if (!ok) { // kuota penuh: isian utama selalu didahulukan, cadangan dikorbankan (terlama dulu)
+      var bl = CB.listBackups(nim);
+      while (!ok && bl.length) { bl.pop(); if (bl.length) lsSet(KEY_BACKUP + nim, JSON.stringify(bl)); else lsDel(KEY_BACKUP + nim); ok = lsSet(KEY_PREFIX + nim, txt); }
+    }
     saveListeners.forEach(function (fn) { fn(ok); });
   }
   CB.save = function () { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 350); };
@@ -186,6 +192,40 @@
     var raw = lsGet(KEY_PREFIX + nim);
     if (!raw) return null;
     try { return migrate(JSON.parse(raw)); } catch (e) { return null; }
+  };
+  /* ---------- cadangan otomatis ----------
+   * Dipanggil sebelum data browser seorang NIM ditimpa (impor file, pemulihan, data rusak).
+   * Disimpan apa adanya (string mentah) supaya cadangan tidak ikut berubah oleh migrasi. */
+  CB.listBackups = function (nim) {
+    try { var l = JSON.parse(lsGet(KEY_BACKUP + nim) || "[]"); return Array.isArray(l) ? l : []; } catch (e) { return []; }
+  };
+  CB.backupLocal = function (nim, reason) {
+    var raw = lsGet(KEY_PREFIX + nim);
+    if (!raw) return false;
+    var list = CB.listBackups(nim);
+    if (list.length && list[0].raw === raw) return true; // isi sama dengan cadangan terakhir
+    list.unshift({ at: isoLocal(), reason: reason || "", raw: raw });
+    list = list.slice(0, 3);
+    var ok = lsSet(KEY_BACKUP + nim, JSON.stringify(list));
+    if (!ok) { list = list.slice(0, 1); ok = lsSet(KEY_BACKUP + nim, JSON.stringify(list)); } // kuota penuh: simpan yang terbaru saja
+    return ok;
+  };
+  CB.restoreBackup = function (nim, i) {
+    var b = CB.listBackups(nim)[i];
+    if (!b) return false;
+    try { migrate(JSON.parse(b.raw)); } catch (e) { return false; }
+    CB.backupLocal(nim, "sebelum pemulihan cadangan " + b.at);
+    return lsSet(KEY_PREFIX + nim, b.raw);
+  };
+  /* Jumlah isian terisi per sesi: untuk membandingkan file impor dengan data browser. */
+  CB.filledCounts = function (d) {
+    var out = {};
+    Object.keys((d && d.sessions) || {}).forEach(function (k) {
+      var cur = d.sessions[k].current || {};
+      out[k] = Object.keys(cur).filter(function (id) { return CB.isFilled(cur[id]); }).length;
+    });
+    out._lead = ((d && d.leadership_log && d.leadership_log.entries) || []).filter(function (e) { return CB.isFilled(e.text); }).length;
+    return out;
   };
   CB.activeNim = function () { return lsGet(KEY_ACTIVE); };
   CB.setActive = function (nim) { lsSet(KEY_ACTIVE, nim); };
@@ -225,6 +265,7 @@
   CB.startStudent = function (f) {
     var nim = String(f.nim1).trim();
     var existing = CB.loadLocal(nim);
+    if (!existing && lsGet(KEY_PREFIX + nim)) CB.backupLocal(nim, "data browser tidak terbaca, sebelum mulai baru");
     var d = existing || blankData({ nim: nim });
     d.identifier.full_name = String(f.full_name).trim();
     d.identifier.email = String(f.email).trim();
@@ -374,9 +415,30 @@
       r.readAsText(file);
     });
   };
+  /* Impor = data browser untuk NIM ini diganti isi file.
+   * Pengaman (8 Nov): (1) data browser selalu dicadangkan dulu (pulihkan.html);
+   * (2) bila file lebih lama, atau ada sesi/Leadership Log yang isiannya lebih banyak di browser,
+   *     tampil peringatan kedua dan impor baru jalan setelah dikonfirmasi (halaman dimuat ulang). */
   CB.acceptImport = function (d) {
-    CB.data = d; CB.setActive(d.identifier.nim); saveNow();
-    lsSet(KEY_EXPORTED + d.identifier.nim, CB.data.saved_at);
+    var nim = d.identifier.nim, local = CB.loadLocal(nim);
+    function go() {
+      CB.backupLocal(nim, "sebelum impor file (disimpan " + d.saved_at + ")");
+      CB.data = d; CB.setActive(nim); saveNow();
+      lsSet(KEY_EXPORTED + nim, CB.data.saved_at);
+    }
+    var older = !!(local && local.saved_at && d.saved_at && new Date(d.saved_at).getTime() < new Date(local.saved_at).getTime());
+    var lc = local ? CB.filledCounts(local) : {}, fc = CB.filledCounts(d), more = [];
+    Object.keys(lc).forEach(function (k) {
+      if (lc[k] > (fc[k] || 0)) more.push((k === "_lead" ? "Leadership Log" : k) + ": " + lc[k] + " isian di browser, " + (fc[k] || 0) + " di file");
+    });
+    if (!older && !more.length) { go(); return Promise.resolve(true); }
+    var paras = [];
+    if (older) paras.push("File ini disimpan <b>" + esc(fmtDate(d.saved_at)) + "</b>, lebih lama dari isian di browser ini (<b>" + esc(fmtDate(local.saved_at)) + "</b>).");
+    if (more.length) paras.push("Isian di browser lebih banyak untuk: <b>" + esc(more.join(" · ")) + "</b>.");
+    paras.push("Kalau kamu tetap memakai file ini, isian browser disimpan sebagai cadangan dan bisa dikembalikan di halaman <a href='pulihkan.html'>Pulihkan</a>. Kalau ragu, pilih Batal.");
+    return CB.modal({ title: "File ini mungkin bukan versi terakhirmu", paras: paras,
+      buttons: [{ label: "Batal, pakai isian browser", value: false, cls: "ghost" }, { label: "Tetap pakai file", value: true, cls: "primary" }] })
+      .then(function (ok) { if (ok) { go(); location.reload(); } return ok; });
   };
 
   /* ---------- modal sederhana ---------- */

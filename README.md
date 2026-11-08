@@ -70,3 +70,15 @@ python3 tools/audit.py S2 tools/extracts/S2.md
 
 ## Proyek di luar daftar
 Di pilihan Proyek (halaman utama) ada opsi "+ Proyek lain (tidak ada di daftar)". Memilihnya memunculkan kotak nama proyek. Di file hasil unduhan: `identifier.group_id = "LAIN"` dan `identifier.project_name` = nama yang diketik. Penerima file mengelompokkan tim lewat `group_id`, jadi semua file ber-ID `LAIN` perlu dicocokkan manual lewat nama proyek atau ditambahkan ke `config/projects.json`.
+
+## Kontrak data mahasiswa (8 Nov 2026) — wajib diikuti semua chat yang mengubah app
+
+Format file tetap `cb-student/1` sampai kursus selesai. Tujuannya: file Week 1 sampai Final selalu terbuka utuh di versi app mana pun.
+
+1. **Field yang sudah dirilis tidak boleh dihapus, diganti nama, atau diganti tipe.** Kalau bentuknya harus berubah: buat ID baru, dan tampilkan isian lama sebagai "isian lama" lewat `migrate()` (contoh: `s3.p5.why_placed` → `{_legacy}`), lalu daftarkan perubahan itu di `MIGRASI_SAH` di `tools/tests/regresi_json.py`.
+2. **Setiap sesi dikunci pada hari rilisnya:** `python3 tools/audit.py SN tools/extracts/SN.md --lock`, lalu `python3 tools/kamus_field.py > docs/kamus-field.md`.
+3. **Yang baru hanya menambah ID.** Kunci tak dikenal di file dibiarkan dan ikut diunduh ulang.
+4. **Tampilkan, jangan salin** (doc 73 aturan 2): halaman hilir membaca `sessions.SN.current` milik sesi hulu, tidak menyimpan salinannya.
+5. **Satu file berisi semua sesi.** File terbaru per NIM adalah yang dibaca. Penilai merujuk ID dari `docs/kamus-field.md`, bukan dari ingatan atau dokumen lama; field kosong = "belum diisi", bukan galat.
+6. **Impor tidak boleh menghilangkan isian diam-diam.** `CB.acceptImport` selalu mencadangkan data browser (maks. 3 per NIM, `cb_backup_<NIM>`), dan memberi peringatan kedua bila file lebih lama atau isiannya lebih sedikit. Pemulihan: `pulihkan.html` (tidak ditautkan dari hub; dosen membagikan link bila perlu). Bila penyimpanan penuh, isian utama didahulukan dan cadangan dikorbankan.
+7. **Uji sebelum rilis:** `python3 tools/tests/regresi_json.py buat-contoh <folder>` lalu `python3 tools/tests/regresi_json.py uji <folder>`. Tambahkan file mahasiswa asli (diunduh dari Drive Form) ke folder yang sama bila ada, **di luar repo**. Rilis hanya bila semua file "utuh".
