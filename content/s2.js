@@ -1,6 +1,6 @@
 /* content/s2.js — teks Sesi 2: teori, kenapa penting, deeper read, cek terbalik, contoh empat kasus.
  * Sumber teori: Sesi-2-Bedah-Mendalam_v4.md (Kotler, Keller & Chernev 2022; Osterwalder et al. 2014;
- * Bland & Osterwalder 2019), silabus §7, §8 Sesi 2, §13, §15; claude/13 (ambang Gate 2 D1/D2).
+ * Bland & Osterwalder 2019), silabus §7, §8 Sesi 2, §15; pemakaian hilir mengikuti claude/64, 67, 73 §2 (v0.6.4).
  * Contoh: verbatim dari S2-worked-example-{jumbo,gojek,marvel,lego}.pptx (v2, 14 Okt 2026).
  * Baris di Competitor Benchmark Matrix contoh diurutkan sesuai urutan workbook (Who exactly? di atas).
  * Konten tidak boleh memuat tanggal kalender; pakai {{due}} / {{interviews_due}}.
@@ -32,8 +32,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p>Di app, tiap FACT punya isian <b>Sumber</b>, <b>Angka</b>, dan <b>Jenis bukti</b> (daftar silabus §7), supaya jenis buktimu terhitung.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> Sesi 2 menyiapkan separuh bukti untuk positioning di Sesi 3 (silabus §13): <i>\"sufficient audience evidence and a defendable positioning\"</i>. Ambangnya: bukti menyentuh segmen primer, minimal <b>dua jenis bukti</b> dari daftar §7, salah satunya dari audiens primer di luar lingkar tim. Kolom FACT inilah tempat kamu menghitungnya dengan jujur.</p>" +
-          "<p>Bahan halaman ini datang dari kotak 4 dan 7 Brand Audit Canvas di Sesi 1. Kebiasaan memilah fakta dari tebakan dipakai lagi di sesi-sesi berikutnya, terutama saat menulis angka pendapatan.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, kolom FACT membantu dua keputusan wajib minggu ini: memilih audiens utama (hlm. 4) dan menjawab jujur apakah BUT di hlm. 5 diucapkan orang atau masih asumsi. Silabus §7 meminta bukti dari minimal dua jenis untuk keseluruhan proyek: Competitor Benchmark Matrix (hlm. 6) sudah satu jenis; uji Concept Card di Sesi 7 bisa menjadi jenis kedua, dan wawancara atau FACT dari audiens di halaman ini juga dihitung.</p>" +
+          "<p>Bahan halaman ini datang dari Brand Audit Canvas di Sesi 1. Kebiasaan memilah fakta dari tebakan dipakai lagi di Sesi 5 hlm. 4, saat reference price yang belum dicek ditandai GUESS.</p>",
         deeper: {
           summary: "Deeper read — kolom FACT yang pendek itu normal",
           html:
@@ -107,8 +107,8 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> SLO Sesi 2 berbunyi <i>\"Students can define commercially meaningful audience segments and formulate evidence-based audience insights.\"</i> Halaman ini adalah awal corong: 2–4 kandidat, yang lalu dipersempit menjadi satu primary di hlm. 4.</p>" +
-          "<p>Segmen yang kamu pilih nanti mengisi blank <i>[segment]</i> di Positioning Statement Sesi 3, dan kalimat kategori menentukan siapa yang masuk Competitor Benchmark Matrix di hlm. 6.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, ia membantu langkah yang wajib di hlm. 4. SLO Sesi 2 berbunyi <i>\"Students can define commercially meaningful audience segments and formulate evidence-based audience insights.\"</i> Halaman ini adalah awal corong: 2–4 kandidat, yang lalu dipersempit menjadi satu primary di hlm. 4.</p>" +
+          "<p>Kalimat kategori, bila ditulis, dipakai di blank <i>[category]</i> Positioning Statement Sesi 3 hlm. 2 dan menentukan siapa yang masuk Competitor Benchmark Matrix di hlm. 6. Kalau halaman ini dilewati, kategori diambil dari matriks hlm. 6.</p>",
         deeper: {
           summary: "Deeper read — segmen terkuat sering punya bukti terlemah",
           html:
@@ -198,10 +198,10 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<li><b>REVENUE POTENTIAL</b> — ada bukti mereka membelanjakan uang untuk hal semacam produkmu?</li>" +
             "</ul>" +
             "<p>Sejuta orang yang tidak bisa kamu jangkau nilainya lebih kecil daripada seribu orang yang bisa. Intuisi akan menarikmu ke segmen terbesar; ACCESSIBLE yang menahannya.</p>" +
-            "<p><b>Primary</b> adalah audiens yang kamu desain untuknya. <b>Secondary</b> adalah audiens yang kamu aktifkan nanti. Tulis juga alasan kenapa yang lain bukan primary. Total dihitung otomatis; kalau seri, tulis alasan memecahnya.</p>"
+            "<p><b>Primary</b> adalah audiens yang kamu desain untuknya; ini satu-satunya yang wajib di halaman ini. Tulis juga alasan singkat kenapa yang lain bukan primary. Skor di atas dan <b>Secondary</b> (audiens yang kamu aktifkan nanti) boleh dilewati. Kalau skor diisi, total dihitung otomatis; kalau seri, tulis alasan memecahnya.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> ini satu-satunya titik komitmen eksplisit di Sesi 2. Primary audience mengisi Value Proposition Canvas di hlm. 5 dan blank <i>[segment]</i> di Positioning Statement Sesi 3, lalu dipakai lagi di brief identitas Sesi 4 dan rencana kanal Sesi 6. Kalau primary-nya kabur, semua halaman sesudahnya ikut kabur.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> ini satu-satunya titik komitmen eksplisit di Sesi 2, dan kalimat PRIMARY AUDIENCE adalah mata rantai yang paling sering dipakai lagi: Value Proposition Canvas di hlm. 5, blank <i>[segment]</i> di Positioning Statement Sesi 3 hlm. 2, kotak AUDIENCE di brief Sesi 4 hlm. 5, Customer Segments di BMC Sesi 5, lalu Customer Journey Map dan KPI Tree Sesi 6. Tulis satu segmen dengan jelas; kalimat yang sama dibaca di semua halaman itu. Skor Audience Priority dan secondary boleh dilewati: keduanya membantu memilih, tapi yang dipakai lagi hanya primary.</p>",
         deeper: {
           summary: "Deeper read — empat pola memilih primary di empat kasus",
           html:
@@ -215,9 +215,9 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         reverse: {
           title: "Cek terbalik sebelum lanjut",
           items: [
-            "Penjumlahan tiap baris sudah dicek?",
-            "Primary adalah total tertinggi, atau kamu menulis alasan kalau memilih yang lain?",
-            "Secondary dan alasan memecah seri (kalau ada) tertulis?",
+            "Kalau skor diisi: penjumlahan tiap baris sudah dicek?",
+            "Kalau skor diisi: primary adalah total tertinggi, atau kamu menulis alasan kalau memilih yang lain?",
+            "Secondary dan alasan memecah seri tertulis (bila diisi)?",
             "Kamu bisa menjelaskan kenapa segmen lain bukan dasar keputusan desain?"
           ]
         },
@@ -273,7 +273,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p><b>Insight sentence</b> ditulis terakhir: [Who] wants [motivation] — BUT [barrier] — SO [opportunity]. Insight bukan fakta, ia <b>tension</b>. BUT-nya wajib salah satu pain di kotak kiri. <b>The BUT is where the business lives.</b></p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> insight sentence menjadi blank <i>[insight]</i> di Positioning Statement Sesi 3. Kalau BUT-nya berasal dari pain yang diucapkan orang, kalimat positioningmu berdiri di atas bukti. Kalau dari asumsi, itu tetap jujur, asal ditandai, dan diuji lewat wawancara (hlm. 9, boleh dilewati).</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> insight sentence menjadi blank <i>[insight]</i> di Positioning Statement Sesi 3 hlm. 2; yang dipakai biasanya separuh BUT-nya. Kalau BUT-nya berasal dari pain yang diucapkan orang, kalimat positioningmu berdiri di atas bukti. Kalau dari asumsi, itu tetap jujur, asal ditandai. Wawancara di hlm. 9 boleh dilewati; kalau kamu melakukannya, sumber BUT bisa berubah dari asumsi menjadi diucapkan orang.</p>",
         deeper: {
           summary: "Deeper read — kalimat insight yang bisa dilacak ke halaman",
           html:
@@ -374,7 +374,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p><b>Baris \"Who exactly?\" tidak opsional:</b> sebut brand yang nyata di setiap kolom. Kolom yang tidak bisa kamu sebut namanya adalah kategori yang belum kamu riset. Tulis UNKNOWN di sel yang belum kamu cek; sel kosong terbaca lupa, UNKNOWN terbaca jujur. Untuk kolom US, jangan tulis asumsi positif tentang dirimu sendiri.</p>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> matriks ini adalah <i>competitor analysis</i>, salah satu jenis bukti di silabus §7 dan bagian dari minimum yang direkomendasikan (\"one competitor or comparable-brand analysis\"). Points of Parity dan Points of Difference di Sesi 3 diturunkan langsung dari matriks ini, termasuk kolom indirect dan substitute. Kalau kamu mengisi Perceptual Map (hlm. 7, boleh dilewati), semua nama di baris pertama muncul lagi di sana.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> matriks ini adalah <i>competitor analysis</i>, salah satu jenis bukti di silabus §7 dan bagian dari minimum yang dianjurkan silabus (\"one competitor or comparable-brand analysis\"). Matriks ini dipakai dua kali lagi. Di Sesi 3 hlm. 2, nama-nama di baris \"Who exactly?\" adalah pesaing untuk THE TEST: bisakah pesaing mengucapkan kalimat positioning yang sama? Di Sesi 5 hlm. 4, baris <b>Price</b> tampil di samping kolom Reference Price, patokan harga yang dibandingkan audiens; tulis angka nyata bila bisa, UNKNOWN bila belum dicek. Points of Parity dan Points of Difference di Sesi 3 hlm. 3 (bila diisi) juga diturunkan dari matriks ini, termasuk kolom indirect dan substitute. Perceptual Map (hlm. 7) boleh dilewati; kalau diisi, semua nama di baris pertama muncul lagi di sana.</p>",
         deeper: {
           summary: "Deeper read — benchmark sering dikira pesaing",
           html:
@@ -404,7 +404,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
               ["Channel", "Cinema, social, schools", "Cinema, local press", "Malls, parks, home", "In-home apps", "Cinema, global marketing"],
               ["Identity/tone", "Warm, proudly local, crafted", "Varies widely", "Not applicable", "Familiar, low-effort", "Polished, universal, safe"],
               ["Their strength", "UNKNOWN — we have not tested what audiences think our strength is", "Lower price, local familiarity", "No cost, no commute", "Zero effort required", "Trusted quality, global reach"],
-              ["Their weakness", "UNKNOWN — same reason", "Perceived lower production quality", "No shared cinema ritual", "No shared family moment", "Not culturally ‘ours’"]
+              ["Their weakness", "UNKNOWN — same reason", "Perceived lower production quality", "No shared cinema ritual", "No shared family moment", "Not made in Indonesia"]
             ] } },
             notice: "Notice the three UNKNOWNs in the US column. The team knows more about its competitors than about how it is perceived itself — and says so, rather than writing a flattering guess. UNKNOWN is a research task; a blank cell is a forgotten one."
           },
@@ -465,7 +465,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> celah yang ditemukan di peta ini adalah posisi yang akan diklaim Positioning Statement Sesi 3. Peta yang jujur, termasuk dua titik \"hari ini\" dan \"target\" bila belum sampai, mencegah kamu mengklaim posisi yang belum kamu tempati.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, celah yang ditemukan di peta ini membantu memilih posisi yang diklaim Positioning Statement Sesi 3 hlm. 2. Peta yang jujur, termasuk dua titik \"hari ini\" dan \"target\" bila belum sampai, mencegah kamu mengklaim posisi yang belum kamu tempati.</p>",
         deeper: {
           summary: "Deeper read — dua titik untuk satu brand, dan klaim yang harus dibuang",
           html:
@@ -538,7 +538,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> asumsi di kotak TEST FIRST disalin ke hlm. 9 dan menjadi dasar wawancaramu minggu ini. Biasanya ia adalah ketakutan yang sama dengan kotak 8 Canvas Sesi 1, sekarang dipersempit menjadi satu perilaku yang bisa diuji.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Kalau diisi, asumsi di kotak TEST FIRST disalin ke hlm. 9 (juga boleh dilewati) dan menjadi dasar wawancaramu. Biasanya ia adalah ketakutan yang sama dengan kotak 8 Canvas Sesi 1, sekarang dipersempit menjadi satu perilaku yang bisa diuji.</p>",
         deeper: {
           summary: "Deeper read — dari kekhawatiran luas ke satu perilaku",
           html:
@@ -620,7 +620,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         why:
-          "<p><b class='k'>Kenapa halaman ini penting:</b> lima wawancara dengan orang di luar tim adalah minimum yang direkomendasikan silabus §7, dan jenis bukti dari audiens primer di luar lingkar tim yang diminta silabus untuk positioning di Sesi 3. Lima wawancara dengan teman sekelas tidak memenuhi ambang itu (Lie 1). Catatan wawancara boleh dipakai bersama dalam satu grup, tapi tiap orang menulis interpretasinya sendiri. Wawancara boleh menyusul sampai {{interviews_due}}, ikut file Minggu 2.</p>",
+          "<p><b class='k'>Kenapa halaman ini penting:</b> halaman ini boleh dilewati. Silabus §7 menganjurkan lima wawancara dengan audiens atau stakeholder yang relevan. Kalau kamu melakukannya, wawancara dengan audiens primer di luar lingkar tim adalah yang bisa mengubah sumber BUT di hlm. 5 dari asumsi menjadi diucapkan orang; lima wawancara dengan teman sekelas tidak bisa (Lie 1). Catatan wawancara boleh dipakai bersama dalam satu grup, tapi tiap orang menulis interpretasinya sendiri.</p>",
         deeper: {
           summary: "Deeper read — pertanyaan yang tidak menyebut produkmu",
           html:
@@ -631,7 +631,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "</ul>"
         },
         reverse: {
-          title: "Cek terbalik sebelum submit",
+          title: "Cek terbalik (kalau halaman ini diisi)",
           items: [
             "Tidak ada pertanyaan \"would you\" atau penjelasan produk?",
             "Setiap pertanyaan menanyakan masa lalu yang nyata?",

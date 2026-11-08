@@ -12,10 +12,11 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
   CB.EVIDENCE_TYPES = EVIDENCE_TYPES;
   CB.specs.S2 = {
     id: "S2", n: 2,
+    hideDue: true, // tenggat Minggu 1 sudah lewat; file terlambat ikut putaran berikutnya (kontrak V20), sama dengan S3/S4
     title: "Audience & Market Evidence Pack",
     wbCover: "SESSION 2 TEAM WORKBOOK",
     coverNote: "Fill this together as a team, outside class. Customer side before product side. Past behaviour beats stated intention. A guess in italics is not a fact.",
-    coverExtra: "Lima wawancara boleh menyusul sampai <b>{{interviews_due}}</b> (ikut file Minggu 2).",
+    coverExtra: "Wawancara di hlm. 9 boleh dilewati; silabus menganjurkan lima, dengan orang di luar tim.",
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
     /* Hal inti (dokumen 64). Lihat catatan di sessions/s1.js. */
     core: {
@@ -152,7 +153,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
           { id: "s2.p9.validation_method", type: "longtext", label: "VALIDATION METHOD", hint: "— interviews, test, etc. Name who does it and by when. —" },
           { id: "s2.p9.interviews", type: "list", appOnly: true, label: "Interview notes", addText: "+ Tambah wawancara",
             hint: "Satu entri per wawancara. Jangan tulis nama lengkap atau nomor telepon; cukup inisial atau deskripsi. Catatan mentah, bukan ringkasan.",
-            emptyText: "Belum ada wawancara tercatat. Minimal 5 per proyek; boleh dipakai bersama dalam satu grup, tapi interpretasinya tulis sendiri.",
+            emptyText: "Belum ada wawancara tercatat. Silabus menganjurkan 5 per proyek (halaman ini boleh dilewati); boleh dipakai bersama dalam satu grup, tapi interpretasinya tulis sendiri.",
             itemFields: [
               { k: "date", label: "Tanggal", type: "date" },
               { k: "who", label: "Siapa (inisial/deskripsi)", type: "text", ph: "mis. ibu 2 anak, Depok" },

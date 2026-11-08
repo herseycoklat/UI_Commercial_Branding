@@ -15,7 +15,8 @@
       "week": 1,
       "release": "2026-10-21T00:00:00+07:00",
       "due": "2026-10-27T23:59:00+07:00",
-      "interviews_due": "2026-11-03T23:59:00+07:00"
+      "interviews_due": "2026-11-03T23:59:00+07:00",
+      "no_upload_deadline": true
     },
     "S3": {
       "title": "Brand Strategy Platform",
@@ -31,7 +32,7 @@
       "due": "2026-11-10T23:59:00+07:00",
       "no_upload_deadline": true,
       "deadline_note": "batas unggah diumumkan dosen di kelas dan di grup kelas",
-    "hide_release_date": true
+      "hide_release_date": true
     },
     "S5": {
       "title": "",
