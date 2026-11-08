@@ -117,8 +117,8 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         carry: { title: "Bawaan dari sesi sebelumnya (hanya tampil, tidak disalin)", items: [
           { id: "s2.p4.primary", label: "PRIMARY AUDIENCE (S2 hlm. 4) — untuk AUDIENCE" },
           { id: "s3.p2.final", label: "POSITIONING STATEMENT (S3 hlm. 2) — dikutip persis di POSITIONING TO EXPRESS" },
-          { id: "s3.p4.personality", label: "PERSONALITY (S3 hlm. 4)" },
-          { id: "s3.p5.sliders", label: "BRAND PERSONALITY SPECTRUM (S3 hlm. 5) — untuk PERSONALITY & TONE" }
+          { id: "s3.p4.personality", label: "PERSONALITY (S3 hlm. 4, bila diisi)" },
+          { id: "s3.p5.sliders", label: "BRAND PERSONALITY SPECTRUM (S3 hlm. 5 atas, bila diisi) — untuk PERSONALITY & TONE" }
         ] },
         fields: [
           { id: "s4.p5.objective", type: "longtext", label: "OBJECTIVE", hint: "What do you need made, and what must it achieve?" },
@@ -170,8 +170,8 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         footer: "At least one row must be a touchpoint built later by someone outside this room. That's the row where brands actually break.",
         carry: { title: "Bawaan (hanya tampil, tidak disalin)", items: [
           { id: "s3.p5.promise_proof", label: "PROMISE → PROOF (S3 hlm. 5) — janji yang harus terasa di tiap touchpoint" },
-          { id: "s3.p4.promise", label: "PROMISE (S3 hlm. 4)" },
-          { id: "s3.p6.roof", label: "MASTER MESSAGE (S3 hlm. 6)" },
+          { id: "s3.p4.promise", label: "PROMISE (S3 hlm. 4, bila diisi)" },
+          { id: "s3.p6.roof", label: "MASTER MESSAGE (S3 hlm. 6, bila diisi)" },
           { id: "s1.p5.touchpoints", label: "TOUCHPOINT INVENTORY (S1 hlm. 5)" }
         ] },
         fields: [
@@ -192,7 +192,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         p: 9, title: "Creative Approval Checklist — Gate 3 Check", skip: true,
         sub: "5–7 binary criteria; two checkers, same answer. Mark YES, NO, or UNKNOWN.",
         strip: { head: "HOW TO PICK THEM", text: "collect 10–15 rules from pp. 2–8 → strike what is not yes/no → rank by “cost if wrong and already printed” → keep 5–7 → label each with its source page and Gate 3 test. If every criterion comes from one test, write why the other two have none." },
-        show: { title: "Creative Approval Checklist", strip: { head: "HOW TO PICK THEM", text: "collect 10–15 rules from pp. 2–8 → strike what is not yes/no → rank by “cost if wrong and already printed” → keep 5–7 → label each with its source page and test. If every criterion comes from one test, write why the other two have none." } },
+        show: { title: "Creative Approval Checklist", strip: { head: "HOW TO PICK THEM", text: "collect 10–15 rules from pp. 2–8 → strike what is not yes/no → rank by “cost if wrong and already printed” → keep 5–7 → label each with its source page and area. If every criterion comes from one area, write why the other two have none." } },
         carry: { title: "Bahan kriteria (hanya tampil, tidak disalin)", items: [
           { id: "s4.p5.mandatory", label: "MANDATORY ELEMENTS (hlm. 5)" },
           { id: "s4.p5.prohibited", label: "PROHIBITED ELEMENTS (hlm. 5)" },
@@ -205,7 +205,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
             itemFields: [
               { k: "src_page", label: "SOURCE PAGE", type: "pages", pages: [2, 3, 4, 5, 6, 7, 8] },
               { k: "q", label: "YES/NO QUESTION", type: "longtext" },
-              { k: "test", label: "GATE 3 TEST", show: { label: "TEST" }, type: "select", empty: "— pilih tes —", options: [{ v: "architecture", label: "architecture (hlm. 2)" }, { v: "naming", label: "naming (hlm. 3–4)" }, { v: "brief", label: "brief (hlm. 5–9)" }] },
+              { k: "test", label: "GATE 3 TEST", show: { label: "AREA" }, type: "select", empty: "— pilih bagian —", options: [{ v: "architecture", label: "architecture (hlm. 2)" }, { v: "naming", label: "naming (hlm. 3–4)" }, { v: "brief", label: "brief (hlm. 5–9)" }] },
               { k: "pass_on", label: "Jawaban yang lolos", type: "select", empty: "— pilih —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }], appOnly: true },
               { k: "answer", label: "ANSWER", type: "select", empty: "— belum dijawab —", options: [{ v: "yes", label: "YES" }, { v: "no", label: "NO" }, { v: "unknown", label: "UNKNOWN (belum dicek)" }] }] },
           { id: "s4.p9.creative_question", type: "creativeq", label: "QUESTION FROM YOUR CREATIVE STREAM",

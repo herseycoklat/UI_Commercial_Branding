@@ -168,6 +168,11 @@
     var pos = txt(c["s4.p5.positioning"]);
     out.push({ group: "i9", key: "b2", label: !pos ? "POSITIONING TO EXPRESS masih kosong." : (s3pos && pos.indexOf(s3pos) >= 0 ? "POSITIONING TO EXPRESS memuat kalimat Sesi 3 persis." : "POSITIONING TO EXPRESS tidak memuat kalimat Sesi 3 persis. Kutip, jangan parafrase (atau perbarui kalimat Sesi 3 bila memang sudah berubah)."), where: "S4 · hlm. 5", state: !pos ? "no" : (s3pos && pos.indexOf(s3pos) >= 0 ? "ok" : "warn") });
 
+    /* doc 73 §8: AUDIENCE brief = audiens utama S2 (peringatan, tidak memblokir; doc 73 §1 aturan 4) */
+    var s2aud = txt((((data.sessions || {}).S2) || {}).current && data.sessions.S2.current["s2.p4.primary"]);
+    var aud = txt(c["s4.p5.audience"]);
+    if (aud) out.push({ group: "i9", key: "b2a", label: s2aud && aud.indexOf(s2aud) >= 0 ? "AUDIENCE memuat audiens utama Sesi 2 persis." : "AUDIENCE tidak memuat audiens utama Sesi 2 persis. Salin dari panel atas, atau perbarui Sesi 2 bila memang berubah.", where: "S4 · hlm. 5", state: s2aud && aud.indexOf(s2aud) >= 0 ? "ok" : "warn" });
+
     /* hal inti 8 · Brand codes (hlm. 6) */
     var cd = ["have", "need", "owners", "nologo"].filter(function (k) { return txt(c["s4.p6." + k]); }).length;
     out.push({ group: "i8", key: "b3", label: "Brand Codes Inventory: " + cd + "/4 kotak terisi. Cek sendiri: paling banyak lima kode, masing-masing dengan pemilik.", where: "S4 · hlm. 6", state: cd === 4 ? "warn" : "no" });
