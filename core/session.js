@@ -622,6 +622,12 @@
     return function () { return fn(CB.data, built); };
   }
 
+  /* Halaman "boleh dilewati" yang masih kosong tidak dicetak (hindari lembar kosong); halaman wajib dan yang berisi selalu dicetak. */
+  function printable(sessId, pg) {
+    if (!pg.skip) return true;
+    return (pg.fields || []).some(function (f) { return CB.isFilled(CB.getField(sessId, f.id)); });
+  }
+
   /* Halaman sampul cetak: memuat informasi yang ada di halaman utama (identitas, sesi, cara kerja). */
   function buildCover(sessId, spec, built) {
     var id = CB.data.identifier, cfg = CB.sessionCfg(sessId) || {};
@@ -655,13 +661,15 @@
     var cols2 = U.el("div", { class: "pc-cols" });
     var toc = U.el("div", { class: "pc-box" });
     toc.appendChild(U.el("div", { class: "pc-h", text: "Daftar isi: " + spec.title }));
-    spec.fillOrder.forEach(function (p, i) {
+    var tn = 0;
+    spec.fillOrder.forEach(function (p) {
       var pg = spec.pages.filter(function (x) { return x.p === p; })[0];
-      if (built.indexOf(p) < 0) return;
+      if (built.indexOf(p) < 0 || !printable(sessId, pg)) return;
       var r = U.el("div", { class: "pc-r" });
-      r.appendChild(U.el("span", { class: "pc-k pc-n", text: (i + 1) + "." })); r.appendChild(U.el("span", { class: "pc-v", text: "hlm. " + p + " · " + pg.title }));
+      r.appendChild(U.el("span", { class: "pc-k pc-n", text: (++tn) + "." })); r.appendChild(U.el("span", { class: "pc-v", text: "hlm. " + p + " · " + pg.title }));
       toc.appendChild(r);
     });
+    toc.appendChild(U.el("p", { class: "pc-ai", text: "Halaman yang boleh dilewati dan kosong tidak dicetak." }));
     cols2.appendChild(toc);
     var how = U.el("div", { class: "pc-box" });
     how.appendChild(U.el("div", { class: "pc-h", text: "Cara kerja" }));
@@ -688,7 +696,7 @@
     var id = CB.data.identifier;
     root.appendChild(buildCover(sessId, spec, built));
     spec.pages.forEach(function (pg) {
-      if (built.indexOf(pg.p) < 0) return;
+      if (built.indexOf(pg.p) < 0 || !printable(sessId, pg)) return;
       var pp = U.el("div", { class: "pp" });
       pp.appendChild(U.el("div", { class: "pp-id", text: id.full_name + " · NIM " + id.nim + " · " + id.group_id + " · " + id.project_name }));
       var h = U.el("div", { class: "pp-head" });
