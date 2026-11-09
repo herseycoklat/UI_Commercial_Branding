@@ -3,6 +3,10 @@ import { h } from './dom.js';
 import { validateField } from './validate.js';
 
 const optText = (o) => h('span', { class: 'ot' }, h('b', {}, o.t), o.d ? h('small', {}, o.d) : null);
+// Urutan tampil di HP: f.urutan (acak tetap) bila ada; nilai dan hasil dosen tetap memakai f.options.
+export const shown = (f) => (f.urutan ? f.urutan.map((v) => f.options.find((o) => o.v === v)) : f.options);
+// Konteks di atas pertanyaan (L4, L5, L12, L13 Sesi 5).
+export const konteksBox = (sc) => (sc.konteks?.length ? h('div', { class: 'konteks' }, sc.konteks.map((t) => h('p', {}, t))) : null);
 
 function hintFor(f) {
   if (f.type === 'multi') {
@@ -38,7 +42,7 @@ export function buildForm(screen, { initial = {}, onChange = () => {} } = {}) {
     onChange({ values: vals, ok: allOk() });
   }
 
-  const single = (f) => h('div', { class: 'opts' }, f.options.map((o) => {
+  const single = (f) => h('div', { class: 'opts' }, shown(f).map((o) => {
     const inp = h('input', { type: 'radio', name: key + f.id, value: o.v });
     inp.checked = vals[f.id] === o.v;
     inp.addEventListener('change', () => { vals[f.id] = o.v; changed(f); });
@@ -47,7 +51,7 @@ export function buildForm(screen, { initial = {}, onChange = () => {} } = {}) {
 
   function multi(f) {
     const inputs = [];
-    const wrap = h('div', { class: 'opts' }, f.options.map((o) => {
+    const wrap = h('div', { class: 'opts' }, shown(f).map((o) => {
       const inp = h('input', { type: 'checkbox', value: o.v });
       inp.addEventListener('change', () => {
         let arr = new Set(vals[f.id] || []);
@@ -96,6 +100,8 @@ export function buildForm(screen, { initial = {}, onChange = () => {} } = {}) {
   }));
 
   const root = h('form', { class: 'form', novalidate: true, onsubmit: (e) => e.preventDefault() });
+  const kb = konteksBox(screen);
+  if (kb) root.append(kb);
   for (const f of screen.fields) {
     const err = h('div', { class: 'err', role: 'alert' });
     errEls.set(f.id, err);

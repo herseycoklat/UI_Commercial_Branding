@@ -5,6 +5,7 @@ import { h, clear } from './dom.js';
 import { aggregateScreen } from './aggregate.js';
 import { collectFlags, markSummary } from './flags.js';
 import { renderResults } from './results.js';
+import { konteksBox } from './render.js';
 import { attendanceRows, attendanceColumns, toCsvTable } from './csv.js';
 import { downloadText } from './download.js';
 
@@ -15,6 +16,7 @@ const S = {
   user: null, state: null, sel: SCREENS[0].id, answers: {}, hidden: {}, spot: null,
   online: 0, peak: 0, lat: [], roster: null, tab: 'kelas', att: null, attBusy: false, confirmEnd: false, openHidden: false, err: '',
   filter: { sesi: '', jenis: '' }, opened: {}, confirmReset: false, attAnswers: null,
+  keyOn: {}, // layar kunciTerpisah (L1): tanda kunci ditampilkan setelah dosen klik, hanya di layar dosen
 };
 const pct = (arr, q) => { const a = [...arr].sort((x, y) => x - y); return a[Math.max(0, Math.ceil(q * a.length) - 1)]; };
 let started = false;
@@ -123,7 +125,7 @@ const setFilter = (k, v) => {
   if (S.tab === 'kelas' && ids.length && !ids.includes(S.sel)) select(ids[0]);
   recompute(); draw();
 };
-const label = (s) => `${s.no}. ${s.judul}`;
+const label = (s) => `${s.no}. ${s.judul}${s.slide ? ` (slide ${s.slide})` : ''}`;
 
 // Filter sesi × jenis: dipakai di daftar layar, laporan kehadiran, dan CSV kehadiran.
 function filterBar() {
@@ -159,6 +161,8 @@ function controls() {
   if (!isActive || !st.open) btns.push(h('button', { id: 'btn-open', class: 'primary', type: 'button', onclick: () => openScreen(S.sel) }, isActive ? 'Buka lagi' : 'Buka layar ini'));
   if (isActive && st.open) btns.push(h('button', { id: 'btn-close', class: 'primary', type: 'button', onclick: () => act({ open: false }) }, 'Tutup layar'));
   if (isActive) btns.push(h('button', { id: 'btn-reveal', class: st.revealed ? 'ghost' : 'primary', type: 'button', onclick: () => act({ revealed: !st.revealed }) }, st.revealed ? 'Sembunyikan hasil' : 'Tampilkan hasil'));
+  if (sc.kunciTerpisah && (!isActive || st.revealed)) btns.push(h('button', { id: 'btn-key', class: S.keyOn[sc.id] ? 'ghost' : 'primary', type: 'button',
+    onclick: () => { S.keyOn = { ...S.keyOn, [sc.id]: !S.keyOn[sc.id] }; draw(); } }, S.keyOn[sc.id] ? 'Sembunyikan tanda' : 'Tandai yang dilaporkan'));
   btns.push(h('button', { id: 'btn-end', class: 'ghost', type: 'button', onclick: () => {
     if (!S.confirmEnd) { S.confirmEnd = true; draw(); setTimeout(() => { S.confirmEnd = false; draw(); }, 4000); return; }
     S.confirmEnd = false; B.setSpot(null); act({ active: '', open: false, revealed: false, penutup: true });
@@ -190,6 +194,7 @@ function kelasView() {
   const head = h('div', { class: 'qbox' },
     h('div', { class: 'qmeta' }, `${sc.no} · ${sc.sesi} · ${sc.jenis} · ${sc.segmen} · ${sc.mode}`),
     h('h2', {}, sc.judul),
+    konteksBox(sc),
     h('div', { class: 'qtext' }, sc.fields.map((f) => h('p', {}, f.label))));
 
   // teks resmi penghitung: "12 dari 58 sudah masuk" (58 = jumlah NIM di roster)
@@ -203,6 +208,7 @@ function kelasView() {
     body = renderResults(sc, agg, {
       answers: S.answers, hidden: S.hidden, spot: S.spot && S.spot.screen === sc.id ? S.spot : null,
       flags: collectFlags(sc, S.answers, S.hidden), marks: markSummary(sc, S.answers, S.hidden),
+      showKey: sc.kunciTerpisah ? !!S.keyOn[sc.id] : undefined,
       openHidden: S.openHidden, onToggleHidden: (o) => { S.openHidden = o; },
       onHide: (nim) => B.setHidden(sc.id, nim, true),
       onUnhide: (nim) => B.setHidden(sc.id, nim, false),
