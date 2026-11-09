@@ -6,16 +6,18 @@ import { flagsFor, collectFlags, markField, markSummary } from '../flags.js';
 import { toCsv, cell, guard, catatankuRows, answerText, BOM, COLUMNS } from '../csv.js';
 
 // ---------- screens ----------
-test('28 layar: I1–I3 lalu 25 layar lama bernomor 1..25, id unik', () => {
-  assert.equal(SCREENS.length, 28);
-  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 28);
+test('41 layar: I1–I3, 25 layar Sesi 4 bernomor 1..25, lalu L1–L13 Sesi 5, id unik', () => {
+  assert.equal(SCREENS.length, 41);
+  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 41);
   assert.deepEqual(SCREENS.slice(0, 4).map((s) => s.id), ['i1', 'i2', 'i3', 'q1']);
-  SCREENS.slice(3).forEach((s, i) => assert.equal(s.no, i + 1));
+  SCREENS.slice(3, 28).forEach((s, i) => assert.equal(s.no, i + 1));
+  assert.deepEqual(SCREENS.slice(28).map((s) => s.no), Array.from({ length: 13 }, (_, i) => `L${i + 1}`));
 });
 
-test('label sesi × jenis: I1=S1, I2=S2, I3=S3 insight; 25 layar lama S4 kelas', () => {
+test('label sesi × jenis: I1=S1, I2=S2, I3=S3 insight; 25 layar S4 kelas; 13 layar S5 kelas', () => {
   assert.deepEqual(SCREENS.slice(0, 3).map((s) => `${s.sesi}/${s.jenis}`), ['S1/insight', 'S2/insight', 'S3/insight']);
-  for (const s of SCREENS.slice(3)) assert.equal(`${s.sesi}/${s.jenis}`, 'S4/kelas', s.id);
+  for (const s of SCREENS.slice(3, 28)) assert.equal(`${s.sesi}/${s.jenis}`, 'S4/kelas', s.id);
+  for (const s of SCREENS.slice(28)) assert.equal(`${s.sesi}/${s.jenis}`, 'S5/kelas', s.id);
   for (const s of SCREENS) assert.ok(SESI_LIST.includes(s.sesi) && JENIS_LIST.includes(s.jenis), s.id);
 });
 
@@ -33,8 +35,39 @@ test('I1–I3: teks doc 63, kunci B/B/UNKNOWN, 30 detik, tidak masuk Catatanku',
   assert.equal(collectFlags(i1, { 1: { values: { masalah: 'a' } } }).length, 0); // tanpa ⚠
 });
 
+test('L1–L13 (Lampiran C S5): slide, tipe, jumlah opsi, waktu, kunci, konteks; tanpa Catatanku', () => {
+  const L = SCREENS.filter((s) => s.sesi === 'S5');
+  const tabel = [ // [slide, waktu, kunci]
+    [2, 45, ['a', 'b', 'c', 'd']], [4, 20, 'b'], [5, 20, 'c'], [6, 20, 'c'], [8, 20, 'd'], [9, 20, 'c'], [10, 20, 'b'],
+    [12, 20, 'b'], [13, 20, 'c'], [14, 20, 'c'], [16, 30, 'c'], [32, 20, 'c'], [42, 20, 'b']];
+  L.forEach((s, i) => {
+    const [slide, waktu, key] = tabel[i];
+    assert.equal(s.slide, slide, s.id); assert.equal(s.waktu, waktu, s.id); assert.deepEqual(s.fields[0].key, key, s.id);
+    assert.equal(s.fields.length, 1, s.id); assert.equal(s.catatanku, undefined, s.id); assert.equal(s.pengingat, undefined, s.id);
+    assert.equal(s.fields[0].type, i === 0 ? 'multi' : 'single', s.id);
+    assert.equal(s.fields[0].options.length, i === 0 ? 8 : 4, s.id);
+  });
+  // huruf di opsi = huruf di slide dan skrip (V3 merujuk E–H)
+  assert.deepEqual(L[0].fields[0].options.map((o) => o.t[0]).join(''), 'ABCDEFGH');
+  assert.equal(L[1].fields[0].options[1].t, 'B. Customers paid with their time, not their money');
+  // L1: acak tetap, berisi semua opsi tepat sekali, empat yang dilaporkan tidak berkumpul di atas; tanda kunci terpisah
+  const u = L[0].fields[0].urutan;
+  assert.deepEqual([...u].sort(), L[0].fields[0].options.map((o) => o.v));
+  assert.notDeepEqual(u.slice(0, 4).sort(), ['a', 'b', 'c', 'd']);
+  assert.equal(L[0].kunciTerpisah, true);
+  assert.equal(markField(L[0].fields[0], ['d', 'c', 'b', 'a']).ok, true);
+  assert.equal(markField(L[0].fields[0], ['a', 'b', 'c', 'd', 'g']).ok, false);
+  // konteks hanya di L4, L5, L12, L13
+  assert.deepEqual(L.filter((s) => s.konteks).map((s) => s.no), ['L4', 'L5', 'L12', 'L13']);
+  assert.deepEqual(SCREEN_BY_ID.l4.konteks, ['They want somewhere cool to sit with friends,', 'BUT a café costs too much,', 'SO they need a cheap place to stay for hours.']);
+  assert.equal(SCREEN_BY_ID.l13.fields[0].label, 'Who did the court say owns the name?');
+  assert.equal(collectFlags(SCREEN_BY_ID.l2, { 1: { values: { jawab: 'a' } } }).length, 0); // tanpa ⚠
+});
+
 test('filter sesi × jenis', () => {
-  assert.equal(SCREENS.filter((s) => matchFilter(s, {})).length, 28);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, {})).length, 41);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S5' })).length, 13);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S5', jenis: 'insight' })).length, 0);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { jenis: 'insight' })).length, 3);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S4' })).length, 25);
   assert.deepEqual(SCREENS.filter((s) => matchFilter(s, { sesi: 'S2', jenis: 'insight' })).map((s) => s.id), ['i2']);

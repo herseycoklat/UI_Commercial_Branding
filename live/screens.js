@@ -1,4 +1,5 @@
-// Kelas Live — 3 layar pengantar (I1–I3, doc 63) + 25 layar jawaban (Lampiran E skrip v3). Layar = data, bukan kode.
+// Kelas Live — 3 layar pengantar (I1–I3, doc 63) + 25 layar Sesi 4 (Lampiran E skrip v3) + 13 layar Sesi 5 (L1–L13,
+// Lampiran C skrip gabungan S5 v1). Layar = data, bukan kode.
 // Teks pertanyaan dan opsi disalin dari Week3-Sesi4-skrip-final-v3-kelas-live.md.
 // Tipe bidang: single | multi | text | grid
 //   single : satu pilihan (dipakai juga untuk "kategori")
@@ -12,8 +13,8 @@
 //   catatanku : {halaman, bagian} bila jawaban masuk Catatanku; 'pengingat' bila hanya pengingat
 //   waktu     : detik yang disarankan (hanya petunjuk untuk dosen)
 //   key       : kunci jawaban (penanda, bukan ⚠). Aturan ⚠ ada di flags.js
-//   sesi      : 'S1' | 'S2' | 'S3' | 'S4'  (label filter, doc 63)
-//   jenis     : 'insight' (tebakan kasus Gojek di pengantar) | 'kelas' (materi Sesi 4)
+//   sesi      : 'S1' | 'S2' | 'S3' | 'S4' | 'S5'  (label filter, doc 63)
+//   jenis     : 'insight' (tebakan kasus Gojek di pengantar) | 'kelas' (materi sesi)
 
 const o = (v, t, d) => (d ? { v, t, d } : { v, t });
 
@@ -365,9 +366,90 @@ const SESI4 = [
   },
 ];
 
-// Ke-25 layar lama: sesi S4, jenis kelas (doc 63). Urutan: I1 → I2 → I3 → Q1 → …
-export const SCREENS = [...PENGANTAR, ...SESI4.map((x) => ({ ...x, sesi: 'S4', jenis: 'kelas' }))];
-export const SESI_LIST = ['S1', 'S2', 'S3', 'S4'];
+// ---------- Sesi 5 (Week 4): L1–L13 ----------
+// Sumber tunggal: Lampiran C skrip gabungan S5 v1 (doc 85 bagian A). Teks pertanyaan, konteks, dan opsi
+// persis dari heading [n · Ln] skrip gabungan (bahasa Inggris, sama dengan deck v3). Semua: sesi S5, jenis kelas,
+// tidak masuk Catatanku, tanpa skor per mahasiswa.
+// Properti baru:
+//   konteks      : baris teks yang tampil DI ATAS pertanyaan (HP dan layar dosen)
+//   urutan (bidang): urutan tampil opsi di HP (acak tetap); hasil dosen tetap urut A–H seperti slide
+//   kunciTerpisah: hasil tampil dulu TANPA tanda kunci; dosen klik "Tandai yang dilaporkan" (L1)
+const L = (no, n, judul, segmen, waktu, label, opts, key, extra = {}) => ({
+  id: `l${no}`, no: `L${no}`, slide: n, segmen, judul, mode: 'tebak', waktu, ...extra,
+  fields: [{ id: 'jawab', type: 'single', label, key, options: opts.map((t, i) => o('abcd'[i], `${'ABCD'[i]}. ${t}`)) }],
+});
+
+const L1_OPTS = [
+  'The seats were always full, but people spent little',
+  'Minimarkets were banned from selling alcohol',
+  'Rent on large stores in expensive locations',
+  'The sale of the business to another company failed',
+  'The stores were empty; nobody knew Sevel',
+  'Prices were too low to make a profit',
+  'It lost to online shopping',
+  'The government forced every store to close',
+].map((t, i) => o('abcdefgh'[i], `${'ABCDEFGH'[i]}. ${t}`));
+
+const SESI5 = [
+  {
+    id: 'l1', no: 'L1', slide: 2, segmen: 'Sevel', judul: 'Sevel · Apa yang membuat tutup? (pilih semua)', mode: 'tebak', waktu: 45,
+    kunciTerpisah: true,
+    fields: [
+      { id: 'alasan', type: 'multi', min: 1, label: 'What do you think made Sevel close? Choose all that apply.',
+        options: L1_OPTS,
+        // acak tetap (bukan per mahasiswa): empat alasan yang dilaporkan tidak berkumpul di atas
+        urutan: ['e', 'b', 'g', 'c', 'f', 'a', 'h', 'd'],
+        key: ['a', 'b', 'c', 'd'], keyNote: 'A–D dilaporkan sumber; E–H bukan. "Sesuai kunci" = memilih tepat A, B, C, D' },
+    ],
+  },
+  L(2, 4, 'S1 · Masalah komersial utama', 'Session 1 · Main commercial problem', 20,
+    "What was Sevel's real commercial problem?",
+    ['Not enough people knew Sevel', 'Customers paid with their time, not their money', 'Prices were too high for young people', 'The stores were too small'], 'b'),
+  L(3, 5, 'S2 · Audiens utama', 'Session 2 · Primary audience', 20,
+    "Sevel's audience was young people who come to hang out. What was wrong with that?",
+    ['There were too few of them', 'They were the wrong age for convenience stores', 'They came, but the people using the seats were not the people spending the money', 'Nothing was wrong; they were the perfect audience'], 'c'),
+  L(4, 6, 'S2 · Insight', 'Session 2 · Insight', 20,
+    'According to this insight, why do they choose Sevel?',
+    ['It has the best food', 'It is open 24 hours', 'It is a cool place to stay that costs less than a café', 'They love the 7 logo'], 'c',
+    { konteks: ['They want somewhere cool to sit with friends,', 'BUT a café costs too much,', 'SO they need a cheap place to stay for hours.'] }),
+  L(5, 8, 'S3 · Positioning', 'Session 3 · Positioning', 20,
+    'Which part is the reason people came, and also a cost every hour?',
+    ['"young people in Jakarta"', '"a warung"', '"better quality"', '"with seats, cold drinks and wifi, all night"'], 'd',
+    { konteks: ["Positioning, built from the founder's own words:",
+      '"For young people in Jakarta who love to nongkrong, Sevel is a warung with better quality: affordable luxury, with seats, cold drinks and wifi, all night."',
+      'Henri Honoris, quoted in NYT (2012); LBS case study.'] }),
+  L(6, 9, 'S3 · Promise → Proof', 'Session 3 · Promise → Proof', 20,
+    "Sevel's promise was real: you could stay as long as you liked, every night. What was the problem?",
+    ['There was no problem; a real promise is enough', 'It was not really kept', "It was kept, but customers didn't pay enough for it", 'Nobody believed it'], 'c'),
+  L(7, 10, 'S4 · Brand codes', 'Session 4 · Brand codes', 20,
+    "The 7 logo and the Slurpee were Sevel's strongest brand codes. What was the problem?",
+    ['Nobody recognised them', 'They belonged to 7-Eleven Inc., not to the Indonesian company', 'They looked too much like Indomaret', 'They changed too often'], 'b'),
+  L(8, 12, 'Page 2 (canvas) · Value Propositions + Customer Relationships', 'Workbook p.2 · Canvas', 20,
+    "What did Sevel's Value Propositions and Customer Relationships give the customer?",
+    ['Cheap daily shopping near home', 'Hours in a cool seat with wifi; sit as long as you like', 'Fast delivery to your door', 'The lowest prices in town'], 'b'),
+  L(9, 13, 'Page 2 (canvas) · Revenue Streams', 'Workbook p.2 · Canvas', 20,
+    'How did Sevel make its money?',
+    ['A fee for every hour you sit', 'A monthly membership', 'A margin on each item sold', 'Renting space inside the store to other brands'], 'c'),
+  L(10, 14, 'Page 2 (canvas) · Key Resources + Cost Structure', 'Workbook p.2 · Canvas', 20,
+    "Why couldn't Sevel simply remove seats to cut costs?",
+    ['Customers would protest', 'Seats cost nothing once they are bought', 'Its restaurant licence, needed to open 24 hours, required tables, chairs and a kitchen', 'The landlord required seats'], 'c'),
+  L(11, 16, 'Indomaret: apa yang berbeda', 'The comparison', 30,
+    'Indomaret has seats too, and it is still here. What does it do differently from Sevel?',
+    ['It has more seats than Sevel', 'Its seats are free and unlimited, just like Sevel', 'It sells the seat through a café-priced coffee: Point Coffee rents a corner and charges café prices', 'It limits customers to one hour per seat'], 'c'),
+  L(12, 32, 'Page 4 (pricing) · Prime Video dalam paket', 'Workbook p.4 · Pricing', 20,
+    'How does Amazon get paid for Prime Video?',
+    ['Each film is paid for separately', "It doesn't; Amazon simply loses money on video", 'Through the whole package: the Prime fee covers shipping and video, and members buy more on Amazon', 'Netflix pays Amazon to show its films'], 'c',
+    { konteks: ['In the US, Prime Video comes inside Amazon Prime, the same membership that gives free shipping.'] }),
+  L(13, 42, 'Page 8 (your three bets) · Pemilik nama "Bensu"', 'Workbook p.8 · Your three bets', 20,
+    'Who did the court say owns the name?',
+    ['Ruben Onsu: he was famous, and it reads like his name', 'The company that filed the name first', "Nobody: a person's name cannot be a trademark", 'Whoever had more outlets'], 'b',
+    { konteks: ['In 2017 Ruben Onsu was the face of "I Am Geprek Bensu".', '"Bensu" even reads like his name: RuBEN OnSU.'] }),
+];
+
+// Ke-25 layar lama: sesi S4, jenis kelas (doc 63). Urutan: I1 → I2 → I3 → Q1 → … → Q25 → L1 → … → L13
+export const SCREENS = [...PENGANTAR, ...SESI4.map((x) => ({ ...x, sesi: 'S4', jenis: 'kelas' })),
+  ...SESI5.map((x) => ({ ...x, sesi: 'S5', jenis: 'kelas' }))];
+export const SESI_LIST = ['S1', 'S2', 'S3', 'S4', 'S5'];
 export const JENIS_LIST = ['insight', 'kelas'];
 export const matchFilter = (s, f = {}) => (!f.sesi || s.sesi === f.sesi) && (!f.jenis || s.jenis === f.jenis);
 

@@ -138,3 +138,8 @@ textarea.txt { resize: vertical; }
 }
 @media (prefers-reduced-motion: reduce) { .bf { transition: none; } }
 .opened { border: 1px solid var(--line); border-radius: .6rem; padding: .6rem .8rem; margin: .6rem 0; }
+
+/* konteks di atas pertanyaan (Sesi 5: L4, L5, L12, L13) */
+.konteks { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: .6rem; padding: .6rem .9rem; margin-bottom: .9rem; font-style: italic; }
+.konteks p { margin: .15rem 0; }
+.qbox .konteks { margin: .3rem 0 .6rem; }

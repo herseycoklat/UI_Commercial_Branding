@@ -66,7 +66,7 @@ check('dosen: hasil sama sekali tidak tampil sebelum layar dibuka', !(await d.pa
 
 // ---------- 3. q1: buka -> jawab -> counter -> hasil tersembunyi -> tampilkan ----------
 const selOrder = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
-check('daftar layar dosen: I1 → I2 → I3 → Q1 → … (28 layar)', selOrder.slice(0, 4).join(',') === 'i1,i2,i3,q1' && selOrder.length === 28, selOrder.slice(0, 5).join(','));
+check('daftar layar dosen: I1 → I2 → I3 → Q1 → … → L1 … L13 (41 layar)', selOrder.slice(0, 4).join(',') === 'i1,i2,i3,q1' && selOrder.length === 41 && selOrder.slice(28).join(',') === Array.from({ length: 13 }, (_, i) => `l${i + 1}`).join(','), selOrder.slice(0, 5).join(','));
 await d.page.selectOption('#sel', 'q1');
 await d.page.click('#btn-open');
 await s1.page.waitForSelector('fieldset[data-field="brand"]');
@@ -344,6 +344,46 @@ const catTxt = await x.page.innerText('main');
 check('I1–I3 tidak masuk Catatanku', !/Akhir 2014|UNKNOWN|GrabBike/.test(catTxt) && /catatan rahasia N3|Brand Architecture Map/.test(catTxt), catTxt.slice(0, 200));
 await x.page.click('header.top button:has-text("Kembali")');
 
+// ---------- 10d. Sesi 5: L1 (pilih semua, acak tetap, tanda kunci terpisah), konteks L4, kunci L2 ----------
+await d.page.selectOption('#sel', 'l1');
+await d.page.click('#btn-open');
+check('L1 tampil di HP: teks skrip + petunjuk pilih lebih dari satu', await bodyHas(x.page, /What do you think made Sevel close\? Choose all that apply\./) && await bodyHas(x.page, /Boleh pilih lebih dari satu/));
+const l1Order = await x.page.locator('fieldset[data-field="alasan"] label.opt b').allInnerTexts();
+check('L1 di HP: urutan acak tetap E B G C F A H D, huruf tetap melekat', l1Order.map((t) => t[0]).join('') === 'EBGCFAHD' && l1Order.length === 8, l1Order.join(' | '));
+for (const t of ['A\\. The seats were always full, but people spent little', 'G\\. It lost to online shopping']) await opt(x.page, 'alasan', t).click();
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+await x.page.screenshot({ path: `${SHOTS}/l1-360.png`, fullPage: true });
+check('360px: layar L1 tanpa geser ke samping', !(await x.page.evaluate(() => document.documentElement.scrollWidth > innerWidth)));
+check('L1: tombol "Tandai yang dilaporkan" belum ada sebelum Tampilkan hasil', (await d.page.locator('#btn-key').count()) === 0);
+await d.page.click('#btn-reveal');
+await bodyHas(d.page, /1 \(100%\)/);
+const dosenOrder = await d.page.locator('.bars .bl').allInnerTexts();
+check('L1 dosen: batang urut A–H seperti slide', dosenOrder.map((t) => t[0]).join('') === 'ABCDEFGH', dosenOrder.join(' | '));
+check('L1 dosen: persentase tampil TANPA tanda kunci dulu', (await d.page.locator('.bar.key').count()) === 0 && !/✓|Sesuai kunci/.test(await d.page.innerText('.results')));
+await d.page.click('#btn-key');
+await until(d.page, () => document.querySelectorAll('.bar.key').length > 0).catch(() => {});
+check('L1 dosen: setelah "Tandai yang dilaporkan", A–D bertanda ✓, E–H tidak', (await d.page.locator('.bar.key .bl').allInnerTexts()).map((t) => t[0]).join('') === 'ABCD' && await bodyHas(d.page, /Sesuai kunci di skrip: 0 dari 1/));
+await d.page.click('#btn-key');
+await until(d.page, () => document.querySelectorAll('.bar.key').length === 0).catch(() => {});
+check('L1 dosen: tanda bisa disembunyikan lagi', (await d.page.locator('.bar.key').count()) === 0);
+await d.page.selectOption('#sel', 'l4');
+await d.page.click('#btn-open');
+check('L4: konteks tiga baris di atas pertanyaan (HP)', await bodyHas(x.page, /They want somewhere cool to sit with friends,\s*BUT a café costs too much,\s*SO they need a cheap place to stay for hours\.\s*According to this insight, why do they choose Sevel\?/));
+check('L4: konteks juga di layar dosen', await bodyHas(d.page, /SO they need a cheap place to stay for hours\./));
+await d.page.selectOption('#sel', 'l2');
+await d.page.click('#btn-open');
+await opt(x.page, 'jawab', 'B\\. Customers paid with their time, not their money').click();
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+check('L2: tanpa tombol tanda terpisah', (await d.page.locator('#btn-key').count()) === 0);
+await d.page.click('#btn-reveal');
+check('L2: jawaban benar B langsung disorot + persentase', await bodyHas(d.page, /B\. Customers paid with their time, not their money ✓/) && await bodyHas(d.page, /1 \(100%\)/));
+await x.page.click('header.top button:has-text("Catatanku")');
+await bodyHas(x.page, /Catatanku/);
+check('L1–L13 tidak masuk Catatanku', !/Sevel|Customers paid/.test(await x.page.innerText('main')));
+await x.page.click('header.top button:has-text("Kembali")');
+
 // filter di daftar layar
 await d.page.selectOption('#f-jenis', 'insight');
 let opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
@@ -351,7 +391,11 @@ check('filter jenis=insight: daftar layar hanya I1–I3', opts.join(',') === 'i1
 await d.page.selectOption('#f-jenis', '');
 await d.page.selectOption('#f-sesi', 'S4');
 opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
-check('filter sesi=S4: 25 layar kelas (ditambah layar terpilih bila di luar filter)', opts.filter((v) => !v.startsWith('i')).length === 25);
+check('filter sesi=S4: 25 layar kelas (ditambah layar terpilih bila di luar filter)', opts.filter((v) => !v.startsWith('i') && !v.startsWith('l')).length === 25);
+await d.page.selectOption('#f-sesi', 'S5');
+await until(d.page, () => [...document.querySelectorAll('#sel option')].every((o) => o.value.startsWith('l'))).catch(() => {});
+opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
+check('filter sesi=S5: L1–L13 (13 layar)', opts.filter((v) => v.startsWith('l')).length === 13 && opts.filter((v) => !v.startsWith('l') && !v.startsWith('i')).length === 0, opts.join(','));
 await d.page.selectOption('#f-sesi', '');
 
 // kehadiran: pembagi = layar dibuka, rincian per jenis, filter, CSV
@@ -359,10 +403,10 @@ await d.page.click('button:has-text("Kehadiran")');
 await d.page.click('#btn-att');
 await until(d.page, () => !/Memuat/.test(document.querySelector('#btn-att').textContent) && document.querySelector('#atab'));
 const opened = await admin('dosenState/opened');
-check('riwayat layar dibuka tercatat di dosenState/opened (6 layar)', Object.keys(opened || {}).sort().join(',') === 'h2-terapkan,i1,i2,i3,poll1,q1', JSON.stringify(opened));
+check('riwayat layar dibuka tercatat di dosenState/opened (9 layar)', Object.keys(opened || {}).sort().join(',') === 'h2-terapkan,i1,i2,i3,l1,l2,l4,poll1,q1', JSON.stringify(opened));
 const waitRow = (re) => until(d.page, ([src, n]) => [...document.querySelectorAll('#atab tbody tr')].some((tr) => tr.innerText.replace(/\s+/g, ' ').startsWith(n) && new RegExp(src).test(tr.innerText.replace(/\s+/g, ' '))), [re.source, N3]).then(() => true, () => false);
 const rowN3 = async () => (await d.page.locator('#atab tbody tr').allInnerTexts()).find((t) => t.startsWith(N3))?.replace(/\s+/g, ' ');
-check('kehadiran semua: pembagi 6, insight N3 = 2/3', await waitRow(/dari 6 2\/3/), await rowN3());
+check('kehadiran semua: pembagi 9, insight N3 = 2/3', await waitRow(/dari 9 2\/3/), await rowN3());
 await d.page.selectOption('#f-jenis', 'insight');
 check('kehadiran filter insight: N3 = 2 dari 3', await waitRow(/^2306000003 2 dari 3 2\/3 0\/0/), await rowN3());
 const [dl3] = await Promise.all([d.page.waitForEvent('download'), d.page.click('#btn-att-csv')]);
