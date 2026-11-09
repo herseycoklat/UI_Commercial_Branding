@@ -81,6 +81,8 @@ def main():
     for pg in spec["pages"]:
         p, txt = pg["p"], sl.get(pg["p"], "")
         first = txt.split(" ", 1)[1] if txt.startswith(str(p) + " ") else txt
+        if pg.get("kicker") and first.startswith(norm(pg["kicker"]) + " "):  # S5 hlm. 8: kicker kecil di atas judul
+            first = first[len(norm(pg["kicker"])) + 1:]
         check(first.startswith(norm(pg["title"])), f"hlm. {p}: judul '{pg['title']}' bukan judul slide")
         def present(t):
             t = norm(t)
@@ -104,6 +106,10 @@ def main():
             check(norm(col["head"]) in txt, f"hlm. {p}: judul kolom '{col['head']}' tidak ada di workbook")
         for f in pg["fields"]:
             ids.append(f["id"])
+            if f["id"] == "s4.p9.criteria" or f.get("wbColumns"):  # kolom daftar = kepala kolom tabel workbook (kolom appOnly dikecualikan)
+                for itf in f.get("itemFields", []):
+                    if not itf.get("appOnly"):
+                        check(norm(itf["label"]) in txt, f"hlm. {p}: kolom isian '{itf['label']}' ({f['id']}) tidak ada di workbook")
             if f.get("appOnly"):
                 warns.append(f"hlm. {p}: {f['id']} adalah tambahan app (bukan kotak workbook) — diputuskan Fai")
                 continue
@@ -114,10 +120,6 @@ def main():
                 check(norm(f["hint"]) in txt, f"hlm. {p}: hint '{f['hint']}' tidak ada di workbook")
             for sl in f.get("subLabels", []):
                 check(norm(sl) in txt, f"hlm. {p}: sub-label '{sl}' tidak ada di workbook")
-            if f["id"] == "s4.p9.criteria":  # v3: kolom daftar kriteria hlm. 9 harus sama dengan kepala kolom workbook (kolom appOnly dikecualikan)
-                for itf in f.get("itemFields", []):
-                    if not itf.get("appOnly"):
-                        check(norm(itf["label"]) in txt, f"hlm. {p}: kolom isian '{itf['label']}' tidak ada di workbook")
             for r in f.get("rows", []):
                 check(norm(r["label"]) in txt, f"hlm. {p}: baris '{r['label']}' tidak ada di workbook")
             for c in f.get("columns", []):

@@ -104,6 +104,14 @@
         panel.innerHTML = "";
         panel.appendChild(U.el("h4", { text: "Contoh — " + ex.name + " · " + pg.title }));
         if (ex.sub) panel.appendChild(U.el("div", { class: "exsub", text: ex.sub + (ex.caveat ? " " + ex.caveat : "") }));
+        /* ex.before / ex.after (v0.7.0, S5): kotak contoh di luar field halaman, mis. masalah S1 yang tampil, cek sebelum submit */
+        function extraBox(x, key) {
+          var bx = U.el("div", { class: "exbox", "data-key": key });
+          bx.appendChild(U.el("b", { text: x.label }));
+          bx.appendChild(exampleValue(null, x.value));
+          panel.appendChild(bx);
+        }
+        (ex.before || []).forEach(function (x, i) { extraBox(x, "before" + i); });
         pg.fields.forEach(function (f) {
           var v = ex.values[f.id]; if (v == null) return;
           var bx = U.el("div", { class: "exbox", "data-key": f.id.split(".").pop() });
@@ -112,6 +120,7 @@
           if (ex.anno && ex.anno[f.id]) bx.appendChild(U.el("div", { class: "anno", text: ex.anno[f.id] }));
           panel.appendChild(bx);
         });
+        (ex.after || []).forEach(function (x, i) { extraBox(x, "after" + i); });
         if (ex.notice) panel.appendChild(U.el("div", { class: "exnotice", text: ex.notice }));
         if (ex.note) panel.appendChild(U.el("div", { class: "exnote", text: ex.note }));
         panel.classList.remove("hidden");
@@ -277,8 +286,8 @@
   }
 
   /* Field tabel di panel bawaan tampil sebagai tabel baca-saja, sama bentuknya dengan halaman asalnya. */
-  function carryTable(f, v) {
-    v = v || {}; var rows = v.rows || {}, extra = v.extra || [];
+  function carryTable(f, v, onlyRow) {
+    v = v || {}; var rows = v.rows || {}, extra = onlyRow ? [] : (v.extra || []);
     var sc = U.el("div", { class: "tscroll carrytable" });
     var t = U.el("table", { class: "wbtable ro" + (f.narrowHead ? " narrowhead" : "") });
     var hr = U.el("tr"); hr.appendChild(U.el("th", { text: f.rowLabel || "" }));
@@ -290,7 +299,7 @@
       f.columns.forEach(function (c) { var x = String(get(c.k) || "").trim(); r.appendChild(U.el("td", { class: x ? "" : "empty", text: x || "—" })); });
       tb.appendChild(r);
     }
-    f.rows.forEach(function (r) { tr(r.label, function (k) { return (rows[r.k] || {})[k]; }); });
+    f.rows.forEach(function (r) { if (onlyRow && r.k !== onlyRow) return; tr(r.label, function (k) { return (rows[r.k] || {})[k]; }); });
     extra.forEach(function (r) { tr(r.label || "(baris tambahan)", function (k) { return r[k]; }); });
     sc.appendChild(t); return sc;
   }
@@ -318,10 +327,13 @@
         var m = /^s(\d+)\./.exec(it.id), sid = m ? "S" + m[1] : sessId;
         var f = CB.findField(it.id), v = CB.getField(sid, it.id);
         var txt = f ? CB.fields.printText(f, v, sid) : "";
+        /* it.row (v0.7.0, S5 hlm. 4): tampilkan satu baris tabel saja, mis. baris Price Competitor Matrix S2 */
+        if (it.row && f && f.type === "table") { var rv = ((v || {}).rows || {})[it.row] || {}; txt = f.columns.some(function (c) { return String(rv[c.k] || "").trim(); }) ? "x" : ""; }
         var row = U.el("div", { class: "carryrow" });
         row.appendChild(U.el("b", { text: it.label }));
         row.appendChild(U.el("span", { class: "small muted", text: " · " + CB.pageLabel(it.id) }));
-        var val = (txt && f && f.type === "table") ? carryTable(f, v)
+        if (it.link !== false && sid !== sessId && CB.sessionHref) row.appendChild(U.el("a", { class: "small carrylink", href: CB.sessionHref(it.id), text: " · ubah di halaman asal →" }));
+        var val = (txt && f && f.type === "table") ? carryTable(f, v, it.row)
           : U.el("div", { class: "carryval" + (txt ? "" : " empty"), text: txt || (isOptionalField(it.id)
             ? "Belum diisi di " + CB.pageLabel(it.id) + " (boleh dilewati). Tidak wajib; isi kalau membantu."
             : "Belum diisi di " + CB.pageLabel(it.id) + ". Kembali dan isi dulu; halaman ini harus bisa ditelusuri ke sana.") });
@@ -352,7 +364,7 @@
       var row = U.el("a", { class: "corerow", href: "#p" + it.page });
       var ic = U.el("span", { class: "coreic" });
       var tx = U.el("span", { class: "coretx" });
-      tx.appendChild(U.el("span", { class: "coremust", text: "MUST-DO · " + it.n + " of " + CB.CORE_TOTAL }));
+      tx.appendChild(U.el("span", { class: "coremust", text: "MUST-DO · " + it.n + " of " + CB.coreTotal() }));
       tx.appendChild(U.el("b", { text: it.chain || it.label })); /* nama rantai = peta beranda (doc 74); nama Indonesia = tabel umpan balik (doc 64) */
       var sub = [it.chain && it.chain !== it.label ? it.label : "", it.note || ""].filter(Boolean).join(", ");
       if (sub) tx.appendChild(U.el("span", { class: "corenote", text: " · " + sub }));
@@ -365,7 +377,7 @@
     });
     card.appendChild(list);
     var sum = U.el("p", { class: "small muted coresum" }); card.appendChild(sum);
-    card.appendChild(U.el("p", { class: "small muted" }, "Sembilan hal inti Sesi 1–4 adalah satu rantai yang dipakai lagi di Sesi 5–8. <a href='index.html#rantai'>Lihat petanya di beranda</a>."));
+    card.appendChild(U.el("p", { class: "small muted" }, (spec.n <= 4 ? "Sembilan hal inti Sesi 1–4 adalah satu rantai yang dipakai lagi di Sesi 5–8." : "Hal inti Sesi 1–" + spec.n + " adalah satu rantai: tiap halaman memakai kalimat dari halaman sebelumnya.") + " <a href='index.html#rantai'>Lihat petanya di beranda</a>."));
     function draw() {
       var fn = CB.checks[sessId]; var rows = fn ? fn(CB.data, built) : [];
       var n = 0;
@@ -387,15 +399,19 @@
     var head = U.el("div", { class: "pagehead" });
     head.appendChild(U.el("span", { class: "num", text: String(pg.p) }));
     var ht = U.el("div");
+    if (pg.kicker) ht.appendChild(U.el("div", { class: "pgkicker", text: pg.kicker }));
     ht.appendChild(U.el("h2", { text: pg.title }));
-    ht.appendChild(U.el("span", { class: "pglabel", text: sessId + " · hlm. " + pg.p }));
+    ht.appendChild(U.el("span", { class: "pglabel", text: sessId + " · hlm. " + pg.p + (pg.short ? " · " + pg.short : "") }));
     if (pg.tag) ht.appendChild(U.el("span", { class: "tag", text: pg.tag }));
     var coreIt = coreItemsOf(spec).filter(function (it) { return it.page === pg.p; })[0];
-    if (coreIt) ht.appendChild(U.el("span", { class: "coretag", text: "MUST-DO · " + coreIt.n + " of " + CB.CORE_TOTAL + (coreIt.where.indexOf("(") > 0 ? " · " + coreIt.where.slice(coreIt.where.indexOf("(") + 1, -1) : "") }));
+    if (coreIt) ht.appendChild(U.el("span", { class: "coretag", text: "MUST-DO · " + coreIt.n + " of " + CB.coreTotal() + (coreIt.where.indexOf("(") > 0 ? " · " + coreIt.where.slice(coreIt.where.indexOf("(") + 1, -1) : "") }));
     if (coreIt) card.classList.add("mustpage");
     if (pg.skip) ht.appendChild(U.el("span", { class: "skiptag pgskip", text: "Boleh dilewati" }));
     if (pg.sub) ht.appendChild(U.el("p", { class: "wbsub", text: pg.sub }));
     head.appendChild(ht); card.appendChild(head);
+    /* v0.7.0 (S5): bar "What this page checks" (halaman inti) atau "Optional. Its minimum is already in…" (halaman opsional), persis workbook */
+    if (pg.checks) card.appendChild(U.el("div", { class: "checksbar" }, "<b>What this page checks:</b> " + U.esc(pg.checks)));
+    if (pg.min) card.appendChild(U.el("div", { class: "minbar" }, "<b>Optional.</b> " + U.esc(pg.min)));
     var host = card;
     if (pg.skip) {
       host = U.el("div", { class: "skipbody" });
@@ -423,6 +439,13 @@
     // Isian
     renderCarry(sessId, pg, host);
     var wa = U.el("div", { class: "workarea" });
+    if (pg.shownTop) {
+      var stb = U.el("div", { class: "box shownbox showntop" });
+      stb.appendChild(U.el("label", { text: pg.shownTop.label }));
+      if (pg.shownTop.hint) stb.appendChild(U.el("div", { class: "hint", text: pg.shownTop.hint }));
+      pg.shownTop.from.forEach(function (src) { stb.appendChild(CB.shownSourceEl(src)); });
+      wa.appendChild(stb);
+    }
     if (pg.fields.length) wa.appendChild(U.el("div", { class: "wahead", text: pg.workLabel || "Workbook" }));
     if (pg.strip) { var sp = U.el("div", { class: "wbstrip" }); sp.appendChild(U.el("b", { text: pg.strip.head })); sp.appendChild(document.createTextNode("  " + pg.strip.text)); wa.appendChild(sp); }
     var byId = byIdOf(pg);
@@ -437,6 +460,15 @@
       wa.appendChild(grid);
       var inCols = [].concat.apply([], pg.columns.map(function (c) { return c.ids; }));
       pg.fields.forEach(function (f) { if (inCols.indexOf(f.id) < 0) wa.appendChild(renderField(sessId, f)); });
+    } else if (pg.layout === "bmc") {
+      /* v0.7.0 (S5 hlm. 2): kanvas sembilan kotak; tiap field punya `area` (kp ka kr vp cr ch cs cost rev clash sent) */
+      var bmc = U.el("div", { class: "bmcgrid" }), areas = {};
+      pg.fields.forEach(function (f) {
+        var a = f.area || "x";
+        if (!areas[a]) { areas[a] = U.el("div", { class: "bmccell a_" + a }); bmc.appendChild(areas[a]); }
+        areas[a].appendChild(renderField(sessId, f));
+      });
+      wa.appendChild(bmc);
     } else if (pg.layout === "grid") {
       var g = U.el("div", { class: "fgrid cols" + (pg.cols || 2) });
       pg.fields.forEach(function (f) { g.appendChild(renderField(sessId, f)); });
@@ -454,6 +486,7 @@
       pg.fields.forEach(function (f) { wa.appendChild(renderField(sessId, f)); });
     }
     if (pg.lowest) renderLowest(sessId, pg, wa);
+    if (pg.candidates && CB.renderCandidates) CB.renderCandidates(sessId, pg, wa);
     if (pg.footer) wa.appendChild(U.el("p", { class: "footrule", text: CB.fill(pg.footer, sessId) }));
     host.appendChild(wa);
 
@@ -835,13 +868,18 @@
         var a = U.el("a", { href: ok ? "#p" + p : "javascript:void(0)", class: ok ? "" : "pending" });
         var ci = coreItemsOf(spec).filter(function (it) { return it.page === p; })[0];
         a.innerHTML = '<span class="ord">' + (i + 1) + ".</span>hlm. " + p + " · " + U.esc(pg.title) + (ok ? "" : " (menyusul)") +
-          (ci ? ' <span class="navcore">MUST-DO · ' + ci.n + " of " + CB.CORE_TOTAL + "</span>" : (pg.skip ? ' <span class="navskip">boleh dilewati</span>' : ""));
+          (ci ? ' <span class="navcore">MUST-DO · ' + ci.n + " of " + CB.coreTotal() + "</span>" : (pg.skip ? ' <span class="navskip">boleh dilewati</span>' : ""));
         if (ci) a.classList.add("navmust"); else if (pg.skip) a.classList.add("navopt");
         nav.appendChild(a);
       });
       intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: " + spec.title }));
       intro.appendChild(nav);
       main.appendChild(intro);
+      /* doc 73 §1 aturan 3: halaman ini menampilkan isian S1–S4. Kalau semuanya kosong di browser ini, ajak impor file terakhir. */
+      if (spec.importPrompt) {
+        var anyPrev = ["S1", "S2", "S3", "S4"].some(function (sid) { var c = ((CB.data.sessions || {})[sid] || {}).current || {}; return Object.keys(c).some(function (k) { return CB.isFilled(c[k]); }); });
+        if (!anyPrev) intro.appendChild(U.el("div", { class: "banner info importnudge" }, "<b>Isian Sesi 1–4 belum ada di browser ini.</b> Halaman ini menampilkan masalah, audiens, dan positioning-mu dari sesi sebelumnya. <a href='index.html#impor'>Impor JSON terakhirmu untuk melanjutkan</a>."));
+      }
       renderCore(sessId, spec, built, main);
 
       spec.fillOrder.forEach(function (p) {

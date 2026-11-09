@@ -4,7 +4,7 @@
   var CB = window.CB, U = CB.util;
   var SESSION_IDS = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"];
   // Sesi yang halamannya sudah ada di repo. Ditambah oleh chat pembangun saat sesi baru di-deploy.
-  var LIVE_PAGES = ["S1", "S2", "S3", "S4"];
+  var LIVE_PAGES = ["S1", "S2", "S3", "S4", "S5"];
 
   function fld(id, label, input, help) {
     var d = U.el("div", { class: "fld" });
@@ -174,7 +174,7 @@
     main.appendChild(card);
 
     // Disclaimer AI + cara kerja
-    var how = U.el("section", { class: "card" });
+    var how = U.el("section", { class: "card", id: "impor" });
     how.appendChild(U.el("h2", { text: "Cara kerja" }));
     var ol = U.el("ol", { class: "steps" });
     ["Buka sesi, isi halaman workbook-nya. Isianmu tersimpan otomatis di browser ini.",
@@ -244,8 +244,11 @@
     var items = CB.coreChain(CB.data);
     if (!items.length) return;
     var card = U.el("section", { class: "card chaincard", id: "rantai" });
-    card.appendChild(U.el("h2", { text: "9 must-dos, Sessions 1–4" }));
-    card.appendChild(U.el("p", { class: "lead", text: "Sembilan hal inti ini satu rantai: tiap halaman memakai kalimat dari halaman sebelumnya, dan rantai ini dipakai lagi di Sesi 5–8. Halaman lain di Sesi 1–4 boleh dilewati." }));
+    var lastS = items.reduce(function (m, it) { return Math.max(m, +it.sid.slice(1)); }, 1);
+    card.appendChild(U.el("h2", { text: items.length + " must-dos, Sessions 1–" + lastS }));
+    card.appendChild(U.el("p", { class: "lead", text: lastS <= 4
+      ? "Sembilan hal inti ini satu rantai: tiap halaman memakai kalimat dari halaman sebelumnya, dan rantai ini dipakai lagi di Sesi 5–8. Halaman lain di Sesi 1–4 boleh dilewati."
+      : "Hal inti ini satu rantai: tiap halaman memakai kalimat dari halaman sebelumnya. Sesi 5 menampilkan masalah, audiens, dan positioning-mu tanpa diketik ulang. Halaman lain boleh dilewati." }));
     var ol = U.el("ol", { class: "chain" });
     var done = 0;
     items.forEach(function (it) {
@@ -261,7 +264,7 @@
       li.appendChild(a); ol.appendChild(li);
     });
     card.appendChild(ol);
-    card.appendChild(U.el("p", { class: "small muted", text: done + " dari " + items.length + " terisi" + (items.length < 9 ? " · hal inti sesi berikutnya muncul saat sesinya dibuka." : ".") }));
+    card.appendChild(U.el("p", { class: "small muted", text: done + " dari " + items.length + " terisi" + (lastS < 8 ? " · hal inti sesi berikutnya muncul saat sesinya dibuka." : ".") }));
     main.appendChild(card);
   }
 

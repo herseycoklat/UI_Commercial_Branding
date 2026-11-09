@@ -36,10 +36,13 @@
       "hide_release_date": true
     },
     "S5": {
-      "title": "",
+      "title": "Commercialization Blueprint",
       "week": 4,
       "release": "2026-11-12T00:00:00+07:00",
-      "due": "2026-11-17T23:59:00+07:00"
+      "due": "2026-11-17T23:59:00+07:00",
+      "no_upload_deadline": true,
+      "deadline_note": "batas unggah diumumkan dosen di kelas dan di grup kelas",
+      "hide_release_date": true
     },
     "S6": {
       "title": "",
