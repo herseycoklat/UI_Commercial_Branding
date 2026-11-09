@@ -175,3 +175,40 @@ Terkunci: ya, 39 ID
 | 9 | `s4.p9.criteria` | Creative Approval Checklist — Gate 3 Check | list | opsional | ya |
 | 9 | `s4.p9.creative_question` | QUESTION FROM YOUR CREATIVE STREAM | creativeq | opsional | ya |
 
+## S5 · Commercialization Blueprint
+
+Hal inti: 10. Business Model Canvas (hlm. 2); 11. Pricing + survival line (hlm. 4); 12. Your three bets (hlm. 8)
+
+Terkunci: BELUM
+
+| Hlm | ID | Label | Tipe | Peran | Kunci |
+|---|---|---|---|---|---|
+| 2 | `s5.p2.kp` | KEY PARTNERS | longtext | HAL INTI | TIDAK |
+| 2 | `s5.p2.ka` | KEY ACTIVITIES | longtext | HAL INTI | TIDAK |
+| 2 | `s5.p2.kr` | KEY RESOURCES | longtext | HAL INTI | TIDAK |
+| 2 | `s5.p2.vp` | VALUE PROPOSITIONS · S3 | shown | HAL INTI | TIDAK |
+| 2 | `s5.p2.cr` | CUSTOMER RELATIONSHIPS | longtext | HAL INTI | TIDAK |
+| 2 | `s5.p2.ch` | CHANNELS | longtext | HAL INTI | TIDAK |
+| 2 | `s5.p2.cs` | CUSTOMER SEGMENTS · S2 | shown | HAL INTI | TIDAK |
+| 2 | `s5.p2.cost` | COST STRUCTURE · MARK WHAT GROWS | list | HAL INTI | TIDAK |
+| 2 | `s5.p2.rev` | REVENUE STREAMS · MARK ONE PRIMARY | list | HAL INTI | TIDAK |
+| 2 | `s5.p2.rev_unsure` | Belum bisa memilih PRIMARY? (tambahan app) | longtext | HAL INTI | TIDAK |
+| 2 | `s5.p2.clash` | ONE CLASH IN OUR CANVAS, AND WHAT WE WILL DO | parts | HAL INTI | TIDAK |
+| 2 | `s5.p2.sentence` | OUR CANVAS AS ONE SENTENCE | longtext | HAL INTI | TIDAK |
+| 3 | `s5.p3.a` | OPTION A | parts | opsional | TIDAK |
+| 3 | `s5.p3.b` | OPTION B | parts | opsional | TIDAK |
+| 3 | `s5.p3.primary` | OUR PRIMARY MODEL | longtext | opsional | TIDAK |
+| 4 | `s5.p4.rows` | WHAT IS PRICED · THE FIGURE · REFERENCE PRICE · VOLUME ASSUMED · ORIGI | list | HAL INTI | TIDAK |
+| 4 | `s5.p4.line` | OUR PRICE AGAINST THE REFERENCE: ABOVE / AT / BELOW, BECAUSE… | status | HAL INTI | TIDAK |
+| 4 | `s5.p4.survival` | THE SURVIVAL LINE · ONE CUSTOMER, ONE RECEIPT | status | HAL INTI | TIDAK |
+| 5 | `s5.p5.partners` | PARTNER · WHAT THEY GIVE · WHAT THEY GET · STATUS | list | opsional | TIDAK |
+| 5 | `s5.p5.next` | AT LEAST ONE ROW CONTACTED OR IDENTIFIED | longtext | opsional | TIDAK |
+| 6 | `s5.p6.channels` | CHANNEL · REACH · COST · CONTROL | list | opsional | TIDAK |
+| 6 | `s5.p6.finding` | AT LEAST ONE HIGH-CONTROL CHANNEL; IF YOU HAVE NONE, THAT IS A FINDING | longtext | opsional | TIDAK |
+| 7 | `s5.p7.assets` | ASSET · CREATOR · OWNER · LICENCE STATUS · RISK | list | opsional | TIDAK |
+| 7 | `s5.p7.money` | WHICH LINE OF MONEY DEPENDS ON OWNING SOMETHING YOU DON'T YET OWN? | longtext | opsional | TIDAK |
+| 8 | `s5.p8.bets` | ROW · KIND · WE BET THAT… IF WE'RE WRONG… · HOW WE TEST OR CHECK IT ·  | list | HAL INTI | TIDAK |
+| 9 | `s5.p9.m1` | MILESTONE 1 · months 0 to ___ | parts | opsional | TIDAK |
+| 9 | `s5.p9.m2` | MILESTONE 2 · months ___ to ___ | parts | opsional | TIDAK |
+| 9 | `s5.p9.m3` | MILESTONE 3 · months ___ to 12 | parts | opsional | TIDAK |
+

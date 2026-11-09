@@ -21,7 +21,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.6.7";
+  var APP_VERSION = "0.7.0";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";

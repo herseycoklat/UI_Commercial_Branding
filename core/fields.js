@@ -241,6 +241,7 @@
       });
     } else if (spec.type === "longtext") {
       el = textarea(id, it[spec.k], function (v) { it[spec.k] = v; onChange(); }, 56);
+      if (spec.ph) el.setAttribute("placeholder", spec.ph);
     } else if (spec.type === "select") {
       el = U.el("select", { id: id });
       el.appendChild(U.el("option", { value: "", text: spec.empty || "—" }));
@@ -273,6 +274,12 @@
       val.items.forEach(function (it, i) {
         var row = U.el("div", { class: "litem" + ((f.itemFields || []).length > 1 ? " multi" : "") + (f.numbered ? " numbered" : ""), "data-iid": it.id });
         if (f.numbered) row.appendChild(U.el("span", { class: "lnum", "aria-label": "Nomor " + (i + 1), text: String(i + 1) }));
+        /* f.rowTags (v0.7.0, S5 hlm. 8): label tetap per posisi baris; f.flagTag = { k, eq, text }: label tambahan bila item[k] === eq */
+        if (f.rowTags) {
+          var tg = [f.rowTags[i] || String(i + 1)];
+          if (f.flagTag && it[f.flagTag.k] === f.flagTag.eq) tg.push(f.flagTag.text);
+          row.appendChild(U.el("div", { class: "lrowtag" + (i === 0 ? " first" : ""), text: tg.join(" · ") }));
+        }
         (f.itemFields || [{ k: "text", label: "", type: "text" }]).forEach(function (spec) {
           if (spec.showIf && it[spec.showIf.k] !== spec.showIf.eq) return;
           row.appendChild(itemInput(it, spec, commit, draw));
@@ -946,14 +953,7 @@
       lb.appendChild(r); lb.appendChild(U.el("span", { text: o.label }));
       row.appendChild(lb);
     });
-    box.appendChild(row);
-    var nid = fid(f) + "_note";
-    var nw = U.el("div", { class: "lfield" });
-    nw.appendChild(U.el("label", { for: nid, class: "sub", text: f.noteLabel || "Catatan" }));
-    var ta = textarea(nid, val.note, function (v) { val.note = v; commit(); }, 44);
-    if (f.notePh) ta.setAttribute("placeholder", f.notePh);
-    nw.appendChild(ta); box.appendChild(nw);
-    if (f.extras && f.extras.length) {
+    function extrasBlock() {
       var ex = U.el("div", { class: "statusextras" });
       f.extras.forEach(function (x) {
         var xid = fid(f) + "_" + x.k;
@@ -962,7 +962,65 @@
         w.appendChild(lineInput(xid, val[x.k], x.ph, function (t) { val[x.k] = t; commit(); }));
         ex.appendChild(w);
       });
-      box.appendChild(ex);
+      return ex;
+    }
+    /* f.extrasFirst (v0.7.0, S5 hlm. 4 survival line): isian tambahan tampil sebelum pilihan status */
+    if (f.extrasFirst && f.extras && f.extras.length) box.appendChild(extrasBlock());
+    box.appendChild(row);
+    var nid = fid(f) + "_note";
+    var nw = U.el("div", { class: "lfield" });
+    nw.appendChild(U.el("label", { for: nid, class: "sub", text: f.noteLabel || "Catatan" }));
+    var ta = textarea(nid, val.note, function (v) { val.note = v; commit(); }, 44);
+    if (f.notePh) ta.setAttribute("placeholder", f.notePh);
+    nw.appendChild(ta); box.appendChild(nw);
+    if (!f.extrasFirst && f.extras && f.extras.length) box.appendChild(extrasBlock());
+    return box;
+  };
+
+  /* ---------- shown (v0.7.0, S5 hlm. 2): nilai hulu tampil read-only + satu kotak tambahan opsional ----------
+   * f.from = [{ id, label, item?, k? }] (item/k: ambil satu kolom dari satu item list, mis. baris 1 Promise → Proof)
+   * Nilai yang disimpan = teks tambahan saja ("teks"). Nilai hulu TIDAK disalin (doc 73 §1 aturan 2). */
+  CB.shownSource = function (src) {
+    var m = /^s(\d+)\./.exec(src.id), sid = m ? "S" + m[1] : "";
+    var f = CB.findField(src.id), v = sid ? CB.getField(sid, src.id) : null;
+    if (src.item != null) { var it = v && v.items && v.items[src.item]; return it ? String(it[src.k] || "").trim() : ""; }
+    if (!f) return typeof v === "string" ? v.trim() : "";
+    if (f.type === "trace") return String((v && v.text) || "").trim();
+    return String(F.printText(f, v, sid) || "").trim();
+  };
+  CB.sessionHref = function (id) {
+    var m = /^s(\d+)\.p(\d+)/.exec(id); return m ? "s" + m[1] + ".html#p" + m[2] : "#";
+  };
+  CB.shownSourceEl = function (src) {
+    var row = U.el("div", { class: "shownsrc" });
+    var head = U.el("div", { class: "shownhead" });
+    head.appendChild(U.el("b", { text: src.label }));
+    head.appendChild(U.el("a", { class: "shownlink", href: CB.sessionHref(src.id), text: "ubah di halaman asal →" }));
+    row.appendChild(head);
+    var body = U.el("div", { class: "shownval" });
+    function draw() {
+      var t = CB.shownSource(src);
+      body.textContent = t || ("Belum diisi → " + CB.pageLabel(src.id));
+      body.classList.toggle("empty", !t);
+    }
+    draw(); if (CB.on) CB.on("change", draw);
+    row.appendChild(body);
+    return row;
+  };
+  F.shown = function (sessId, f) {
+    var box = U.el("div", { class: "box shownbox", "data-fid": f.id });
+    box.appendChild(U.el("label", { for: fid(f), text: f.label }));
+    if (f.hint) box.appendChild(U.el("div", { class: "hint", text: f.hint }));
+    var ro = U.el("div", { class: "shownro" });
+    ro.appendChild(U.el("div", { class: "shownnote", text: "Already there · read-only" }));
+    (f.from || []).forEach(function (src) { ro.appendChild(CB.shownSourceEl(src)); });
+    box.appendChild(ro);
+    if (f.extraLabel) {
+      box.appendChild(U.el("label", { for: fid(f), class: "sub", text: f.extraLabel }));
+      var ta = textarea(fid(f), CB.getField(sessId, f.id), function (v) { CB.setField(sessId, f.id, v); changed(f.id); }, 44);
+      if (f.extraPh) ta.setAttribute("placeholder", f.extraPh);
+      ta.setAttribute("data-fid", f.id);
+      box.appendChild(ta);
     }
     return box;
   };
@@ -1044,6 +1102,11 @@
 
   /* ---------- teks cetak per tipe ---------- */
   F.printText = function (f, v, sessId) {
+    if (f.type === "shown") {
+      var up = (f.from || []).map(function (src) { var t = CB.shownSource(src); return t ? src.label + ": " + t : ""; }).filter(Boolean);
+      if (typeof v === "string" && v.trim()) up.push(v.trim());
+      return up.join("\n");
+    }
     if (v == null || v === "") return "";
     if (typeof v === "string") return v;
     if (f.type === "score") return (v.score ? v.score + " / 5" : "—") + (v.justification ? " — " + v.justification : "");

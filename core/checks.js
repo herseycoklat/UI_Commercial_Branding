@@ -187,11 +187,135 @@
   };
 })();
 
+/* ---------- S5: hal inti 10 (Business Model Canvas), 11 (Pricing + survival line), 12 (Your three bets) ----------
+ * doc 73 §1 aturan 4: input baru dihitung, tidak memblokir. Isian S1–S3 yang tampil di hlm. 2 hanya peringatan bila kosong
+ * ("belum diisi" ≠ "tidak cocok"). Teks tanpa kata Gate (doc 64). */
+(function () {
+  "use strict";
+  var CB = window.CB;
+  function txt(v) { return typeof v === "string" ? v.trim() : ""; }
+  function cur(data, sid) { return (((data.sessions || {})[sid]) || {}).current || {}; }
+  function items(v) { return (v && Array.isArray(v.items)) ? v.items : []; }
+  function t(x) { return String(x || "").trim(); }
+  CB.checkGroups.S5 = {
+    i10: { title: "10 · Business Model Canvas (page 2)", help: "Tujuh kotak ditulis; Customer Segments dan Value Propositions tampil dari Sesi 2 dan 3. Biaya ditandai GROWS atau tetap, satu PRIMARY, satu tabrakan, satu kalimat." },
+    i11: { title: "11 · Pricing + survival line (page 4)", help: "Setiap angka punya origin. Satu kalimat ABOVE / AT / BELOW (atau NOT MONEY) dengan alasan dari positioning. Survival line ditulis walau GUESS." },
+    i12: { title: "12 · Your three bets (page 8)", help: "Maksimal tiga baris. Baris 1 diuji ke orang sungguhan sebelum Sesi 7. Minimal satu baris nama (cek: satu orang, satu tanggal)." }
+  };
+  CB.checks.S5 = function (data) {
+    var c = cur(data, "S5"), out = [];
+    /* ---- i10 · page 2 (canvas) ---- */
+    var boxes = ["kp", "ka", "kr", "cr", "ch"].filter(function (k) { return txt(c["s5.p2." + k]); }).length;
+    var costs = items(c["s5.p2.cost"]).filter(function (it) { return t(it.cost); });
+    var revs = items(c["s5.p2.rev"]).filter(function (it) { return t(it.stream); });
+    var n7 = boxes + (costs.length ? 1 : 0) + (revs.length ? 1 : 0);
+    out.push({ group: "i10", key: "c1", label: "Kanvas: " + n7 + "/7 kotak yang kamu tulis terisi (Key Partners, Key Activities, Key Resources, Customer Relationships, Channels, Cost Structure, Revenue Streams).", where: "S5 · hlm. 2", state: n7 === 7 ? "ok" : "no" });
+    var up = [["s1.p7.problem1", "S1", "masalah utama Sesi 1"], ["s2.p4.primary", "S2", "audiens utama Sesi 2"], ["s3.p2.final", "S3", "positioning Sesi 3"]].filter(function (u) {
+      var v = cur(data, u[1])[u[0]]; return !(typeof v === "string" ? v.trim() : (v && t(v.text)));
+    });
+    if (up.length) out.push({ group: "i10", key: "c2", label: "Belum tampil di kanvas: " + up.map(function (u) { return u[2]; }).join(", ") + ". Isi di halaman asalnya, atau impor file terakhirmu.", where: "S5 · hlm. 2", state: "warn" });
+    var unmarked = costs.filter(function (it) { return !it.grows; }).length, grows = costs.filter(function (it) { return it.grows === "grows"; }).length;
+    out.push({ group: "i10", key: "c3", label: !costs.length ? "Cost Structure masih kosong." : (unmarked ? unmarked + " biaya belum ditandai GROWS atau tetap." : "Cost Structure: " + costs.length + " biaya, " + grows + " ditandai GROWS."), where: "S5 · hlm. 2", state: costs.length && !unmarked ? "ok" : "no" });
+    var prim = revs.filter(function (it) { return it.role === "primary"; }).length, unsure = txt(c["s5.p2.rev_unsure"]);
+    out.push({ group: "i10", key: "c4", label: prim === 1 ? "Revenue Streams: satu PRIMARY." : prim > 1 ? "Revenue Streams: " + prim + " baris ditandai PRIMARY. Pilih satu; yang lain turunan." : unsure ? "Belum ada PRIMARY, dan kamu menulis apa yang perlu diketahui dulu (sah untuk minggu ini)." : "Revenue Streams belum punya PRIMARY. Tandai satu, atau tulis apa yang perlu kamu ketahui dulu.", where: "S5 · hlm. 2", state: prim === 1 || (prim === 0 && unsure && revs.length) ? "ok" : "no" });
+    var cl = c["s5.p2.clash"] || {};
+    out.push({ group: "i10", key: "c5", label: t(cl.clash) && t(cl.action) ? "Satu tabrakan ditulis, dengan yang akan kamu lakukan." : "Tabrakan: tulis kotak mana bertabrakan dan yang akan kamu lakukan (keduanya).", where: "S5 · hlm. 2", state: t(cl.clash) && t(cl.action) ? "ok" : "no" });
+    out.push({ group: "i10", key: "c6", label: txt(c["s5.p2.sentence"]) ? "Kanvas dibaca sebagai satu kalimat." : "OUR CANVAS AS ONE SENTENCE masih kosong.", where: "S5 · hlm. 2", state: txt(c["s5.p2.sentence"]) ? "ok" : "no" });
+
+    /* ---- i11 · page 4 (pricing) ---- */
+    var rows = items(c["s5.p4.rows"]).filter(function (it) { return t(it.item) || t(it.figure) || t(it.reference); });
+    var incomplete = rows.filter(function (it) {
+      var base = t(it.item) && t(it.figure) && t(it.reference) && t(it.volume) && it.o_price && it.o_volume;
+      var unk = (it.o_price === "unknown" || it.o_volume === "unknown") && !t(it.o_note);
+      return !base || unk;
+    }).length;
+    out.push({ group: "i11", key: "d1", label: !rows.length ? "Belum ada baris harga. Satu baris per hal yang dibayar orang." : (incomplete ? incomplete + " dari " + rows.length + " baris belum lengkap (lima kolom + origin harga dan volume; UNKNOWN butuh tindakan, pemilik, kapan)." : rows.length + " baris harga, semua angka punya origin."), where: "S5 · hlm. 4", state: rows.length && !incomplete ? "ok" : "no" });
+    if (rows.length && rows.every(function (it) { return it.o_price === "measured" && it.o_volume === "measured"; }))
+      out.push({ group: "i11", key: "d2", label: "Semua origin MEASURED. Itu hampir selalu salah: cek lagi mana yang sebenarnya COMPARABLE atau GUESS.", where: "S5 · hlm. 4", state: "warn" });
+    var ln = c["s5.p4.line"] || {};
+    var lineOk = ln.status && t(ln.note) && (ln.status !== "not_money" || t(ln.gives));
+    out.push({ group: "i11", key: "d3", label: lineOk ? "Harga terhadap reference: " + String(ln.status).replace("_", " ").toUpperCase() + ", dengan alasan." : !ln.status ? "Pilih ABOVE, AT, BELOW, atau NOT MONEY, lalu tulis alasannya." : (ln.status === "not_money" && !t(ln.gives) ? "NOT MONEY: tulis apa yang mereka berikan." : "Tulis alasannya (\"because ___\", dari positioning Sesi 3)."), where: "S5 · hlm. 4", state: lineOk ? "ok" : "no" });
+    var sv = c["s5.p4.survival"] || {};
+    var svOk = sv.status && t(sv.note);
+    out.push({ group: "i11", key: "d4", label: svOk ? "Survival line ditulis: " + (sv.status === "positive" ? "POSITIVE" : sv.status === "negative" ? "NEGATIVE (normal di tahap ini)" : "UNKNOWN, dengan bagian yang belum diketahui") + "." : "Survival line: pilih hasilnya dan tulis hitungannya, walau GUESS.", where: "S5 · hlm. 4", state: svOk ? "ok" : "no" });
+    if (svOk && !(t(sv.money_in) && t(sv.money_out))) out.push({ group: "i11", key: "d5", label: "Survival line: isi juga uang masuk dan biaya untuk satu pelanggan, supaya hitungannya bisa dibaca.", where: "S5 · hlm. 4", state: "warn" });
+
+    /* ---- i12 · page 8 (your three bets) ---- */
+    var bets = items(c["s5.p8.bets"]);
+    var full = bets.filter(function (b) { return b.kind && t(b.bet) && t(b.wrong) && t(b.test) && t(b.who) && t(b.when); }).length;
+    out.push({ group: "i12", key: "e1", label: !bets.length ? "Belum ada taruhan." : full + " dari " + bets.length + " baris lengkap (kind, we bet that, if we're wrong, cara uji atau cek, siapa, kapan).", where: "S5 · hlm. 8", state: bets.length && full === bets.length ? "ok" : "no" });
+    var named = bets.filter(function (b) { return b.namerow === "yes"; }).length;
+    out.push({ group: "i12", key: "e2", label: named ? "Ada baris nama (siapa pemilik nama dan aset utama)." : "Belum ada baris nama. Minimal satu baris tentang siapa pemilik nama proyek dan aset utamamu.", where: "S5 · hlm. 8", state: named ? "ok" : "no" });
+    if (bets[0] && (bets[0].namerow === "yes" || bets[0].kind === "legal"))
+      out.push({ group: "i12", key: "e3", label: "Baris 1 adalah taruhan yang diuji ke orang sungguhan sebelum Sesi 7. Baris nama (legal) adalah cek; pindahkan ke baris 2 atau 3.", where: "S5 · hlm. 8", state: "warn" });
+    out.push({ group: "i12", key: "e4", label: "Baris 1 dibawa ke Sesi 7: cara mengujinya dibahas di akhir Sesi 6.", where: "S5 · hlm. 8", state: "info" });
+    return out;
+  };
+
+  /* Kandidat hlm. 8 (doc 73 §3, doc 82 §3): ditampilkan di samping tabel, bukan picker, tidak disimpan. */
+  CB.s5Candidates = function (data) {
+    var c5 = cur(data, "S5"), out = [];
+    function add(src, href, text) { out.push({ src: src, href: href, text: text }); }
+    items(c5["s5.p4.rows"]).forEach(function (it) {
+      var lab = { guess: "GUESS", unknown: "UNKNOWN" };
+      var parts = [];
+      if (lab[it.o_price]) parts.push("price " + lab[it.o_price]);
+      if (lab[it.o_volume]) parts.push("volume " + lab[it.o_volume]);
+      if (parts.length) add("Today · page 4 (pricing)", "#p4", (t(it.item) || "(baris tanpa nama)") + ": " + parts.join(", ") + (t(it.o_note) ? " · " + t(it.o_note) : ""));
+    });
+    var sv = c5["s5.p4.survival"] || {};
+    if (sv.status === "negative" || sv.status === "unknown") add("Today · page 4 (pricing)", "#p4", "Survival line " + sv.status.toUpperCase() + (t(sv.note) ? ": " + t(sv.note) : ""));
+    var cl = c5["s5.p2.clash"] || {};
+    if (t(cl.clash)) add("Today · page 2 (canvas)", "#p2", "Clash: " + t(cl.clash) + (t(cl.action) ? " · what we will do: " + t(cl.action) : ""));
+    items(cur(data, "S3")["s3.p5.promise_proof"]).forEach(function (it) {
+      if (it.status === "planned" || it.status === "unknown") add("Earlier · S3 Promise → Proof", "s3.html#p5", (it.status === "planned" ? "PLANNED: " : "UNKNOWN: ") + (t(it.promise) || "(promise tanpa teks)"));
+    });
+    var c4 = cur(data, "S4");
+    if (txt(c4["s4.p6.have"]) || txt(c4["s4.p6.need"])) add("Earlier · S4 brand codes", "s4.html#p6", "Codes: " + [txt(c4["s4.p6.have"]), txt(c4["s4.p6.need"])].filter(Boolean).join(" · ") + " — owners written: " + (txt(c4["s4.p6.owners"]) || "none yet"));
+    var name = txt(c4["s4.p2.product"]) || t((data.identifier || {}).project_name);
+    add("Earlier · your project's name", txt(c4["s4.p2.product"]) ? "s4.html#p2" : "index.html", (name || "(nama proyek belum ditulis)") + " — who owns this name today? A person, the team, or UNKNOWN.");
+    items(c5["s5.p5.partners"]).forEach(function (it) { if (it.status === "aspirational") add("Page 5 (partners)", "#p5", "ASPIRATIONAL partner: " + (t(it.partner) || "(tanpa nama)")); });
+    items(c5["s5.p6.channels"]).forEach(function (it) {
+      var cst = t(it.cost);
+      if (cst && /\b(jam|hours?)\b/i.test(cst) && !/(rp|%|\$|rupiah|percent)/i.test(cst)) add("Page 6 (channels)", "#p6", "Hours-only channel: " + (t(it.channel) || "(tanpa nama)") + " · " + cst);
+    });
+    items(c5["s5.p7.assets"]).forEach(function (it) { if (/not yet|belum/i.test(t(it.owner) + " " + t(it.licence))) add("Page 7 (IP)", "#p7", "NOT YET AGREED: " + (t(it.asset) || "(aset tanpa nama)")); });
+    return out;
+  };
+  CB.renderCandidates = function (sessId, pg, host) {
+    var U = CB.util;
+    var box = U.el("div", { class: "candbox" });
+    box.appendChild(U.el("div", { class: "candhead" }, "<b>" + U.esc(pg.candidates.head) + "</b> · already there, from your own pages (not a picker: copy what you choose into a row)"));
+    box.appendChild(U.el("p", { class: "small muted", text: pg.candidates.text }));
+    var ul = U.el("ul", { class: "candlist" }); box.appendChild(ul);
+    function draw() {
+      ul.innerHTML = "";
+      var list = CB.s5Candidates(CB.data);
+      list.forEach(function (x) {
+        var li = U.el("li");
+        li.appendChild(U.el("a", { class: "candsrc", href: x.href, text: x.src }));
+        li.appendChild(document.createTextNode(" " + x.text));
+        ul.appendChild(li);
+      });
+    }
+    draw(); if (CB.on) CB.on("change", draw);
+    host.appendChild(box);
+  };
+})();
+
 /* ---------- status hal inti, dipakai panel sesi dan peta rantai di beranda (v0.6.0, doc 74) ---------- */
 (function () {
   "use strict";
   var CB = window.CB;
   CB.CORE_TOTAL = 9;
+  /* v0.7.0: jumlah hal inti = hal inti sesi yang sudah dirilis (S1–S4 = 9, + S5 = 12). Angka per sesi tetap di sini supaya
+   * halaman sesi lama (yang tidak memuat spec S5) tetap menulis angka yang sama dengan beranda. */
+  var CORE_COUNT = { S1: 1, S2: 3, S3: 2, S4: 3, S5: 3 };
+  CB.coreTotal = function () {
+    var n = 0;
+    Object.keys(CORE_COUNT).forEach(function (sid) { if (sid <= "S4" || !CB.isReleased || CB.isReleased(sid)) n += CORE_COUNT[sid]; });
+    return n;
+  };
   /* Satu hal inti terisi = baris cek kelompoknya tidak ada yang "no" atau "pending". "warn" tetap dihitung terisi. */
   CB.coreDone = function (rows, it) {
     var mine = rows.filter(function (r) { return r.group === it.k; });
@@ -200,7 +324,7 @@
   /* Rantai sembilan hal inti S1–S4 berurutan (n 1…9), hanya sesi yang dirilis (atau mode pratinjau). */
   CB.coreChain = function (data) {
     var out = [];
-    ["S1", "S2", "S3", "S4"].forEach(function (sid) {
+    ["S1", "S2", "S3", "S4", "S5"].forEach(function (sid) {
       var spec = (CB.specs || {})[sid], fn = CB.checks[sid];
       if (!spec || !spec.core || !fn || (CB.isReleased && !CB.isReleased(sid))) return;
       var rows = fn(data || CB.data, spec.pages.map(function (p) { return p.p; }));

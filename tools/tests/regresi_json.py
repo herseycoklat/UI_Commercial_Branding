@@ -4,7 +4,7 @@ Wajib dijalankan sebelum setiap rilis yang menyentuh sessions/*.js, core/fields.
 
 Pakai:
   python3 tools/tests/regresi_json.py buat-contoh <folder_keluar>
-      Membuat file contoh "semua kolom terisi" untuk S1–S4 dengan mengisi setiap input di halaman sesi,
+      Membuat file contoh "semua kolom terisi" untuk S1–S5 dengan mengisi setiap input di halaman sesi,
       lalu menambah bentuk data lama (Leadership Log v0.1, S3 why_placed teks, kunci tak dikenal).
   python3 tools/tests/regresi_json.py uji <folder_berisi_json>
       Untuk tiap file: muat ke browser seperti milik mahasiswa, buka setiap halaman sesi yang ada isinya,
@@ -20,7 +20,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 PORT = 8779
 BASE = f"http://localhost:{PORT}/"
 CHROME = "/opt/pw-browsers/chromium" if os.path.exists("/opt/pw-browsers/chromium") else None
-SESS = ["S1", "S2", "S3", "S4"]
+SESS = ["S1", "S2", "S3", "S4", "S5"]
 NIM = "2399000001"
 
 
