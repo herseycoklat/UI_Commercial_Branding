@@ -1,5 +1,5 @@
 // Kelas Live — 3 layar pengantar (I1–I3, doc 63) + 25 layar Sesi 4 (Lampiran E skrip v3) + 13 layar Sesi 5 (L1–L13,
-// Lampiran C skrip gabungan S5 v1). Layar = data, bukan kode.
+// Lampiran C skrip gabungan S5 v1) + 4 layar Sesi 6 (L1–L4, skrip kelas S6 v1). Layar = data, bukan kode.
 // Teks pertanyaan dan opsi disalin dari Week3-Sesi4-skrip-final-v3-kelas-live.md.
 // Tipe bidang: single | multi | text | grid
 //   single : satu pilihan (dipakai juga untuk "kategori")
@@ -13,7 +13,7 @@
 //   catatanku : {halaman, bagian} bila jawaban masuk Catatanku; 'pengingat' bila hanya pengingat
 //   waktu     : detik yang disarankan (hanya petunjuk untuk dosen)
 //   key       : kunci jawaban (penanda, bukan ⚠). Aturan ⚠ ada di flags.js
-//   sesi      : 'S1' | 'S2' | 'S3' | 'S4' | 'S5'  (label filter, doc 63)
+//   sesi      : 'S1' .. 'S6'  (label filter, doc 63)
 //   jenis     : 'insight' (tebakan kasus Gojek di pengantar) | 'kelas' (materi sesi)
 
 const o = (v, t, d) => (d ? { v, t, d } : { v, t });
@@ -374,6 +374,7 @@ const SESI4 = [
 //   konteks      : baris teks yang tampil DI ATAS pertanyaan (HP dan layar dosen)
 //   urutan (bidang): urutan tampil opsi di HP (acak tetap); hasil dosen tetap urut A–H seperti slide
 //   kunciTerpisah: hasil tampil dulu TANPA tanda kunci; dosen klik "Tandai yang dilaporkan" (L1)
+//   labelKunci   : teks tombol itu bila bukan "Tandai yang dilaporkan" (S6: "Tandai kunci")
 const L = (no, n, judul, segmen, waktu, label, opts, key, extra = {}) => ({
   id: `l${no}`, no: `L${no}`, slide: n, segmen, judul, mode: 'tebak', waktu, ...extra,
   fields: [{ id: 'jawab', type: 'single', label, key, options: opts.map((t, i) => o('abcd'[i], `${'ABCD'[i]}. ${t}`)) }],
@@ -446,10 +447,59 @@ const SESI5 = [
     { konteks: ['In 2017 Ruben Onsu was the face of "I Am Geprek Bensu".', '"Bensu" even reads like his name: RuBEN OnSU.'] }),
 ];
 
-// Ke-25 layar lama: sesi S4, jenis kelas (doc 63). Urutan: I1 → I2 → I3 → Q1 → … → Q25 → L1 → … → L13
+// ---------- Sesi 6 (Week 5): L1–L4 ----------
+// Sumber tunggal: skrip kelas S6 v1 (Week5-Sesi6-skrip-kelas-v1.md slide 3; -bagian2.md slide 4 dan 5; -bagian3.md slide 12).
+// Teks disalin persis dan dicocokkan otomatis dengan tabel skrip (test/logic.test.js). Id `s6-lN` supaya tidak bentrok dengan `lN` Sesi 5.
+// L1–L3: pilihan tunggal, 30 detik, persentase dulu, kunci ditandai kemudian (kunciTerpisah). L4: tanpa kunci.
+// Properti opsi `dosen`: label yang HANYA tampil di layar dosen (L4: SAY / DO / PAY / Ditolak). Tidak pernah digambar di HP.
+const S6 = (no, n, judul, segmen, label, opts, key, extra = {}) => ({
+  id: `s6-l${no}`, no: `L${no}`, slide: n, segmen, judul, mode: 'tebak', waktu: 30, ...(key ? { kunciTerpisah: true, labelKunci: 'Tandai kunci' } : {}), ...extra,
+  fields: [{ id: 'jawab', type: 'single', label, ...(key ? { key } : {}),
+    options: opts.map((t, i) => (Array.isArray(t) ? { ...o('abcd'[i], `${'ABCD'[i]}. ${t[0]}`), dosen: t[1] } : o('abcd'[i], `${'ABCD'[i]}. ${t}`))) }],
+});
+
+const SESI6 = [
+  S6(1, 3, 'Clubhouse · Kenapa yang paling setia ikut pergi?', 'Clubhouse',
+    'Menurutmu, kenapa pengguna Clubhouse yang paling setia ikut pergi?',
+    ['Twitter dan Instagram meniru fiturnya, penggunanya pindah ke sana',
+      'Versi Android datang terlambat, hype-nya keburu habis',
+      'Pandemi selesai, orang tidak punya waktu lagi untuk ngobrol berjam-jam',
+      'Setelah dibuka untuk umum, ruangnya tidak lagi terasa eksklusif'], 'd',
+    { konteks: ['Clubhouse: aplikasi ruang obrolan suara, live.',
+      '2021: 10 juta pengguna per minggu, valuasi 4 miliar dolar.',
+      '2023: PHK lebih dari setengah karyawan.',
+      'Pengguna paling awal dan paling setia ikut pergi.'] }),
+  S6(2, 4, 'Clubhouse · Pesan "eksklusif" datang dari mana?', 'Message',
+    "Clubhouse tidak pernah menulis 'eksklusif'. Dari mana audiens aslinya mendapat pesan itu?",
+    ['Dari deskripsi di App Store dan situsnya',
+      'Dari cara masuknya: harus diundang teman, hanya iPhone',
+      'Dari ramainya Elon Musk ikut ngobrol di awal 2021',
+      'Dari berita valuasi 4 miliar dolar'], 'b'),
+  S6(3, 5, 'Clubhouse · Angka paling atas', 'KPI Tree',
+    'Kamu PM Clubhouse di tahun 2021. Angka apa yang kamu taruh paling atas?',
+    ['Berapa banyak orang yang aktif setiap minggu',
+      'Berapa banyak room yang dibuat setiap hari',
+      'Berapa banyak orang yang mengunduh setiap bulan',
+      'Berapa banyak orang yang masih aktif sebulan setelah masuk'], 'd'),
+  S6(4, 12, 'Jumbo · SAY, DO, PAY', 'Jumat depan',
+    'Seorang ibu dengan anak usia SD melihat kartu Jumbo. Jawaban apa yang paling kamu harapkan darinya?',
+    [['"Wah, bagus banget. Nanti saya tonton sama anak saya."', 'SAY'],
+      ['"Boleh kirim link presale-nya? Saya cek jadwal hari Minggu dulu."', 'DO'],
+      ['"Saya beli empat tiket sekarang, untuk Minggu pagi."', 'PAY'],
+      ['"Kayaknya bukan untuk kami. Anak saya takut nonton di bioskop yang gelap."', 'DITOLAK']], null,
+    { konteks: ['Jumbo',
+      'Untuk siapa: keluarga dengan anak usia SD',
+      'Pesan utama: "The film you want your kids to watch: courage, friendship and family love, proudly blending Indonesian culture with world-class animation. Quality time for the whole family this Lebaran."',
+      'Di mana: bioskop XXI, CGV, Cinepolis, libur Lebaran, mulai 31 Maret',
+      'Harga: Rp40–45 ribu per tiket',
+      'Yang kami minta: ajak keluargamu menonton Jumbo di libur Lebaran.'] }),
+];
+
+// Ke-25 layar lama: sesi S4, jenis kelas (doc 63). Urutan: I1 → I2 → I3 → Q1 → … → Q25 → L1 → … → L13 (S5) → L1 → … → L4 (S6)
 export const SCREENS = [...PENGANTAR, ...SESI4.map((x) => ({ ...x, sesi: 'S4', jenis: 'kelas' })),
-  ...SESI5.map((x) => ({ ...x, sesi: 'S5', jenis: 'kelas' }))];
-export const SESI_LIST = ['S1', 'S2', 'S3', 'S4', 'S5'];
+  ...SESI5.map((x) => ({ ...x, sesi: 'S5', jenis: 'kelas' })),
+  ...SESI6.map((x) => ({ ...x, sesi: 'S6', jenis: 'kelas' }))];
+export const SESI_LIST = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'];
 export const JENIS_LIST = ['insight', 'kelas'];
 export const matchFilter = (s, f = {}) => (!f.sesi || s.sesi === f.sesi) && (!f.jenis || s.jenis === f.jenis);
 

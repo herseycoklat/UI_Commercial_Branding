@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { SCREENS, SCREEN_BY_ID, SESI_LIST, JENIS_LIST, matchFilter } from '../screens.js';
 import { aggregateScreen, groupBrands, normalizeBrand } from '../aggregate.js';
@@ -6,18 +7,20 @@ import { flagsFor, collectFlags, markField, markSummary } from '../flags.js';
 import { toCsv, cell, guard, catatankuRows, answerText, BOM, COLUMNS } from '../csv.js';
 
 // ---------- screens ----------
-test('41 layar: I1–I3, 25 layar Sesi 4 bernomor 1..25, lalu L1–L13 Sesi 5, id unik', () => {
-  assert.equal(SCREENS.length, 41);
-  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 41);
+test('45 layar: I1–I3, 25 layar Sesi 4 bernomor 1..25, L1–L13 Sesi 5, L1–L4 Sesi 6, id unik', () => {
+  assert.equal(SCREENS.length, 45);
+  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 45);
   assert.deepEqual(SCREENS.slice(0, 4).map((s) => s.id), ['i1', 'i2', 'i3', 'q1']);
   SCREENS.slice(3, 28).forEach((s, i) => assert.equal(s.no, i + 1));
-  assert.deepEqual(SCREENS.slice(28).map((s) => s.no), Array.from({ length: 13 }, (_, i) => `L${i + 1}`));
+  assert.deepEqual(SCREENS.slice(28, 41).map((s) => s.no), Array.from({ length: 13 }, (_, i) => `L${i + 1}`));
+  assert.deepEqual(SCREENS.slice(41).map((s) => s.id), ['s6-l1', 's6-l2', 's6-l3', 's6-l4']);
 });
 
-test('label sesi × jenis: I1=S1, I2=S2, I3=S3 insight; 25 layar S4 kelas; 13 layar S5 kelas', () => {
+test('label sesi × jenis: I1=S1, I2=S2, I3=S3 insight; 25 layar S4 kelas; 13 layar S5 kelas; 4 layar S6 kelas', () => {
   assert.deepEqual(SCREENS.slice(0, 3).map((s) => `${s.sesi}/${s.jenis}`), ['S1/insight', 'S2/insight', 'S3/insight']);
   for (const s of SCREENS.slice(3, 28)) assert.equal(`${s.sesi}/${s.jenis}`, 'S4/kelas', s.id);
-  for (const s of SCREENS.slice(28)) assert.equal(`${s.sesi}/${s.jenis}`, 'S5/kelas', s.id);
+  for (const s of SCREENS.slice(28, 41)) assert.equal(`${s.sesi}/${s.jenis}`, 'S5/kelas', s.id);
+  for (const s of SCREENS.slice(41)) assert.equal(`${s.sesi}/${s.jenis}`, 'S6/kelas', s.id);
   for (const s of SCREENS) assert.ok(SESI_LIST.includes(s.sesi) && JENIS_LIST.includes(s.jenis), s.id);
 });
 
@@ -64,8 +67,73 @@ test('L1–L13 (Lampiran C S5): slide, tipe, jumlah opsi, waktu, kunci, konteks;
   assert.equal(collectFlags(SCREEN_BY_ID.l2, { 1: { values: { jawab: 'a' } } }).length, 0); // tanpa ⚠
 });
 
+// ---------- Sesi 6: L1–L4 harus sama dengan kutipan skrip (test/fixtures/s6-skrip-v1.md) ----------
+const strip = (t) => t.replace(/\*\*/g, '').replace(/\*/g, '').trim();
+function parseSkripS6() {
+  const md = readFileSync(new URL('./fixtures/s6-skrip-v1.md', import.meta.url), 'utf8');
+  const blok = md.split(/^## /m).slice(1);
+  return blok.map((b) => {
+    const tanya = b.match(/\*"(.+?)"\*/s)[1];
+    const opsi = [...b.matchAll(/^- ([A-D])\. (.+?)(?: \*\((\w+)\)\*)?$/gm)].map((m) => ({ huruf: m[1], teks: m[2], dosen: m[3] }));
+    const kunci = (b.match(/^Kunci:? \*\*([A-D])\*\*/m) || [])[1];
+    const konteksM = b.match(/^Konteks:\n> (.+)$/m);
+    const konteks = konteksM ? strip(konteksM[1]).split(/(?<=\.) /) : null;
+    return { tanya, opsi, kunci, konteks };
+  });
+}
+
+test('S6 L1–L4: pertanyaan, opsi A–D, kunci, dan konteks L1 sama persis dengan skrip', () => {
+  const skrip = parseSkripS6();
+  assert.equal(skrip.length, 4);
+  const layar = SCREENS.filter((s) => s.sesi === 'S6');
+  layar.forEach((s, i) => {
+    const k = skrip[i]; const f = s.fields[0];
+    assert.equal(f.label, k.tanya, s.id);
+    assert.equal(f.options.length, 4, s.id);
+    f.options.forEach((op, j) => {
+      assert.equal(op.t, `${k.opsi[j].huruf}. ${k.opsi[j].teks}`, `${s.id} opsi ${j}`);
+      assert.equal(op.v, k.opsi[j].huruf.toLowerCase(), `${s.id} nilai ${j}`);
+    });
+    assert.equal(f.key, k.kunci ? k.kunci.toLowerCase() : undefined, `${s.id} kunci`);
+  });
+  assert.deepEqual(SCREEN_BY_ID['s6-l1'].konteks, skrip[0].konteks);
+});
+
+test('S6: slide, waktu, tipe; L1–L3 kunciTerpisah dan tombol "Tandai kunci"; L4 tanpa kunci; tanpa kata Gate', () => {
+  const L = SCREENS.filter((s) => s.sesi === 'S6');
+  assert.deepEqual(L.map((s) => s.slide), [3, 4, 5, 12]);
+  assert.deepEqual(L.map((s) => s.no), ['L1', 'L2', 'L3', 'L4']);
+  for (const s of L) {
+    assert.equal(s.waktu, 30, s.id); assert.equal(s.mode, 'tebak', s.id);
+    assert.equal(s.fields.length, 1, s.id); assert.equal(s.fields[0].type, 'single', s.id);
+    assert.equal(s.catatanku, undefined, s.id); assert.equal(s.pengingat, undefined, s.id);
+    assert.ok(!/gate/i.test(JSON.stringify(s)), `${s.id} memuat kata Gate`);
+  }
+  for (const s of L.slice(0, 3)) { assert.equal(s.kunciTerpisah, true, s.id); assert.equal(s.labelKunci, 'Tandai kunci', s.id); }
+  assert.equal(L[3].kunciTerpisah, undefined); assert.equal(L[3].fields[0].key, undefined);
+  assert.deepEqual(L.slice(0, 3).map((s) => s.fields[0].key), ['d', 'b', 'd']);
+  assert.deepEqual(L.filter((s) => s.konteks).map((s) => s.no), ['L1', 'L4']);
+  assert.equal(L[0].konteks.length, 4);
+  // L4: kartu Jumbo teks pendek berisi enam baris, "Yang kami minta" terakhir
+  assert.equal(L[3].konteks.length, 6);
+  assert.ok(L[3].konteks[2].startsWith('Pesan utama: "The film you want your kids to watch'));
+  assert.ok(L[3].konteks[5].startsWith('Yang kami minta:'));
+  // label SAY/DO/PAY/Ditolak hanya di L4, hanya sebagai properti `dosen` (bukan di teks opsi yang tampil di HP)
+  assert.deepEqual(L[3].fields[0].options.map((o) => o.dosen), ['SAY', 'DO', 'PAY', 'DITOLAK']);
+  for (const op of L[3].fields[0].options) assert.ok(!/SAY|\bDO\b|PAY|DITOLAK/.test(op.t + (op.d || '')), op.v);
+  for (const s of L.slice(0, 3)) for (const op of s.fields[0].options) assert.equal(op.dosen, undefined);
+  // L4 tanpa kunci: tidak ada tanda sesuai/tidak sesuai
+  assert.equal(markSummary(L[3], { 1: { values: { jawab: 'a' } } }, {})?.jawab, undefined);
+  assert.equal(collectFlags(L[3], { 1: { values: { jawab: 'a' } } }).length, 0);
+  // kunci L1–L3 dihitung seperti biasa
+  assert.equal(markField(L[0].fields[0], 'd').ok, true);
+  assert.equal(markField(L[1].fields[0], 'a').ok, false);
+});
+
 test('filter sesi × jenis', () => {
-  assert.equal(SCREENS.filter((s) => matchFilter(s, {})).length, 41);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, {})).length, 45);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S6' })).length, 4);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S6', jenis: 'insight' })).length, 0);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S5' })).length, 13);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S5', jenis: 'insight' })).length, 0);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { jenis: 'insight' })).length, 3);

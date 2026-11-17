@@ -66,7 +66,7 @@ check('dosen: hasil sama sekali tidak tampil sebelum layar dibuka', !(await d.pa
 
 // ---------- 3. q1: buka -> jawab -> counter -> hasil tersembunyi -> tampilkan ----------
 const selOrder = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
-check('daftar layar dosen: I1 → I2 → I3 → Q1 → … → L1 … L13 (41 layar)', selOrder.slice(0, 4).join(',') === 'i1,i2,i3,q1' && selOrder.length === 41 && selOrder.slice(28).join(',') === Array.from({ length: 13 }, (_, i) => `l${i + 1}`).join(','), selOrder.slice(0, 5).join(','));
+check('daftar layar dosen: I1 → I2 → I3 → Q1 → … → L1 … L13 (S5) → s6-l1 … s6-l4 (45 layar)', selOrder.slice(0, 4).join(',') === 'i1,i2,i3,q1' && selOrder.length === 45 && selOrder.slice(28, 41).join(',') === Array.from({ length: 13 }, (_, i) => `l${i + 1}`).join(',') && selOrder.slice(41).join(',') === 's6-l1,s6-l2,s6-l3,s6-l4', selOrder.slice(0, 5).join(','));
 await d.page.selectOption('#sel', 'q1');
 await d.page.click('#btn-open');
 await s1.page.waitForSelector('fieldset[data-field="brand"]');
@@ -391,11 +391,11 @@ check('filter jenis=insight: daftar layar hanya I1–I3', opts.join(',') === 'i1
 await d.page.selectOption('#f-jenis', '');
 await d.page.selectOption('#f-sesi', 'S4');
 opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
-check('filter sesi=S4: 25 layar kelas (ditambah layar terpilih bila di luar filter)', opts.filter((v) => !v.startsWith('i') && !v.startsWith('l')).length === 25);
+check('filter sesi=S4: 25 layar kelas (ditambah layar terpilih bila di luar filter)', opts.filter((v) => !v.startsWith('i') && !/^l\d+$/.test(v) && !v.startsWith('s6-')).length === 25);
 await d.page.selectOption('#f-sesi', 'S5');
-await until(d.page, () => [...document.querySelectorAll('#sel option')].every((o) => o.value.startsWith('l'))).catch(() => {});
+await until(d.page, () => { const os = [...document.querySelectorAll('#sel option')]; return os.length === 13 && os.every((o) => /^l\d+$/.test(o.value)); }).catch(() => {});
 opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
-check('filter sesi=S5: L1–L13 (13 layar)', opts.filter((v) => v.startsWith('l')).length === 13 && opts.filter((v) => !v.startsWith('l') && !v.startsWith('i')).length === 0, opts.join(','));
+check('filter sesi=S5: L1–L13 (13 layar)', opts.filter((v) => /^l\d+$/.test(v)).length === 13 && opts.length === 13, opts.join(','));
 await d.page.selectOption('#f-sesi', '');
 
 // kehadiran: pembagi = layar dibuka, rincian per jenis, filter, CSV
@@ -428,6 +428,72 @@ await d.page.click('#btn-open');
 await d.page.click('button:has-text("Kehadiran")');
 check('layar yang dibuka setelah dikosongkan tercatat lagi (pembagi 1)', await waitRow(/dari 1 /), await rowN3());
 await d.page.click('button:has-text("Layar")');
+
+// ---------- 10e. Sesi 6: L1–L4 (konteks, tanda kunci terpisah, label SAY/DO/PAY hanya di dosen) ----------
+await d.page.selectOption('#f-sesi', 'S6');
+await until(d.page, () => { const os = [...document.querySelectorAll('#sel option')]; return os.length === 4 && os.every((o) => o.value.startsWith('s6-')); }).catch(() => {});
+opts = await d.page.locator('#sel option').evaluateAll((os) => os.map((o) => o.value));
+check('filter sesi=S6: s6-l1 … s6-l4 (4 layar)', opts.join(',') === 's6-l1,s6-l2,s6-l3,s6-l4', opts.join(','));
+const lab6 = await d.page.locator('#sel option').allInnerTexts();
+check('daftar dosen S6: label memuat nomor slide deck (L1 slide 3, L2 slide 4, L3 slide 5, L4 slide 12) dan [S6 · kelas]',
+  /L1\./.test(lab6[0]) && /slide 3\)/.test(lab6[0]) && /slide 4\)/.test(lab6[1]) && /slide 5\)/.test(lab6[2]) && /slide 12\)/.test(lab6[3]) && lab6.every((t) => /\[S6 · kelas\]/.test(t)), lab6.join(' | '));
+await d.page.selectOption('#sel', 's6-l1');
+await d.page.click('#btn-open');
+check('S6 L1 di HP: konteks empat baris di atas pertanyaan', await bodyHas(x.page, /Clubhouse: aplikasi ruang obrolan suara, live\.\s*2021: 10 juta pengguna per minggu, valuasi 4 miliar dolar\.\s*2023: PHK lebih dari setengah karyawan\.\s*Pengguna paling awal dan paling setia ikut pergi\.\s*Menurutmu, kenapa pengguna Clubhouse yang paling setia ikut pergi\?/));
+const s6l1 = await x.page.locator('fieldset[data-field="jawab"] label.opt b').allInnerTexts();
+check('S6 L1 di HP: opsi A–D urut, teks skrip', s6l1.length === 4 && s6l1[3] === 'D. Setelah dibuka untuk umum, ruangnya tidak lagi terasa eksklusif' && s6l1.map((t) => t[0]).join('') === 'ABCD', s6l1.join(' | '));
+await opt(x.page, 'jawab', 'D\\. Setelah dibuka untuk umum, ruangnya tidak lagi terasa eksklusif').click();
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+await x.page.screenshot({ path: `${SHOTS}/s6-l1-360.png`, fullPage: true });
+check('360px: layar S6 L1 tanpa geser ke samping', !(await x.page.evaluate(() => document.documentElement.scrollWidth > innerWidth)));
+check('S6 L1: tombol "Tandai kunci" belum ada sebelum Tampilkan hasil', (await d.page.locator('#btn-key').count()) === 0);
+await d.page.click('#btn-reveal');
+await bodyHas(d.page, /1 \(100%\)/);
+check('S6 L1 dosen: persentase tampil TANPA tanda kunci dulu', (await d.page.locator('.bar.key').count()) === 0 && !/✓|Sesuai kunci/.test(await d.page.innerText('.results')));
+check('S6 L1 dosen: tombol berlabel "Tandai kunci"', (await d.page.locator('#btn-key').innerText()).trim() === 'Tandai kunci');
+await d.page.click('#btn-key');
+await until(d.page, () => document.querySelectorAll('.bar.key').length > 0).catch(() => {});
+check('S6 L1 dosen: setelah Tandai kunci, hanya D bertanda ✓ dan "Sesuai kunci 1 dari 1"', (await d.page.locator('.bar.key .bl').allInnerTexts()).map((t) => t[0]).join('') === 'D' && await bodyHas(d.page, /Sesuai kunci di skrip: 1 dari 1/));
+check('S6 L1: tidak ada label SAY/DO/PAY di layar dosen', !/SAY|PAY|DITOLAK/.test(await d.page.innerText('.results')));
+await d.page.selectOption('#sel', 's6-l2');
+await d.page.click('#btn-open');
+check('S6 L2 di HP: pertanyaan dan opsi B persis skrip', await bodyHas(x.page, /Clubhouse tidak pernah menulis 'eksklusif'\. Dari mana audiens aslinya mendapat pesan itu\?/) && await bodyHas(x.page, /B\. Dari cara masuknya: harus diundang teman, hanya iPhone/));
+await opt(x.page, 'jawab', 'A\\. Dari deskripsi di App Store dan situsnya').click();
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+await d.page.click('#btn-reveal');
+await bodyHas(d.page, /1 \(100%\)/);
+check('S6 L2 dosen: persentase dulu tanpa kunci; sesudah Tandai kunci B bertanda, jawaban A tidak sesuai', (await d.page.locator('.bar.key').count()) === 0);
+await d.page.click('#btn-key');
+await until(d.page, () => document.querySelectorAll('.bar.key').length > 0).catch(() => {});
+check('S6 L2 dosen: B ✓ dan "Sesuai kunci di skrip: 0 dari 1"', (await d.page.locator('.bar.key .bl').allInnerTexts()).map((t) => t[0]).join('') === 'B' && await bodyHas(d.page, /Sesuai kunci di skrip: 0 dari 1/));
+await d.page.selectOption('#sel', 's6-l3');
+await d.page.click('#btn-open');
+check('S6 L3 di HP: pertanyaan PM Clubhouse 2021', await bodyHas(x.page, /Kamu PM Clubhouse di tahun 2021\. Angka apa yang kamu taruh paling atas\?/));
+await d.page.selectOption('#sel', 's6-l4');
+await d.page.click('#btn-open');
+check('S6 L4 di HP: kartu Jumbo teks pendek di atas pertanyaan', await bodyHas(x.page, /Jumbo\s*Untuk siapa: keluarga dengan anak usia SD\s*Pesan utama: "The film you want your kids to watch: courage, friendship and family love, proudly blending Indonesian culture with world-class animation\. Quality time for the whole family this Lebaran\."\s*Di mana: bioskop XXI, CGV, Cinepolis, libur Lebaran, mulai 31 Maret\s*Harga: Rp40–45 ribu per tiket\s*Yang kami minta: ajak keluargamu menonton Jumbo di libur Lebaran\.\s*Seorang ibu dengan anak usia SD melihat kartu Jumbo\./));
+const hpL4 = await x.page.innerText('main');
+check('S6 L4 di HP: tanpa label SAY / DO / PAY / Ditolak', !/\bSAY\b|\bDO\b|\bPAY\b|DITOLAK|Ditolak/.test(hpL4), hpL4.slice(0, 300));
+await opt(x.page, 'jawab', 'B\\. "Boleh kirim link presale-nya\\? Saya cek jadwal hari Minggu dulu\\."').click();
+await x.page.click('button:has-text("Kirim jawaban")');
+await bodyHas(x.page, /Terkirim ✓/);
+await x.page.screenshot({ path: `${SHOTS}/s6-l4-360.png`, fullPage: true });
+check('360px: layar S6 L4 tanpa geser ke samping', !(await x.page.evaluate(() => document.documentElement.scrollWidth > innerWidth)));
+check('S6 L4: tanpa tombol kunci', (await d.page.locator('#btn-key').count()) === 0);
+await d.page.click('#btn-reveal');
+await bodyHas(d.page, /1 \(100%\)/);
+const l4Labs = await d.page.locator('.bars .bl .dlab').allInnerTexts();
+check('S6 L4 dosen: label SAY · DO · PAY · DITOLAK di tiap batang, urut A–D', l4Labs.join(',') === 'SAY,DO,PAY,DITOLAK', l4Labs.join(','));
+check('S6 L4 dosen: tanpa ✓ dan tanpa "Sesuai kunci"', (await d.page.locator('.bar.key').count()) === 0 && !/✓|Sesuai kunci/.test(await d.page.innerText('.results')));
+check('S6 L4 dosen: konteks kartu Jumbo juga tampil', await bodyHas(d.page, /Yang kami minta: ajak keluargamu menonton Jumbo di libur Lebaran\./));
+await x.page.click('header.top button:has-text("Catatanku")');
+await bodyHas(x.page, /Catatanku/);
+check('S6 L1–L4 tidak masuk Catatanku', !/Clubhouse|Jumbo|presale/.test(await x.page.innerText('main')));
+await x.page.click('header.top button:has-text("Kembali")');
+await d.page.selectOption('#f-sesi', '');
+check('Rules tidak berubah setelah blok S6', (() => { try { execSync('git diff --quiet HEAD -- database.rules.json'); return true; } catch { return false; } })());
 
 // ---------- 11. penutup ----------
 await d.page.click('#btn-end');

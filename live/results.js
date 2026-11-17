@@ -6,16 +6,16 @@ import { decode } from './validate.js';
 const keyList = (f) => (f.key == null ? [] : Array.isArray(f.key) ? f.key : typeof f.key === 'object' ? [] : [f.key]);
 
 function bars(f, tally, showKey) {
-  const known = f.options.map((o) => [o.v, o.t]);
+  const known = f.options.map((o) => [o.v, o.t, o.dosen]);
   const extra = Object.keys(tally.counts).filter((k) => !f.options.some((o) => o.v === k)).map((k) => [k, `(${k})`]);
   const max = Math.max(1, ...Object.values(tally.counts));
   const keys = showKey ? keyList(f) : [];
-  return h('div', { class: 'bars' }, [...known, ...extra].map(([v, t]) => {
+  return h('div', { class: 'bars' }, [...known, ...extra].map(([v, t, lab]) => {
     const n = tally.counts[v] || 0;
     const pct = tally.total ? Math.round((n / tally.total) * 100) : 0;
     const isKey = keys.includes(v);
     return h('div', { class: 'bar' + (isKey ? ' key' : '') },
-      h('div', { class: 'bl' }, t, isKey ? ' ✓' : ''),
+      h('div', { class: 'bl' }, t, isKey ? ' ✓' : '', lab ? h('span', { class: 'dlab' }, lab) : null),
       h('div', { class: 'bt' }, h('div', { class: 'bf', style: `width:${(n / max) * 100}%` })),
       h('div', { class: 'bn' }, `${n} (${pct}%)`));
   }));
