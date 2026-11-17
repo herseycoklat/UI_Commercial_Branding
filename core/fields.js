@@ -984,6 +984,15 @@
     var m = /^s(\d+)\./.exec(src.id), sid = m ? "S" + m[1] : "";
     var f = CB.findField(src.id), v = sid ? CB.getField(sid, src.id) : null;
     if (src.item != null) { var it = v && v.items && v.items[src.item]; return it ? String(it[src.k] || "").trim() : ""; }
+    /* src.filter (v0.8.0, S6): semua item list yang item[filter.k] === filter.eq, satu baris per item (k, lalu k2 bila ada).
+     * Dipakai untuk baris REAL Promise → Proof S3 dan baris PRIMARY Revenue Streams S5. */
+    if (src.filter) {
+      var its = (v && v.items) || [];
+      return its.filter(function (x) { return x && x[src.filter.k] === src.filter.eq; }).map(function (x, i) {
+        var a = String(x[src.k] || "").trim(), b = src.k2 ? String(x[src.k2] || "").trim() : "";
+        return (i + 1) + ". " + (a || "(tanpa teks)") + (b ? " — " + b : "");
+      }).join("\n");
+    }
     if (!f) return typeof v === "string" ? v.trim() : "";
     if (f.type === "trace") return String((v && v.text) || "").trim();
     return String(F.printText(f, v, sid) || "").trim();
@@ -998,13 +1007,20 @@
     head.appendChild(U.el("a", { class: "shownlink", href: CB.sessionHref(src.id), text: "ubah di halaman asal →" }));
     row.appendChild(head);
     var body = U.el("div", { class: "shownval" });
+    var others = src.countOthers ? U.el("div", { class: "small muted shownothers" }) : null;
     function draw() {
       var t = CB.shownSource(src);
-      body.textContent = t || ("Belum diisi → " + CB.pageLabel(src.id));
+      body.textContent = t || (src.filter ? "Belum ada baris " + String(src.filter.eq === "nyata" ? "REAL" : src.filter.eq).toUpperCase() + " → " + CB.pageLabel(src.id) : "Belum diisi → " + CB.pageLabel(src.id));
       body.classList.toggle("empty", !t);
+      if (others) {
+        var m = /^s(\d+)\./.exec(src.id), v = CB.getField("S" + m[1], src.id), its = (v && v.items) || [];
+        var n = its.filter(function (x) { return x && x[src.filter.k] !== src.filter.eq && String(x[src.k] || "").trim(); }).length;
+        others.textContent = n ? n + " baris lain (PLANNED, UNKNOWN, atau belum diberi status) tidak ditampilkan: itu belum boleh jadi reason." : "";
+      }
     }
     draw(); if (CB.on) CB.on("change", draw);
     row.appendChild(body);
+    if (others) row.appendChild(others);
     return row;
   };
   F.shown = function (sessId, f) {

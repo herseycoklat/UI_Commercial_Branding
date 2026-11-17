@@ -37,6 +37,9 @@ STRING_TYPES = {"text", "longtext", "copytext", "enum"}
 def shape_family(t):
     return "teks" if t in STRING_TYPES else t
 DATE_RE = re.compile(r"\b\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Mei|Jun|Jul|Aug|Agu|Sep|Oct|Okt|Nov|Dec|Des)\b|\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun|Sen|Sel|Rab|Kam|Jum|Sab|Min)\s+\d{1,2}\b", re.I)
+# content.caseDates (S6, 17 Nov 2026): contoh memakai tanggal kasus (2027) yang sah. Yang tetap ditolak hanya tanggal minggu kursus:
+# tanggal November/Desember tanpa tahun (mis. "Fri 27 Nov", "Wed 2 Dec"). Tanggal dengan tahun = tanggal kasus.
+COURSE_DATE_RE = re.compile(r"\b\d{1,2}\s+(Nov|Nop|Dec|Des)[a-z]*\.?(?!\s+\d{4})", re.I)
 STATUS_RE = re.compile(r"APPROVED|REVISION DUE")
 GATE_RE = re.compile(r"\bgates?\b", re.I)
 
@@ -63,6 +66,7 @@ def main():
     spec, content = dump["spec"], dump["content"] or {"pages": {}}
     shown = dump["shown"]
     sl = slides(open(extract, encoding="utf-8").read())
+    date_re = COURSE_DATE_RE if (content or {}).get("caseDates") else DATE_RE
     fails, warns, passes = [], [], 0
 
     def check(cond, msg, warn=False):
@@ -134,7 +138,7 @@ def main():
         if ct:
             blob = json.dumps(ct, ensure_ascii=False)
             check(not STATUS_RE.search(blob), f"hlm. {p}: konten memuat kata status Gate")
-            m = DATE_RE.search(blob)
+            m = date_re.search(blob)
             check(not m, f"hlm. {p}: konten memuat tanggal kalender ({m.group(0) if m else ''})")
             page_ids = {f["id"] for f in pg["fields"]}
             for case, ex in (ct.get("examples") or {}).items():
@@ -152,7 +156,7 @@ def main():
             continue
         blob = json.dumps(v, ensure_ascii=False)
         check(not STATUS_RE.search(blob), f"konten '{k}' memuat kata status Gate")
-        m = DATE_RE.search(blob)
+        m = date_re.search(blob)
         check(not m, f"konten '{k}' memuat tanggal kalender ({m.group(0) if m else ''})")
 
     # 10. kata "Gate" tidak tampil ke mahasiswa

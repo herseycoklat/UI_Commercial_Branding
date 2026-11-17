@@ -411,6 +411,8 @@
     head.appendChild(ht); card.appendChild(head);
     /* v0.7.0 (S5): bar "What this page checks" (halaman inti) atau "Optional. Its minimum is already in…" (halaman opsional), persis workbook */
     if (pg.checks) card.appendChild(U.el("div", { class: "checksbar" }, "<b>What this page checks:</b> " + U.esc(pg.checks)));
+    /* v0.8.0 (S6): workbook v3 S6 memakai "What this page answers" */
+    if (pg.answers) card.appendChild(U.el("div", { class: "checksbar" }, "<b>What this page answers:</b> " + U.esc(pg.answers)));
     if (pg.min) card.appendChild(U.el("div", { class: "minbar" }, "<b>Optional.</b> " + U.esc(pg.min)));
     var host = card;
     if (pg.skip) {
@@ -834,6 +836,8 @@
       pp.appendChild(U.el("div", { class: "pp-foot", text: "Dicetak dari Workbook App · " + U.fmtDate(new Date().toISOString()) + " · arsip pribadi, bukan file pengumpulan." }));
       root.appendChild(pp);
     });
+    /* v0.8.0 (S6): Concept Card ikut dicetak sebagai halaman terakhir */
+    if (spec.conceptCard && CB.cardPrintPage) root.appendChild(CB.cardPrintPage());
   }
 
   CB.bootSession = function (sessId) {
@@ -871,6 +875,9 @@
           (ci ? ' <span class="navcore">MUST-DO · ' + ci.n + " of " + CB.coreTotal() + "</span>" : (pg.skip ? ' <span class="navskip">boleh dilewati</span>' : ""));
         if (ci) a.classList.add("navmust"); else if (pg.skip) a.classList.add("navopt");
         nav.appendChild(a);
+        if (spec.conceptCard && spec.conceptCard.after === p && CB.renderConceptCard) {
+          var ca = U.el("a", { href: "#kartu", class: "navcard" }); ca.innerHTML = '<span class="ord">★</span>Your Concept Card <span class="navcore">dirakit dari halamanmu</span>'; nav.appendChild(ca);
+        }
       });
       intro.appendChild(U.el("p", { class: "small muted", text: "Daftar isi: " + spec.title }));
       intro.appendChild(nav);
@@ -886,6 +893,8 @@
         if (built.indexOf(p) < 0) return;
         var pg = spec.pages.filter(function (x) { return x.p === p; })[0];
         main.appendChild(renderPage(sessId, spec, pg, content.pages[p]));
+        /* v0.8.0 (S6): Concept Card dirakit dari halaman asal, tampil sesudah halaman spec.conceptCard.after (core/card.js) */
+        if (spec.conceptCard && spec.conceptCard.after === p && CB.renderConceptCard) main.appendChild(CB.renderConceptCard(sessId, content.card));
       });
       var getChecks = renderChecks(sessId, built, main);
 

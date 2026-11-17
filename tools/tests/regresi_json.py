@@ -20,7 +20,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 PORT = 8779
 BASE = f"http://localhost:{PORT}/"
 CHROME = "/opt/pw-browsers/chromium" if os.path.exists("/opt/pw-browsers/chromium") else None
-SESS = ["S1", "S2", "S3", "S4", "S5"]
+SESS = ["S1", "S2", "S3", "S4", "S5", "S6"]
 NIM = "2399000001"
 
 

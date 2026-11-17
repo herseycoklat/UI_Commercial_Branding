@@ -252,6 +252,51 @@
     return out;
   };
 
+  /* ---------- S6: hal inti 13 (Customer Journey, page 4), 14 (Message, page 5), 15 (KPI Tree, page 9) ----------
+   * Acuan: slide 12 "Check Before You Submit" worked example S6 v3: satu orang + enam langkah + satu fix (apa/siapa/kapan);
+   * satu pesan + ≥2 reasons + satu ask; empat langkah + tiga baris cek. Hanya terisi/tidak; isinya dibaca penilai. */
+  CB.checkGroups.S6 = {
+    i13: { title: "13 · Customer Journey (page 4)", help: "Satu orang dari audiens utama Sesi 2, enam langkah sampai share, satu friksi diperbaiki: apa yang berubah, siapa, kapan." },
+    i14: { title: "14 · Message (page 5)", help: "Satu pesan utama dari janji positioning, 2–3 reasons yang masing-masing menunjuk baris REAL Promise → Proof Sesi 3, satu ajakan." },
+    i15: { title: "15 · KPI Tree (page 9)", help: "Empat langkah (target, per minggu, pendorong, sinyal awal), lalu cek Conversion, Revenue, Brand. UNKNOWN boleh, dengan siapa dan kapan." }
+  };
+  CB.checks.S6 = function (data) {
+    var c = cur(data, "S6"), out = [];
+    /* ---- i13 · page 4 (journey) ---- */
+    if (!txt(cur(data, "S2")["s2.p4.primary"])) out.push({ group: "i13", key: "j0", label: "Audiens utama Sesi 2 (hlm. 4) belum ada di browser ini. Isi di Sesi 2, atau impor file terakhirmu: halaman ini dan kartu memakainya.", where: "S2 · hlm. 4", state: "warn" });
+    out.push({ group: "i13", key: "j1", label: txt(c["s6.p4.person"]) ? "Satu orang ditulis." : "OUR ONE PERSON masih kosong: satu nama dan satu baris.", where: "S6 · hlm. 4", state: txt(c["s6.p4.person"]) ? "ok" : "no" });
+    var jr = (c["s6.p4.journey"] || {}).rows || {}, steps = ["discover", "evaluate", "access", "purchase", "experience", "share"];
+    var filled = steps.filter(function (k) { var r = jr[k] || {}; return t(r.where) || t(r["do"]) || t(r.stop); });
+    out.push({ group: "i13", key: "j2", label: filled.length === 6 ? "Enam langkah terisi, sampai share." : filled.length + " dari 6 langkah terisi" + (filled.length && filled.length < 6 ? " (belum: " + steps.filter(function (k) { return filled.indexOf(k) < 0; }).join(", ") + ")" : "") + ". Jalan yang berhenti di purchase belum journey.", where: "S6 · hlm. 4", state: filled.length === 6 ? "ok" : "no" });
+    var ac = jr.access || {};
+    if (filled.length && !t(ac.where) && !t(ac["do"])) out.push({ group: "i13", key: "j3", label: "Langkah ACCESS kosong: baris WHERE di Concept Card diambil dari sini.", where: "S6 · hlm. 4", state: "warn" });
+    var fx = c["s6.p4.fix"] || {}, fxOk = t(fx.change) && t(fx.who) && t(fx.when);
+    out.push({ group: "i13", key: "j4", label: fxOk ? "Satu friksi diperbaiki: apa, siapa, kapan." : "Satu friksi: tulis apa yang berubah, siapa, dan kapan (ketiganya).", where: "S6 · hlm. 4", state: fxOk ? "ok" : "no" });
+    /* ---- i14 · page 5 (message) ---- */
+    out.push({ group: "i14", key: "m1", label: txt(c["s6.p5.main"]) ? "Satu pesan utama ditulis." : "MAIN MESSAGE masih kosong.", where: "S6 · hlm. 5", state: txt(c["s6.p5.main"]) ? "ok" : "no" });
+    var rs = items(c["s6.p5.reasons"]), rsOk = rs.filter(function (r) { return t(r.says) && t(r.proof); });
+    out.push({ group: "i14", key: "m2", label: rsOk.length >= 2 ? rsOk.length + " reasons, masing-masing dengan proof." : rsOk.length + " reason lengkap. Tulis minimal dua, masing-masing WHAT IT SAYS dan PROOF.", where: "S6 · hlm. 5", state: rsOk.length >= 2 ? "ok" : "no" });
+    var real = items(cur(data, "S3")["s3.p5.promise_proof"]).filter(function (x) { return x && x.status === "nyata" && t(x.promise); });
+    function nz(s) { return t(s).toLowerCase().replace(/[“”"'’.,:;!?()\-–—]/g, " ").replace(/\s+/g, " ").trim(); }
+    if (rsOk.length && !real.length) out.push({ group: "i14", key: "m3", label: "Promise → Proof Sesi 3 belum punya baris REAL. Reason hanya boleh menunjuk baris REAL: tandai yang sudah nyata di Sesi 3, atau kecilkan janjinya.", where: "S3 · hlm. 5", state: "warn" });
+    else if (rsOk.length) {
+      var miss = rsOk.filter(function (r) { var p = nz(r.proof); return !real.some(function (x) { var q = nz(x.promise); return q && (p.indexOf(q) >= 0 || q.indexOf(p) >= 0); }); });
+      if (miss.length) out.push({ group: "i14", key: "m4", label: miss.length + " reason belum menyebut promise baris REAL mana pun secara persis. Tulis promise baris itu di kolom PROOF (cek sendiri; bisa jadi kamu menulisnya dengan kata lain).", where: "S6 · hlm. 5", state: "warn" });
+    }
+    out.push({ group: "i14", key: "m5", label: txt(c["s6.p5.ask"]) ? "Satu ajakan ditulis." : "ONE ASK masih kosong.", where: "S6 · hlm. 5", state: txt(c["s6.p5.ask"]) ? "ok" : "no" });
+    /* ---- i15 · page 9 (KPI tree) ---- */
+    var tg = c["s6.p9.target"] || {}, tgN = ["who", "does", "howmany", "when"].filter(function (k) { return t(tg[k]); }).length;
+    out.push({ group: "i15", key: "k1", label: tgN === 4 ? "Target: siapa, melakukan apa, berapa, kapan." : "Target: " + tgN + " dari 4 bagian terisi (siapa · melakukan apa · berapa · kapan).", where: "S6 · hlm. 9", state: tgN === 4 ? "ok" : "no" });
+    var st = ["s6.p9.breakdown", "s6.p9.drivers", "s6.p9.signal"].filter(function (id) { return txt(c[id]); }).length;
+    out.push({ group: "i15", key: "k2", label: st === 3 ? "Langkah 2–4 terisi (per minggu, pendorong, sinyal awal)." : "Langkah 2–4: " + st + " dari 3 terisi.", where: "S6 · hlm. 9", state: st === 3 ? "ok" : "no" });
+    var ck = (c["s6.p9.check"] || {}).rows || {}, ckN = ["conversion", "revenue", "brand"].filter(function (k) { return t((ck[k] || {}).where); });
+    out.push({ group: "i15", key: "k3", label: ckN.length === 3 ? "Cek Conversion, Revenue, Brand terisi." : "Cek: " + ckN.length + " dari 3 baris terisi. Brand cukup rencana cara mengukur; UNKNOWN boleh dengan siapa dan kapan.", where: "S6 · hlm. 9", state: ckN.length === 3 ? "ok" : "no" });
+    var ask = txt(c["s6.p5.ask"]);
+    if (ask && t(tg.does) && nz(ask) !== nz(tg.does)) out.push({ group: "i15", key: "k4", label: "Langkah 1 (\"" + t(tg.does) + "\") dan ajakan hlm. 5 (\"" + ask + "\") ditulis berbeda. Keduanya harus aksi yang sama: cek sendiri.", where: "S6 · hlm. 9", state: "warn" });
+    out.push({ group: "i15", key: "k5", label: "Concept Card dirakit dari hlm. 4, 5, 9 dan Sesi 2, 3, 5: lihat sesudah hlm. 9.", where: "S6 · kartu", state: "info" });
+    return out;
+  };
+
   /* Kandidat hlm. 8 (doc 73 §3, doc 82 §3): ditampilkan di samping tabel, bukan picker, tidak disimpan. */
   CB.s5Candidates = function (data) {
     var c5 = cur(data, "S5"), out = [];
@@ -310,7 +355,7 @@
   CB.CORE_TOTAL = 9;
   /* v0.7.0: jumlah hal inti = hal inti sesi yang sudah dirilis (S1–S4 = 9, + S5 = 12). Angka per sesi tetap di sini supaya
    * halaman sesi lama (yang tidak memuat spec S5) tetap menulis angka yang sama dengan beranda. */
-  var CORE_COUNT = { S1: 1, S2: 3, S3: 2, S4: 3, S5: 3 };
+  var CORE_COUNT = { S1: 1, S2: 3, S3: 2, S4: 3, S5: 3, S6: 3 };
   CB.coreTotal = function () {
     var n = 0;
     Object.keys(CORE_COUNT).forEach(function (sid) { if (sid <= "S4" || !CB.isReleased || CB.isReleased(sid)) n += CORE_COUNT[sid]; });
@@ -324,7 +369,7 @@
   /* Rantai sembilan hal inti S1–S4 berurutan (n 1…9), hanya sesi yang dirilis (atau mode pratinjau). */
   CB.coreChain = function (data) {
     var out = [];
-    ["S1", "S2", "S3", "S4", "S5"].forEach(function (sid) {
+    ["S1", "S2", "S3", "S4", "S5", "S6"].forEach(function (sid) {
       var spec = (CB.specs || {})[sid], fn = CB.checks[sid];
       if (!spec || !spec.core || !fn || (CB.isReleased && !CB.isReleased(sid))) return;
       var rows = fn(data || CB.data, spec.pages.map(function (p) { return p.p; }));

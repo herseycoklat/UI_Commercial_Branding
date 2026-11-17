@@ -45,10 +45,13 @@
       "hide_release_date": true
     },
     "S6": {
-      "title": "",
+      "title": "Go-to-Market and Brand Activation Plan",
       "week": 5,
-      "release": "2026-11-19T00:00:00+07:00",
-      "due": "2026-11-24T23:59:00+07:00"
+      "release": "2026-11-20T00:00:00+07:00",
+      "due": "2026-11-25T23:59:00+07:00",
+      "no_upload_deadline": true,
+      "deadline_note": "batas unggah diumumkan dosen di kelas dan di grup kelas",
+      "hide_release_date": true
     },
     "S7": {
       "title": "",

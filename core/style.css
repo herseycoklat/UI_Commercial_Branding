@@ -573,3 +573,45 @@ ol.chain li.done .chainst{color:var(--ok);}
 .candlist li{margin:3px 0;}
 .candsrc{font-weight:bold; font-size:12px; text-decoration:none; color:var(--deep); margin-right:4px;}
 .importnudge{margin-top:10px;}
+
+/* ---------- Concept Card (v0.8.0, S6) ---------- */
+.cardsec{border:2px solid var(--terra);}
+.cctools{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0 12px;}
+.ccard{background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 0; max-width:880px;}
+.ccrow{display:grid; grid-template-columns:200px 1fr; gap:2px 16px; padding:9px 18px; border-bottom:1px solid var(--line);}
+.ccrow:last-child{border-bottom:none;}
+.ccrow.s6{background:#F3EFE3;}
+.cclabel{font-size:11.5px; font-weight:bold; letter-spacing:.06em; color:var(--deep); padding-top:3px;}
+.ccval{font-size:15.5px; color:var(--ink); white-space:pre-wrap;}
+.ccsrc{grid-column:2; font-size:11.5px; color:var(--muted);}
+.ccrow.name .ccval{font-family:Cambria,Georgia,serif; font-size:22px; font-weight:bold;}
+.ccrow.big .ccval{font-family:Cambria,Georgia,serif; font-size:21px; font-weight:bold; line-height:1.3;}
+.ccrow.small .ccval{font-size:13px; font-style:italic; color:#555;}
+.ccrow.small .cclabel{font-weight:normal; letter-spacing:0; text-transform:lowercase;}
+.ccrow.empty .ccval{color:var(--terra); font-style:italic; font-size:14px;}
+.cclink{margin-left:2px;}
+.ccnotes{margin:12px 0 4px; padding-left:20px; font-size:13.5px;}
+.ccn.no{color:var(--terra);} .ccn.warn{color:#8a6100;} .ccn.info{color:var(--muted);}
+.ccyes{color:var(--deep); font-weight:bold;} .ccnot{color:var(--terra); font-weight:bold;}
+.navcard{font-weight:bold;}
+.shownothers{margin-top:4px;}
+.ccwrap:fullscreen{background:#fff; padding:3vh 5vw; overflow:auto;}
+.ccwrap:fullscreen .ccard, .ccwrap.ccfull .ccard{max-width:none; border:none;}
+.ccwrap:fullscreen .ccrow, .ccwrap.ccfull .ccrow{grid-template-columns:22vw 1fr; padding:1.4vh 2vw;}
+.ccwrap:fullscreen .cclabel, .ccwrap.ccfull .cclabel{font-size:1.25vw;}
+.ccwrap:fullscreen .ccval, .ccwrap.ccfull .ccval{font-size:1.9vw;}
+.ccwrap:fullscreen .ccrow.big .ccval, .ccwrap.ccfull .ccrow.big .ccval{font-size:2.8vw;}
+.ccwrap:fullscreen .ccrow.name .ccval, .ccwrap.ccfull .ccrow.name .ccval{font-size:3vw;}
+.ccwrap:fullscreen .ccsrc, .ccwrap.ccfull .ccsrc{font-size:1vw;}
+.ccwrap:fullscreen .cclink, .ccwrap.ccfull .cclink{display:none;}
+.ccwrap.ccfull{position:fixed; inset:0; z-index:9999; background:#fff; padding:3vh 5vw; overflow:auto;}
+@media print{
+  .ppcard .ccard{border:1px solid #D8CFC6; max-width:none;}
+  .ppcard .ccrow{grid-template-columns:42mm 1fr; padding:6pt 10pt; break-inside:avoid;}
+  .ppcard .ccrow.s6{background:#F3EFE3; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .ppcard .ccval{font-size:12pt;} .ppcard .ccrow.big .ccval{font-size:16pt;} .ppcard .ccrow.name .ccval{font-size:18pt;}
+  .ppcard .cclabel{font-size:8.5pt;} .ppcard .ccsrc{font-size:8pt;}
+  .ppcard .pp-title{margin-bottom:4pt;}
+}
+.ccexit{display:none; margin-bottom:12px;}
+.ccwrap:fullscreen .ccexit, .ccwrap.ccfull .ccexit{display:inline-block;}
