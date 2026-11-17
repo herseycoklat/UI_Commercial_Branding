@@ -162,7 +162,7 @@ function controls() {
   if (isActive && st.open) btns.push(h('button', { id: 'btn-close', class: 'primary', type: 'button', onclick: () => act({ open: false }) }, 'Tutup layar'));
   if (isActive) btns.push(h('button', { id: 'btn-reveal', class: st.revealed ? 'ghost' : 'primary', type: 'button', onclick: () => act({ revealed: !st.revealed }) }, st.revealed ? 'Sembunyikan hasil' : 'Tampilkan hasil'));
   if (sc.kunciTerpisah && (!isActive || st.revealed)) btns.push(h('button', { id: 'btn-key', class: S.keyOn[sc.id] ? 'ghost' : 'primary', type: 'button',
-    onclick: () => { S.keyOn = { ...S.keyOn, [sc.id]: !S.keyOn[sc.id] }; draw(); } }, S.keyOn[sc.id] ? 'Sembunyikan tanda' : 'Tandai yang dilaporkan'));
+    onclick: () => { S.keyOn = { ...S.keyOn, [sc.id]: !S.keyOn[sc.id] }; draw(); } }, S.keyOn[sc.id] ? 'Sembunyikan tanda' : (sc.labelKunci || 'Tandai yang dilaporkan')));
   btns.push(h('button', { id: 'btn-end', class: 'ghost', type: 'button', onclick: () => {
     if (!S.confirmEnd) { S.confirmEnd = true; draw(); setTimeout(() => { S.confirmEnd = false; draw(); }, 4000); return; }
     S.confirmEnd = false; B.setSpot(null); act({ active: '', open: false, revealed: false, penutup: true });

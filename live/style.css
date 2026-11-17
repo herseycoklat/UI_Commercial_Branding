@@ -97,6 +97,7 @@ textarea.txt { resize: vertical; }
 .rf h3 { margin: 0 0 .5rem; font-size: 1.1rem; }
 .bars { display: grid; gap: .45rem; }
 .bar { display: grid; grid-template-columns: minmax(8rem, 16rem) 1fr 6rem; gap: .6rem; align-items: center; }
+.bl .dlab { display: inline-block; margin-left: .5rem; padding: 0 .4rem; border-radius: .6rem; font-size: .75rem; font-weight: 700; background: var(--line, #ddd); color: inherit; }
 .bar.key .bl { font-weight: 700; color: var(--ok); }
 .bt { background: color-mix(in srgb, var(--line) 60%, transparent); border-radius: .4rem; height: 1.3rem; overflow: hidden; }
 .bf { background: var(--bar); height: 100%; border-radius: .4rem; transition: width .25s; }
