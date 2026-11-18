@@ -16,6 +16,17 @@
   function get(sid, id) { return CB.getField ? CB.getField(sid, id) : null; }
   function items(v) { return (v && v.items) || []; }
   function norm(s) { return t(s).toLowerCase().replace(/[“”"'’.,:;!?()\-–—]/g, " ").replace(/\s+/g, " ").trim(); }
+  /* v0.8.1: ajakan hlm 5 dan langkah 1 hlm 9 biasanya ditulis dengan panjang berbeda. Dianggap "aksi yang sama" bila
+   * minimal separuh kata kunci kalimat yang lebih pendek muncul di kalimat lain. Dipakai juga oleh core/checks.js. */
+  var STOP = { the: 1, and: 1, for: 1, you: 1, your: 1, our: 1, with: 1, from: 1, this: 1, that: 1, page: 1, step: 1, same: 1, action: 1,
+    yang: 1, dan: 1, untuk: 1, dari: 1, dengan: 1, kamu: 1, kami: 1, sama: 1, hlm: 1, langkah: 1 };
+  function words(s) { return norm(s).split(" ").filter(function (w) { return w.length >= 3 && !STOP[w]; }); }
+  CB.sameAction = function (a, b) {
+    var A = words(a), B = words(b); if (!A.length || !B.length) return true;
+    var small = A.length <= B.length ? A : B, big = small === A ? B : A;
+    var hit = small.filter(function (w) { return big.some(function (x) { return x === w || (w.length >= 5 && x.length >= 5 && (x.indexOf(w.slice(0, 5)) === 0 || w.indexOf(x.slice(0, 5)) === 0)); }); }).length;
+    return hit / small.length >= 0.5;
+  };
 
   CB.cardRows = function () {
     var id = (CB.data && CB.data.identifier) || {};
@@ -46,8 +57,8 @@
     if (pp.length && !pp.some(function (x) { return x.status === "nyata"; }))
       out.push({ state: "warn", text: "WHY BELIEVE IT kosong karena Promise → Proof Sesi 3 belum punya baris REAL. Reason di page 5 (message) hanya boleh menunjuk baris REAL." });
     var ask = t(get("S6", "s6.p5.ask")), does = t((get("S6", "s6.p9.target") || {}).does);
-    if (ask && does && norm(ask) !== norm(does))
-      out.push({ state: "warn", text: "Ajakan di page 5 (message): \"" + ask + "\" · langkah 1 di page 9 (KPI tree): \"" + does + "\". Keduanya harus aksi yang sama; cek sendiri apakah kalimatnya setara." });
+    if (ask && does && !CB.sameAction(ask, does))
+      out.push({ state: "warn", text: "Ajakan di page 5 (message): \"" + ask + "\" · langkah 1 di page 9 (KPI tree): \"" + does + "\". Kata-katanya jauh berbeda, padahal keduanya harus aksi yang sama: cek sendiri." });
     var line = get("S5", "s5.p4.line") || {};
     if (line.status === "not_money") out.push({ state: "info", text: "PRICE menampilkan apa yang mereka berikan, bukan angka (S5 page 4: NOT MONEY)." });
     return out;

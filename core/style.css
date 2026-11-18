@@ -615,3 +615,7 @@ ol.chain li.done .chainst{color:var(--ok);}
 }
 .ccexit{display:none; margin-bottom:12px;}
 .ccwrap:fullscreen .ccexit, .ccwrap.ccfull .ccexit{display:inline-block;}
+@media (max-width:600px){
+  .ccrow{grid-template-columns:1fr; gap:2px; padding:10px 14px;}
+  .ccsrc{grid-column:1;}
+}

@@ -395,7 +395,7 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<p><b>The test:</b> read each line to your primary audience. Does it still keep the promise in your positioning?</p>" +
             "<p><b>Goes on the card:</b> main message → the <b>big row</b>. Proof → <b>Why believe it</b>. Ask → <b>What we ask you to do</b>.</p>" +
             mistake("Writing for everyone, or inventing a new message. A message with no link to Session 3 is a new strategy written at the last minute.") +
-            "<p><b>Before release.</b> <i>The card on slide 1 is after release: its message grew once families proved it. Before release, write only as far as your REAL proof.</i></p>" },
+            "<p><b>Before release.</b> <i>The card on slide 1 of the class deck is after release: its message grew once families proved it. Before release, write only as far as your REAL proof.</i></p>" },
         why: "<p><b class='k'>Kenapa halaman ini penting:</b> produk macet kalau orang tidak paham apa yang ditawarkan. Pesan utama tidak dibuat baru: ia turun dari janji di positioning Sesi 3, dan setiap reason menunjuk satu baris REAL Promise → Proof. Baris REAL itu satu-satunya sumber <b>WHY BELIEVE IT</b> di kartu.</p>" +
           "<p><b>What Clubhouse teaches.</b> (1) <b>Tulis untuk audiens utamamu, bukan untuk semua orang.</b> Pesan Clubhouse 2021 bicara ke seluruh dunia; orang yang paling setia mendengar \"bukan untuk kami\". (2) <b>Pengalamanmu juga mengucapkan pesan.</b> Clubhouse tidak pernah menulis \"eksklusif\"; undangannya yang mengatakannya.</p>" +
           "<p><b>ONE ASK</b> = langkah 1 page 9 (KPI tree), aksi yang sama. Pesan utama menjadi baris besar kartu; ajakan menjadi <b>WHAT WE ASK YOU TO DO</b>.</p>",

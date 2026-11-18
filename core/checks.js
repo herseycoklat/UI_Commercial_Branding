@@ -292,7 +292,7 @@
     var ck = (c["s6.p9.check"] || {}).rows || {}, ckN = ["conversion", "revenue", "brand"].filter(function (k) { return t((ck[k] || {}).where); });
     out.push({ group: "i15", key: "k3", label: ckN.length === 3 ? "Cek Conversion, Revenue, Brand terisi." : "Cek: " + ckN.length + " dari 3 baris terisi. Brand cukup rencana cara mengukur; UNKNOWN boleh dengan siapa dan kapan.", where: "S6 · hlm. 9", state: ckN.length === 3 ? "ok" : "no" });
     var ask = txt(c["s6.p5.ask"]);
-    if (ask && t(tg.does) && nz(ask) !== nz(tg.does)) out.push({ group: "i15", key: "k4", label: "Langkah 1 (\"" + t(tg.does) + "\") dan ajakan hlm. 5 (\"" + ask + "\") ditulis berbeda. Keduanya harus aksi yang sama: cek sendiri.", where: "S6 · hlm. 9", state: "warn" });
+    if (ask && t(tg.does) && !(CB.sameAction ? CB.sameAction(ask, tg.does) : nz(ask) === nz(tg.does))) out.push({ group: "i15", key: "k4", label: "Langkah 1 (\"" + t(tg.does) + "\") dan ajakan hlm. 5 (\"" + ask + "\") kata-katanya jauh berbeda. Keduanya harus aksi yang sama: cek sendiri.", where: "S6 · hlm. 9", state: "warn" });
     out.push({ group: "i15", key: "k5", label: "Concept Card dirakit dari hlm. 4, 5, 9 dan Sesi 2, 3, 5: lihat sesudah hlm. 9.", where: "S6 · kartu", state: "info" });
     return out;
   };
