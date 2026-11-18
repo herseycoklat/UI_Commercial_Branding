@@ -444,6 +444,22 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             mistake("Putting the biggest number on top, or an output (“post 20 times”) instead of what people do.") },
         why: "<p><b class='k'>Kenapa halaman ini penting:</b> produk macet kalau tim menghitung angka yang salah. Clubhouse mengumumkan angka besar (pengguna mingguan, valuasi, room yang ramai), padahal yang penting adalah berapa orang yang <b>masih aktif</b>. <b>Measure what matters</b>: bukan angka terbesar, tapi angka yang membantu kalian bertindak lebih awal.</p>" +
           "<p>Mulai dari <b>target</b>, lalu turun ke angka per minggu, cari pendorongnya, dan pasang satu sinyal awal: empat langkah yang sama untuk Jumbo dan Clubhouse di kelas. Langkah 1 menghitung <b>orang di kartu</b> yang melakukan ajakan page 5 (message). Baris Revenue mulai dari harga Sesi 5 (tampil di atas); baris Brand cukup rencana cara mengukur.</p>",
+        /* v0.8.2 (18 Nov): koreksi slide 2 deck S6 (EARLY SIGNAL Jumbo 2025) hidup di tool; deck tidak diubah (sudah dibagikan). */
+        deeper: {
+          summary: "Deeper read · A KPI tree from real numbers: Jumbo after release",
+          html: "<p class='small muted'><i>Jumbo after cinema release, 2025 — the real film, not the worked example.</i></p>" +
+            "<p><b>Rule:</b> tickets a day = shows a day × tickets per show.</p>" +
+            "<div class='tscroll'><table class='wbtable ro'><thead><tr><th>Step</th><th>Jumbo, 2025</th></tr></thead><tbody>" +
+            "<tr><th>Target</th><td>Assume 10M tickets in ~9 weeks → ≈160k a day (10.07M ÷ 63 days); ≈Rp400–450B, an estimate from ticket price.</td></tr>" +
+            "<tr><th>Capacity</th><td>501 screens, ~1,400 shows on day 1 → 912 screens, 3,600+ shows by week 3.</td></tr>" +
+            "<tr><th>Fill rate</th><td>≈43 tickets per show on day 1 (60,457 ÷ 1,400). At 43, the target needs ≈3,700 shows a day; by week 3 Jumbo had 3,600+. Full shows → more screens.</td></tr>" +
+            "<tr><th>Peaks</th><td>1.5M+ in one weekend (18–20 Apr): weekends, holidays, school trips.</td></tr>" +
+            "<tr><th>Early signal</th><td>Daily tickets rising after day 1: ≈143k a day in week 1 (1M in 7 days) → ≈250k a day on days 8–11 (2M by day 11, reported), already above the 160k pace.</td></tr>" +
+            "<tr><th>Brand (during the run)</th><td>OST 19M views, #NontonJumboLagi.</td></tr>" +
+            "</tbody></table></div>" +
+            "<p><b>A correction to the class deck (slide 2).</b> Slide 2 puts trailer views, the OST and #NontonJumboLagi under early signal. A better reading: the OST views and the hashtag came <i>after</i> release, so they show Brand, not an early warning. Trailer views did not move with tickets either: Bumi Manusia's trailer had 2.4M views in three days and drew 1.32M viewers against a 3M target; Jumbo's had about a tenth of those views and drew about 10M. <b>An early signal is a number that moves before the result <i>and</i> with it.</b></p>" +
+            "<p class='small muted'>Sources: opening 60,457 tickets — CNN Indonesia (Apr 2025); 1M in 7 days — Antara; ≈10.07M in 63 days — Jakarta Post / Cinepoint (Jun 2025); 501 screens, ~1,400 → 3,600+ shows — GoodStats (Apr 2025); 912 screens — Popmama (Apr 2025); 1.5M+ on 18–20 Apr and OST 19M views — MomsMoney/Kontan (Apr–May 2025); ticket Rp40–45k — Tirto (Apr 2025); trailer 257k views — GNFI (Feb 2025); 2M by day 11 — reported; Bumi Manusia trailer 2.4M views — CNN Indonesia (Jul 2019), 1.32M viewers vs a 3M target — Jakarta Post (Aug 2019), JPNN. Revenue is an estimate: Visinema has not published it.</p>"
+        },
         examples: examples(9)
       },
       /* ================= hlm. 10 — Launch Risk & Contingency (R11) ================= */
