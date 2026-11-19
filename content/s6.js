@@ -385,6 +385,24 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
         why: "<p><b class='k'>Kenapa halaman ini penting:</b> produk macet kalau orang tidak pernah bertemu dengannya. Halaman ini menggambar jalan <b>satu orang</b>, audiens utamamu dari Sesi 2, dari tidak tahu sampai mengajak orang lain.</p>" +
           "<p><b>What Clubhouse teaches.</b> (1) <b>Gambar untuk satu orang.</b> Clubhouse kehilangan audiensnya saat menggambar ulang jalannya untuk semua orang. (2) <b>Di setiap langkah, tanya apa yang bisa membuatnya berhenti.</b> Untuk audiens asli Clubhouse: langkah experience. (3) <b>Perbaiki satu friksi, lalu cek langkah lain.</b> Clubhouse memperbaiki access dan merusak experience orang yang paling setia.</p>" +
           "<p>Langkah <b>access</b>-mu menjadi baris <b>WHERE</b> di Concept Card. Audiens di atas halaman masih kosong? Isi dulu Sesi 2: kartumu dirakit dari situ.</p>",
+        /* v0.8.3 (19 Nov): Clubhouse dari kelas (slide 3) sebagai journey satu orang + koreksi bacaan unduhan; deck tidak diubah. */
+        deeper: {
+          summary: "Deeper read · One person's journey on Clubhouse, and the step that broke",
+          html: "<p class='small muted'><i>Clubhouse, 2020–2023 · the case from class.</i></p>" +
+            "<p>Picture one true-audience member in 2020: a professional who wants serious, intimate talk with interesting people.</p>" +
+            "<div class='tscroll'><table class='wbtable ro'><thead><tr><th>Step</th><th>What she meets</th><th>Why she moves on</th></tr></thead><tbody>" +
+            "<tr><th>DISCOVER</th><td>A friend in her circle is already on Clubhouse and talks about it</td><td>It comes from someone she trusts</td></tr><tr><th>EVALUATE</th><td>She sees who is inside: serious people, topics she cares about</td><td>“This is a place for people like me”</td></tr><tr><th>ACCESS</th><td>She needs an invite from a friend, and an iPhone</td><td>Hard to get in, and that is the message: you were chosen</td></tr><tr><th>PURCHASE <span class='small muted'>(read: decides to use it)</span></th><td>It is free; what she gives is time, hours in a room</td><td>She already feels she belongs</td></tr><tr><th>EXPERIENCE</th><td>Small, intimate rooms; she can raise her hand and speak</td><td>Exactly what she came for</td></tr><tr><th>SHARE</th><td>She uses her invites (2 each at first) on friends like her</td><td>New people are people like her, so the circle stays the same</td></tr>" +
+            "</tbody></table></div>" +
+            "<p><i>Share was Clubhouse's growth engine: each invite brought the right person to the next discover.</i></p>" +
+            "<p><b>The step that broke.</b></p><ul>" +
+            "<li>Mid-2021 Clubhouse fixed <b>access</b> for everyone: Android in May, invites dropped in July.</li>" +
+            "<li>That broke <b>experience</b> for its true audience: rooms filled with people who were not its audience; the chosen, intimate feeling was gone.</li>" +
+            "<li>Then <b>share</b> stopped: an invite no longer meant anything.</li>" +
+            "<li>The sign: in 2022 Clubhouse built Houses, private rooms to bring the intimacy back.</li></ul>" +
+            "<p><b>Fix one friction, then check the other steps.</b> <i>“Experience broke” is a reading of public signs (Houses, the founder's memo), not a number Clubhouse measured.</i></p>" +
+            "<p><b>Reading the download numbers.</b> Slide 3 in class reads the drop as people leaving; a better reading: downloads are NEW installs per month, not people leaving: 2.4M in January, 9.6M in February, 2.7M in March, about 922,000 in April 2021 (Sensor Tower). In April, Sensor Tower said retention was still strong: most people who had joined were staying. What stopped was the wave of newcomers drawn by the hype. The FOMO wave stopped coming in April; signs of loyal users leaving appear only after the door opened in mid-2021.</p>" +
+            "<p class='small muted'>Sources: TechCrunch (invite-only, iOS); The Guardian, AP (Feb 2021, two invites each); SiliconANGLE (Android, May 2021); CNBC (invites dropped, Jul 2021); Bloomberg via The Star (Houses, 2022); Clubhouse blog / The Verge (2023); Sensor Tower blog (Apr 2021); Business Insider via Sensor Tower (May 2021).</p>"
+        },
         examples: examples(4)
       },
       /* ================= hlm. 5 — Message and Content Matrix (R2, v6) ================= */
@@ -454,11 +472,11 @@ window.CB = window.CB || {}; CB.content = CB.content || {};
             "<tr><th>Capacity</th><td>501 screens, ~1,400 shows on day 1 → 912 screens, 3,600+ shows by week 3.</td></tr>" +
             "<tr><th>Fill rate</th><td>≈43 tickets per show on day 1 (60,457 ÷ 1,400). At 43, the target needs ≈3,700 shows a day; by week 3 Jumbo had 3,600+. Full shows → more screens.</td></tr>" +
             "<tr><th>Peaks</th><td>1.5M+ in one weekend (18–20 Apr): weekends, holidays, school trips.</td></tr>" +
-            "<tr><th>Early signal</th><td>Daily tickets rising after day 1: ≈143k a day in week 1 (1M in 7 days) → ≈250k a day on days 8–11 (2M by day 11, reported), already above the 160k pace.</td></tr>" +
-            "<tr><th>Brand (during the run)</th><td>OST 19M views, #NontonJumboLagi.</td></tr>" +
+            "<tr><th>Early signal</th><td>Daily tickets rising after day 1: ≈143k a day in week 1 (1M in 7 days) → ≈250k a day on days 8–11 (2M by day 11), already above the 160k pace.</td></tr>" +
+            "<tr><th>Brand (during the run)</th><td>OST 19M views (by 1 May 2025), #NontonJumboLagi.</td></tr>" +
             "</tbody></table></div>" +
-            "<p><b>A correction to the class deck (slide 2).</b> Slide 2 puts trailer views, the OST and #NontonJumboLagi under early signal. A better reading: the OST views and the hashtag came <i>after</i> release, so they show Brand, not an early warning. Trailer views did not move with tickets either: Bumi Manusia's trailer had 2.4M views in three days and drew 1.32M viewers against a 3M target; Jumbo's had about a tenth of those views and drew about 10M. <b>An early signal is a number that moves before the result <i>and</i> with it.</b></p>" +
-            "<p class='small muted'>Sources: opening 60,457 tickets — CNN Indonesia (Apr 2025); 1M in 7 days — Antara; ≈10.07M in 63 days — Jakarta Post / Cinepoint (Jun 2025); 501 screens, ~1,400 → 3,600+ shows — GoodStats (Apr 2025); 912 screens — Popmama (Apr 2025); 1.5M+ on 18–20 Apr and OST 19M views — MomsMoney/Kontan (Apr–May 2025); ticket Rp40–45k — Tirto (Apr 2025); trailer 257k views — GNFI (Feb 2025); 2M by day 11 — reported; Bumi Manusia trailer 2.4M views — CNN Indonesia (Jul 2019), 1.32M viewers vs a 3M target — Jakarta Post (Aug 2019), JPNN. Revenue is an estimate: Visinema has not published it.</p>"
+            "<p><b>A correction to the class deck (slide 2).</b> Slide 2 puts trailer views, the OST and #NontonJumboLagi under early signal. The OST views and the hashtag came <i>after</i> release, so they show Brand, not an early warning. <b>A good early signal moves before the result <i>and</i> moves with it.</b> Bumi Manusia's trailer had 2.4M views in three days and the film sold 1.32M tickets against a 3M target; Jumbo's trailer had about a tenth of those views and sold about 10M. A big number with no comparison is not a signal.</p>" +
+            "<p class='small muted'>Sources: opening 60,457 tickets — CNN Indonesia (Apr 2025); 501 screens, ~1,400 → 3,600+ shows — GoodStats (Apr 2025); 912 screens — Popmama (Apr 2025); 1M in 7 days and 2M in 11 days — Antara; ≈10.07M in 63 days — Jakarta Post / Cinepoint (Jun 2025); 1.5M+ on 18–20 Apr and OST 19M views — MomsMoney/Kontan (Apr–May 2025); ticket Rp40–45k — Tirto (Apr 2025); trailer 257k views — GNFI (Feb 2025); Bumi Manusia trailer 2.4M views — CNN Indonesia (7 Jul 2019); Bumi Manusia 1.32M vs a 3M target and Dilan 1991 totals — Jakarta Post (Aug 2019), JPNN. ≈143k, ≈250k and ≈3,700 are our arithmetic. Revenue is an estimate: Visinema has not published it.</p>"
         },
         examples: examples(9)
       },
