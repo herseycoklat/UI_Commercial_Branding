@@ -8,7 +8,8 @@
  *    Value Propositions menampilkan audiens S2 dan positioning + promise S3 read-only (tipe "shown"), dengan satu kotak
  *    tambahan opsional untuk segmen lain / buyer ≠ user / apa yang diterima segmen lain. Nilai tersimpan = teks tambahan saja.
  *  - hlm. 4: baris Price Competitor Matrix S2 tampil di samping (carry dengan `row: "price"`).
- *  - hlm. 8: maksimal 3 baris; baris 1 berlabel "1 · TESTED BEFORE SESSION 7"; baris yang ditandai baris nama berlabel
+ *  - hlm. 8: maksimal 3 baris; baris 1 berlabel "1 · THE BET WE TEST FIRST (CONCEPT CARD)" (v0.8.4; aturan 14–15 Nov: baris 1
+ *    diuji lewat Concept Card di kelas, bukan diuji sendiri lebih dulu); baris yang ditandai baris nama berlabel
  *    "NAME ROW (A CHECK)". Daftar kandidat tampil di samping (dihitung dari halaman lain, tidak disimpan).
  *    Aturan lama "rank by how fast a risk would damage you" dan semua teks Gate tidak dipakai (doc 82 §3).
  * ID FIELD DIKUNCI SETELAH S5 DIRILIS: boleh menambah, tidak boleh mengganti nama/menghapus.
@@ -23,7 +24,7 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
     wbCover: "SESSION 5 TEAM WORKBOOK",
     coverNote: "Where does the money come from, and what do you own? One rule runs through every page: every number carries its origin (MEASURED, COMPARABLE, GUESS, or UNKNOWN with an action). A number with no origin can't be argued with by anyone, including you next week.",
     hideDue: true,
-    coverExtra: "Core pages (2, 4, 8) are required; optional pages (3, 5, 6, 7, 9) are filled only when you need them, and their minimum is already on a core page. Row 1 of page 8 is what you test with real people before Session 7. Batas unggah diumumkan dosen di kelas dan di grup kelas.",
+    coverExtra: "Core pages (2, 4, 8) are required; optional pages (3, 5, 6, 7, 9) are filled only when you need them, and their minimum is already on a core page. Row 1 of page 8 is the bet you can test with real people; the test runs on your Concept Card in class. Batas unggah diumumkan dosen di kelas dan di grup kelas.",
     importPrompt: true,
     fillOrder: [2, 3, 4, 5, 6, 7, 8, 9],
     core: {
@@ -194,21 +195,25 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         p: 8, title: "Your Brand's Three Bets", kicker: "COMMERCIAL RISK REGISTER", short: "page 8 (your three bets)",
         checks: "what must be true for your brand to survive, and how will you find out before it's too late?",
         sub: "Three rows at most. Almost nothing here is new: you marked it on the pages before.",
-        footer: "Row 1 is the bet you test with real people before Session 7. A name row is a check, not a test: one person, one date. The rows are not ranked.",
+        appText: ["footer"],
+        footer: "Row 1 is the bet you can test with real people. The test runs on your Concept Card in class. A name row is a check, not a test: one person, one date. The rows are not ranked.",
         candidates: { head: "CANDIDATES", text: "WHERE ROWS COME FROM · today: a GUESS on page 4 (pricing), a negative or unknown survival line, the clash on page 2 (canvas). Earlier: an S3 promise still UNKNOWN or PLANNED, an S4 code with no owner, your project's name. If you filled pages 5–7: an ASPIRATIONAL partner, an hours-only channel, a NOT YET AGREED asset." },
         fields: [
           { id: "s5.p8.bets", type: "list", appOnly: true, wbColumns: true, label: "ROW · KIND · WE BET THAT… IF WE'RE WRONG… · HOW WE TEST OR CHECK IT · WHO / WHEN",
             tip: "At least one row is about WHO OWNS your project's name and key asset. It is a check, not a test: one person, one date.",
-            addText: "+ Tambah taruhan", emptyText: "Belum ada taruhan. Baris 1 = taruhan yang kamu uji ke orang sungguhan sebelum Sesi 7.", max: 3,
-            rowTags: ["1 · TESTED BEFORE SESSION 7", "2", "3"], flagTag: { k: "namerow", eq: "yes", text: "NAME ROW (A CHECK)" },
+            addText: "+ Tambah taruhan", emptyText: "Belum ada taruhan. Baris 1 = taruhan yang bisa diuji ke orang sungguhan; ujinya lewat Concept Card di kelas.", max: 3,
+            rowTags: ["1 · THE BET WE TEST FIRST (CONCEPT CARD)", "2", "3"], flagTag: { k: "namerow", eq: "yes", text: "NAME ROW (A CHECK)" },
+            /* v0.8.4: peringatan per baris (tampilan saja; nilai tersimpan tidak diubah) */
+            rowWarn: { when: { k: "namerow", eq: "yes" }, unless: { k: "kind", eq: "legal" }, text: "This row is marked as the name row, but its kind is not legal. A name row is about who owns your project's name." },
             itemFields: [
               { k: "kind", label: "KIND", type: "select", empty: "— desirability / viability / feasibility / legal —", options: [{ v: "desirability", label: "Desirability · will people want it?" }, { v: "viability", label: "Viability · does the money work?" }, { v: "feasibility", label: "Feasibility · can we make and deliver it?" }, { v: "legal", label: "Legal · are we allowed to?" }] },
               { k: "bet", label: "WE BET THAT…", type: "longtext", ph: "We bet that ___." },
               { k: "wrong", label: "IF WE'RE WRONG…", type: "longtext", ph: "If we're wrong, ___. The consequence, not just a name." },
               { k: "test", label: "HOW WE TEST OR CHECK IT", type: "longtext", ph: "— one concrete action with real people in the next two weeks —" },
               { k: "who", label: "WHO", type: "text", ph: "one person's name" },
-              { k: "when", label: "WHEN", type: "text", ph: "one date or milestone, mis. before Session 7 · within 2 weeks" },
-              { appOnly: true, k: "namerow", label: "Name row? (who owns the name and key asset)", type: "select", empty: "— no —", options: [{ v: "yes", label: "Yes: this is our name row (a check)" }] }] }
+              { k: "when", label: "WHEN", type: "text", ph: "one date or milestone, e.g. within 2 weeks · after the Concept Card test" },
+              { appOnly: true, k: "namerow", label: "Name row? (who owns the name and key asset)", type: "select", empty: "— no —", options: [{ v: "yes", label: "Yes: this row is about who owns our name (a check)" }],
+                note: "Choose Yes only on the row about who owns your project's name. Usually its kind is legal." }] }
         ]
       },
 

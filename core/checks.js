@@ -200,7 +200,7 @@
   CB.checkGroups.S5 = {
     i10: { title: "10 · Business Model Canvas (page 2)", help: "Tujuh kotak ditulis; Customer Segments dan Value Propositions tampil dari Sesi 2 dan 3. Biaya ditandai GROWS atau tetap, satu PRIMARY, satu tabrakan, satu kalimat." },
     i11: { title: "11 · Pricing + survival line (page 4)", help: "Setiap angka punya origin. Satu kalimat ABOVE / AT / BELOW (atau NOT MONEY) dengan alasan dari positioning. Survival line ditulis walau GUESS." },
-    i12: { title: "12 · Your three bets (page 8)", help: "Maksimal tiga baris. Baris 1 diuji ke orang sungguhan sebelum Sesi 7. Minimal satu baris nama (cek: satu orang, satu tanggal)." }
+    i12: { title: "12 · Your three bets (page 8)", help: "Maksimal tiga baris. Baris 1 = taruhan yang bisa diuji ke orang sungguhan; ujinya lewat Concept Card di kelas. Minimal satu baris nama (kind legal; cek: satu orang, satu tanggal)." }
   };
   CB.checks.S5 = function (data) {
     var c = cur(data, "S5"), out = [];
@@ -244,11 +244,18 @@
     var bets = items(c["s5.p8.bets"]);
     var full = bets.filter(function (b) { return b.kind && t(b.bet) && t(b.wrong) && t(b.test) && t(b.who) && t(b.when); }).length;
     out.push({ group: "i12", key: "e1", label: !bets.length ? "Belum ada taruhan." : full + " dari " + bets.length + " baris lengkap (kind, we bet that, if we're wrong, cara uji atau cek, siapa, kapan).", where: "S5 · hlm. 8", state: bets.length && full === bets.length ? "ok" : "no" });
-    var named = bets.filter(function (b) { return b.namerow === "yes"; }).length;
-    out.push({ group: "i12", key: "e2", label: named ? "Ada baris nama (siapa pemilik nama dan aset utama)." : "Belum ada baris nama. Minimal satu baris tentang siapa pemilik nama proyek dan aset utamamu.", where: "S5 · hlm. 8", state: named ? "ok" : "no" });
+    /* v0.8.4: baris nama = namerow Yes DAN kind legal (penilaian W4: Yes sering dipilih di baris 1 sebagai "baris penting").
+     * Hanya logika cek; nilai tersimpan tidak diubah. */
+    var named = bets.filter(function (b) { return b.namerow === "yes" && b.kind === "legal"; }).length;
+    var legalNo = []; bets.forEach(function (b, i) { if (b.kind === "legal" && b.namerow !== "yes") legalNo.push(i + 1); });
+    out.push({ group: "i12", key: "e2", label: named ? "Ada baris nama (kind legal: siapa pemilik nama dan aset utama)." : legalNo.length ? "Belum ada baris nama. Baris " + legalNo.join(", ") + " berjenis legal: kalau isinya tentang siapa pemilik nama proyekmu, pilih Yes di \"Name row?\"." : "Belum ada baris nama. Minimal satu baris berjenis legal tentang siapa pemilik nama proyek dan aset utamamu, dengan Yes di \"Name row?\".", where: "S5 · hlm. 8", state: named ? "ok" : "no" });
+    bets.forEach(function (b, i) {
+      if (b.namerow === "yes" && b.kind !== "legal")
+        out.push({ group: "i12", key: "e2w", label: "Baris " + (i + 1) + " ditandai baris nama, tetapi kind-nya bukan legal. Baris nama adalah baris tentang siapa pemilik nama proyekmu; kalau bukan, kosongkan \"Name row?\" di baris ini.", where: "S5 · hlm. 8", state: "warn" });
+    });
     if (bets[0] && (bets[0].namerow === "yes" || bets[0].kind === "legal"))
-      out.push({ group: "i12", key: "e3", label: "Baris 1 adalah taruhan yang diuji ke orang sungguhan sebelum Sesi 7. Baris nama (legal) adalah cek; pindahkan ke baris 2 atau 3.", where: "S5 · hlm. 8", state: "warn" });
-    out.push({ group: "i12", key: "e4", label: "Baris 1 dibawa ke Sesi 7: cara mengujinya dibahas di akhir Sesi 6.", where: "S5 · hlm. 8", state: "info" });
+      out.push({ group: "i12", key: "e3", label: "Baris 1 adalah taruhan yang bisa diuji ke orang sungguhan lewat Concept Card. Baris nama (legal) adalah cek; pindahkan ke baris 2 atau 3.", where: "S5 · hlm. 8", state: "warn" });
+    out.push({ group: "i12", key: "e4", label: "Baris 1 tidak kamu uji sendiri. Ujinya lewat Concept Card di kelas.", where: "S5 · hlm. 8", state: "info" });
     return out;
   };
 

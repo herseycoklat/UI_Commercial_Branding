@@ -255,6 +255,8 @@
       el.addEventListener("change", function () { it[spec.k] = el.value; onChange(); });
     }
     w.appendChild(el);
+    /* spec.note (v0.8.4): teks bantuan app di bawah isian item (tampilan saja) */
+    if (spec.note) w.appendChild(U.el("div", { class: "small muted lnote", text: spec.note }));
     return w;
   }
   /* list.itemFields[].showIf = { k, eq } : isian hanya tampil bila item[k] === eq (nilainya tetap disimpan bila disembunyikan).
@@ -284,6 +286,10 @@
           if (spec.showIf && it[spec.showIf.k] !== spec.showIf.eq) return;
           row.appendChild(itemInput(it, spec, commit, draw));
         });
+        /* f.rowWarn (v0.8.4) = { when:{k,eq}, unless:{k,eq}, text }: peringatan di baris itu (tampilan saja, nilai tidak diubah) */
+        var rw = f.rowWarn;
+        if (rw && it[rw.when.k] === rw.when.eq && !(rw.unless && it[rw.unless.k] === rw.unless.eq))
+          row.appendChild(U.el("div", { class: "lwarn", role: "status", text: rw.text }));
         var del = U.el("button", { type: "button", class: "iconbtn", text: "✕", title: "Hapus", "aria-label": "Hapus item " + (i + 1) });
         del.onclick = function () { val.items.splice(i, 1); commit(); draw(); };
         row.appendChild(del);
