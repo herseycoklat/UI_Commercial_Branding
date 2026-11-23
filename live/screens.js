@@ -1,5 +1,6 @@
 // Kelas Live — 3 layar pengantar (I1–I3, doc 63) + 25 layar Sesi 4 (Lampiran E skrip v3) + 13 layar Sesi 5 (L1–L13,
-// Lampiran C skrip gabungan S5 v1) + 4 layar Sesi 6 (L1–L4, skrip kelas S6 v1). Layar = data, bukan kode.
+// Lampiran C skrip gabungan S5 v1) + 4 layar Sesi 6 (L1–L4, skrip kelas S6 v1)
+// + 11 layar Sesi 7 (L1–L6 + Uji kartu #1–#5, doc 92 bagian C + butir 104). Layar = data, bukan kode.
 // Teks pertanyaan dan opsi disalin dari Week3-Sesi4-skrip-final-v3-kelas-live.md.
 // Tipe bidang: single | multi | text | grid
 //   single : satu pilihan (dipakai juga untuk "kategori")
@@ -13,7 +14,7 @@
 //   catatanku : {halaman, bagian} bila jawaban masuk Catatanku; 'pengingat' bila hanya pengingat
 //   waktu     : detik yang disarankan (hanya petunjuk untuk dosen)
 //   key       : kunci jawaban (penanda, bukan ⚠). Aturan ⚠ ada di flags.js
-//   sesi      : 'S1' .. 'S6'  (label filter, doc 63)
+//   sesi      : 'S1' .. 'S7'  (label filter, doc 63)
 //   jenis     : 'insight' (tebakan kasus Gojek di pengantar) | 'kelas' (materi sesi)
 
 const o = (v, t, d) => (d ? { v, t, d } : { v, t });
@@ -495,11 +496,62 @@ const SESI6 = [
       'Yang kami minta: ajak keluargamu menonton Jumbo di libur Lebaran.'] }),
 ];
 
-// Ke-25 layar lama: sesi S4, jenis kelas (doc 63). Urutan: I1 → I2 → I3 → Q1 → … → Q25 → L1 → … → L13 (S5) → L1 → … → L4 (S6)
+// ---------- Sesi 7 (Week 6, kelas offline Jum 27 Nov): L1–L6 + Uji kartu #1–#5 ----------
+// Sumber tunggal: doc 92 bagian C (teks L1–L6 dan kunci) + spesifikasi butir 104/109 (prompt chat Kelas Live 23 Nov 19.58).
+// Teks dicocokkan otomatis dengan test/fixtures/s7-kelas-live.md. Id berawalan `s7-`.
+// L1/L2/L4/L5: pilihan tunggal 20 dtk, acak tetap di HP (`urutan`), persentase dulu, kunci ditandai kemudian (kunciTerpisah).
+//   Kunci L2 (D) dan L5 (C) TIDAK ditandai di tempat: dosen memilih layar itu lagi di dashboard (jendela tidak di-share)
+//   dan klik "Tandai kunci" sebelum membuka Uji kartu #1. Tombol tersedia untuk layar yang tidak aktif.
+// L3/L6 dan Uji kartu #1–#5: satu template (ujiKartu): SAY / DO / PAY / Tidak, satu jawaban, tanpa kunci, 30 dtk,
+//   + kotak "Kenapa?" opsional. Isi kartu tidak pernah tampil di HP (kartu ditayangkan dari PDF di layar yang di-share).
+const UJI_OPTS = [
+  o('say', 'SAY', 'Saya bilang tertarik, tapi belum melakukan apa-apa'),
+  o('do', 'DO', 'Saya mau melakukan langkah kecil yang gampang dibatalkan'),
+  o('pay', 'PAY', 'Saya mau memberi sesuatu yang hilang kalau mundur (uang, waktu, nomor HP, rekomendasi)'),
+  o('tidak', 'Tidak', 'Saya tidak tertarik'),
+];
+const UJI_TANYA = 'Kamu adalah orang di baris FOR WHOM kartu ini. Setelah membaca kartunya, kamu apa?';
+const uji = (id, no, slide, segmen, judul, label) => ({
+  id, no, slide, segmen, judul, mode: 'poll', waktu: 30, ujiKartu: true,
+  kenapaDari: 'pilih', urutKenapa: ['tidak', 'say', 'do', 'pay'], // di layar dosen: Tidak dan SAY dulu (untuk dipanggil)
+  fields: [
+    { id: 'pilih', type: 'single', label, options: UJI_OPTS },
+    { id: 'kenapa', type: 'text', label: 'Kenapa?', optional: true, max: 150 },
+  ],
+});
+const S7 = (no, slide, segmen, judul, label, opts, key, urutan) => ({
+  id: `s7-l${no}`, no: `L${no}`, slide, segmen, judul, mode: 'tebak', waktu: 20, kunciTerpisah: true, labelKunci: 'Tandai kunci',
+  fields: [{ id: 'jawab', type: 'single', label, key, urutan, options: opts.map((t, i) => o('abcd'[i], `${'ABCD'[i]}. ${t}`)) }],
+});
+
+const SESI7 = [
+  S7(1, 3, 'Old Spice', 'Old Spice · Untuk siapa?',
+    'Iklan Old Spice ini sebenarnya ditujukan untuk siapa?',
+    ['Laki-laki muda yang ingin terlihat lebih menarik', 'Perempuan yang membelikan sabun untuk pasangannya',
+      'Remaja laki-laki yang baru mulai pakai deodoran', 'Laki-laki pengguna setia Old Spice'], 'b', ['c', 'a', 'd', 'b']),
+  S7(2, 3, 'Old Spice', 'Old Spice · Prediksi penjualan (kunci di klik 3)',
+    'Sebulan setelah kampanye ini, penjualan sabun mandi Old Spice…',
+    ['Tidak berubah', 'Naik sekitar 10%', 'Naik sekitar 50%', 'Naik lebih dari 100%'], 'd', ['b', 'd', 'a', 'c']),
+  uji('s7-l3', 'L3', 3, 'Contoh · Old Spice', 'Contoh · Old Spice (SAY/DO/PAY)',
+    'Kamu perempuan yang biasa membelikan sabun mandi untuk pasanganmu. Setelah melihat iklan ini, kamu…'),
+  S7(4, 4, 'Peloton', 'Peloton · Untuk siapa?',
+    'Siapa yang diharapkan membeli setelah menonton iklan Peloton ini?',
+    ['Perempuan yang ingin olahraga di rumah', 'Orang yang mencari hadiah untuk pasangan',
+      'Anggota gym yang ingin berhenti langganan', 'Penggemar sepeda yang ingin latihan di rumah'], 'b', ['d', 'a', 'b', 'c']),
+  S7(5, 4, 'Peloton', 'Peloton · Prediksi penjualan (kunci di klik 3)',
+    'Iklan ini ramai dikritik. Penjualan liburan Peloton sesudahnya…',
+    ['Turun tajam', 'Turun sedikit', 'Tidak memiliki informasi penjualan', 'Malah naik tajam'], 'c', ['b', 'c', 'd', 'a']),
+  uji('s7-l6', 'L6', 4, 'Contoh · Peloton', 'Contoh · Peloton (SAY/DO/PAY)',
+    'Kamu sedang mencari hadiah untuk pasanganmu, dan uangnya ada. Setelah melihat iklan ini, kamu…'),
+  ...[1, 2, 3, 4, 5].map((n) => uji(`s7-uk${n}`, `U${n}`, 5, `Uji kartu #${n}`, `Uji kartu #${n}`, UJI_TANYA)),
+];
+
+// Ke-25 layar lama: sesi S4, jenis kelas (doc 63). Urutan: I1 → I2 → I3 → Q1 → … → Q25 → L1 → … → L13 (S5) → L1 → … → L4 (S6) → L1 … L6, U1 … U5 (S7)
 export const SCREENS = [...PENGANTAR, ...SESI4.map((x) => ({ ...x, sesi: 'S4', jenis: 'kelas' })),
   ...SESI5.map((x) => ({ ...x, sesi: 'S5', jenis: 'kelas' })),
-  ...SESI6.map((x) => ({ ...x, sesi: 'S6', jenis: 'kelas' }))];
-export const SESI_LIST = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'];
+  ...SESI6.map((x) => ({ ...x, sesi: 'S6', jenis: 'kelas' })),
+  ...SESI7.map((x) => ({ ...x, sesi: 'S7', jenis: 'kelas' }))];
+export const SESI_LIST = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7'];
 export const JENIS_LIST = ['insight', 'kelas'];
 export const matchFilter = (s, f = {}) => (!f.sesi || s.sesi === f.sesi) && (!f.jenis || s.jenis === f.jenis);
 

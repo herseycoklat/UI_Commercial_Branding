@@ -144,3 +144,6 @@ textarea.txt { resize: vertical; }
 .konteks { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: .6rem; padding: .6rem .9rem; margin-bottom: .9rem; font-style: italic; }
 .konteks p { margin: .15rem 0; }
 .qbox .konteks { margin: .3rem 0 .6rem; }
+
+/* S7 Uji kartu: label pilihan di kartu "Kenapa?" (hanya layar dosen) */
+.card .kpilih { display: inline-block; margin-bottom: .25rem; padding: 0 .45rem; border-radius: .6rem; font-size: .75rem; font-weight: 700; background: var(--line, #ddd); }
