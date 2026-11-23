@@ -4,23 +4,26 @@ import assert from 'node:assert/strict';
 import { SCREENS, SCREEN_BY_ID, SESI_LIST, JENIS_LIST, matchFilter } from '../screens.js';
 import { aggregateScreen, groupBrands, normalizeBrand } from '../aggregate.js';
 import { flagsFor, collectFlags, markField, markSummary } from '../flags.js';
-import { toCsv, cell, guard, catatankuRows, answerText, BOM, COLUMNS } from '../csv.js';
+import { toCsv, cell, guard, catatankuRows, answerText, BOM, COLUMNS, resultRows, resultFileName, toCsvTable, RESULT_COLUMNS } from '../csv.js';
+import { kenapaItems } from '../results.js';
 
 // ---------- screens ----------
-test('45 layar: I1–I3, 25 layar Sesi 4 bernomor 1..25, L1–L13 Sesi 5, L1–L4 Sesi 6, id unik', () => {
-  assert.equal(SCREENS.length, 45);
-  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 45);
+test('56 layar: I1–I3, 25 layar Sesi 4 bernomor 1..25, L1–L13 Sesi 5, L1–L4 Sesi 6, 11 layar Sesi 7, id unik', () => {
+  assert.equal(SCREENS.length, 56);
+  assert.equal(new Set(SCREENS.map((s) => s.id)).size, 56);
   assert.deepEqual(SCREENS.slice(0, 4).map((s) => s.id), ['i1', 'i2', 'i3', 'q1']);
   SCREENS.slice(3, 28).forEach((s, i) => assert.equal(s.no, i + 1));
   assert.deepEqual(SCREENS.slice(28, 41).map((s) => s.no), Array.from({ length: 13 }, (_, i) => `L${i + 1}`));
-  assert.deepEqual(SCREENS.slice(41).map((s) => s.id), ['s6-l1', 's6-l2', 's6-l3', 's6-l4']);
+  assert.deepEqual(SCREENS.slice(41, 45).map((s) => s.id), ['s6-l1', 's6-l2', 's6-l3', 's6-l4']);
+  assert.deepEqual(SCREENS.slice(45).map((s) => s.id), ['s7-l1', 's7-l2', 's7-l3', 's7-l4', 's7-l5', 's7-l6', 's7-uk1', 's7-uk2', 's7-uk3', 's7-uk4', 's7-uk5']);
 });
 
 test('label sesi × jenis: I1=S1, I2=S2, I3=S3 insight; 25 layar S4 kelas; 13 layar S5 kelas; 4 layar S6 kelas', () => {
   assert.deepEqual(SCREENS.slice(0, 3).map((s) => `${s.sesi}/${s.jenis}`), ['S1/insight', 'S2/insight', 'S3/insight']);
   for (const s of SCREENS.slice(3, 28)) assert.equal(`${s.sesi}/${s.jenis}`, 'S4/kelas', s.id);
   for (const s of SCREENS.slice(28, 41)) assert.equal(`${s.sesi}/${s.jenis}`, 'S5/kelas', s.id);
-  for (const s of SCREENS.slice(41)) assert.equal(`${s.sesi}/${s.jenis}`, 'S6/kelas', s.id);
+  for (const s of SCREENS.slice(41, 45)) assert.equal(`${s.sesi}/${s.jenis}`, 'S6/kelas', s.id);
+  for (const s of SCREENS.slice(45)) assert.equal(`${s.sesi}/${s.jenis}`, 'S7/kelas', s.id);
   for (const s of SCREENS) assert.ok(SESI_LIST.includes(s.sesi) && JENIS_LIST.includes(s.jenis), s.id);
 });
 
@@ -130,8 +133,97 @@ test('S6: slide, waktu, tipe; L1–L3 kunciTerpisah dan tombol "Tandai kunci"; L
   assert.equal(markField(L[1].fields[0], 'a').ok, false);
 });
 
+// ---------- Sesi 7: L1–L6 + Uji kartu #1–#5 harus sama dengan sumber (test/fixtures/s7-kelas-live.md) ----------
+function parseS7() {
+  const md = readFileSync(new URL('./fixtures/s7-kelas-live.md', import.meta.url), 'utf8');
+  const rows = [...md.matchAll(/^\| (L\d) \| [^|]+ \| ([^|]+) \| ([^|]+) \| ([^|]+) \| (\d+) dtk \|$/gm)].map((m) => ({
+    no: m[1], tanya: m[2].trim(), opsi: m[3].includes('template Uji kartu') ? null : m[3].trim().split(' · '),
+    kunci: m[4].trim() === '—' ? null : m[4].trim()[0], waktu: Number(m[5]) }));
+  const uji = md.split('## Template Uji kartu')[1];
+  return { rows, ujiTanya: uji.match(/^Teks HP: (.+)$/m)[1],
+    ujiOpsi: [...uji.matchAll(/^- (\S+) · (.+)$/gm)].map((m) => [m[1], m[2]]), kenapa: uji.match(/^Kotak teks opsional: (.+)$/m)[1] };
+}
+
+test('S7 L1–L6: pertanyaan, opsi A–D, kunci, waktu sama persis dengan doc 92 bagian C; L3/L6 = template Uji kartu', () => {
+  const src = parseS7();
+  assert.equal(src.rows.length, 6);
+  for (const k of src.rows) {
+    const s = SCREEN_BY_ID[`s7-${k.no.toLowerCase()}`];
+    assert.equal(s.no, k.no); assert.equal(s.waktu, k.waktu, s.id);
+    assert.equal(s.fields[0].label, k.tanya, s.id);
+    if (k.opsi) {
+      assert.deepEqual(s.fields[0].options.map((o) => o.t), k.opsi, s.id);
+      assert.equal(s.fields[0].key, k.kunci.toLowerCase(), s.id);
+    } else {
+      assert.equal(s.ujiKartu, true, s.id); assert.equal(s.fields[0].key, undefined, s.id);
+    }
+  }
+});
+
+test('S7 template Uji kartu: L3, L6, Uji kartu #1–#5 identik (pilihan, kotak Kenapa?), tanpa kunci, 30 dtk', () => {
+  const src = parseS7();
+  const U = ['s7-l3', 's7-l6', 's7-uk1', 's7-uk2', 's7-uk3', 's7-uk4', 's7-uk5'].map((id) => SCREEN_BY_ID[id]);
+  for (const s of U) {
+    assert.equal(s.waktu, 30, s.id); assert.equal(s.kunciTerpisah, undefined, s.id); assert.equal(s.catatanku, undefined, s.id);
+    assert.equal(s.fields.length, 2, s.id);
+    const [p, k] = s.fields;
+    assert.equal(p.type, 'single'); assert.equal(p.key, undefined); assert.equal(p.urutan, undefined, `${s.id}: urutan tangga tetap`);
+    assert.deepEqual(p.options.map((o) => [o.t, o.d]), src.ujiOpsi, s.id);
+    assert.equal(k.type, 'text'); assert.equal(k.label, src.kenapa); assert.equal(k.optional, true); assert.ok(k.max <= 300);
+    assert.deepEqual([p.options, k], [U[0].fields[0].options, U[0].fields[1]], `${s.id}: pilihan dan kotak sama dengan L3`);
+  }
+  for (let n = 1; n <= 5; n++) {
+    const s = SCREEN_BY_ID[`s7-uk${n}`];
+    assert.equal(s.judul, `Uji kartu #${n}`); assert.equal(s.segmen, `Uji kartu #${n}`); assert.equal(s.fields[0].label, src.ujiTanya);
+  }
+  assert.equal(SCREEN_BY_ID['s7-l3'].segmen, 'Contoh · Old Spice');
+  assert.equal(SCREEN_BY_ID['s7-l6'].segmen, 'Contoh · Peloton');
+  // tanpa konteks: isi kartu tidak pernah tampil di HP
+  for (const s of SCREENS.filter((x) => x.sesi === 'S7')) assert.equal(s.konteks, undefined, s.id);
+});
+
+test('S7: slide 3/4/5, acak tetap L1/L2/L4/L5 (semua opsi, kunci tidak di posisi yang sama dengan slide), kunciTerpisah, tanpa Gate', () => {
+  const L = SCREENS.filter((s) => s.sesi === 'S7');
+  assert.deepEqual(L.map((s) => s.slide), [3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5]);
+  for (const id of ['s7-l1', 's7-l2', 's7-l4', 's7-l5']) {
+    const s = SCREEN_BY_ID[id]; const f = s.fields[0];
+    assert.equal(s.kunciTerpisah, true, id); assert.equal(s.labelKunci, 'Tandai kunci', id); assert.equal(s.waktu, 20, id);
+    assert.deepEqual([...f.urutan].sort(), ['a', 'b', 'c', 'd'], id);
+    assert.notDeepEqual(f.urutan, ['a', 'b', 'c', 'd'], id);
+    assert.notEqual(f.urutan.indexOf(f.key), 'abcd'.indexOf(f.key), `${id}: kunci pindah posisi`);
+    assert.notEqual(f.urutan[0], f.key, `${id}: kunci tidak di paling atas`);
+  }
+  assert.deepEqual(['s7-l1', 's7-l2', 's7-l4', 's7-l5'].map((id) => SCREEN_BY_ID[id].fields[0].key), ['b', 'd', 'b', 'c']);
+  for (const s of L) assert.ok(!/gate/i.test(JSON.stringify(s)), s.id);
+  assert.equal(markField(SCREEN_BY_ID['s7-l2'].fields[0], 'd').ok, true);
+  assert.equal(markSummary(SCREEN_BY_ID['s7-uk1'], { 1: { values: { pilih: 'say' } } }).pilih, undefined);
+});
+
+test('S7 hasil: Kenapa? berlabel pilihan, Tidak dan SAY dulu; unduhan CSV persentase + teks, tanpa NIM dan tanpa yang disembunyikan', () => {
+  const sc = SCREEN_BY_ID['s7-uk2'];
+  const answers = { 2306000001: ans({ pilih: 'pay', kenapa: 'Saya pesan sekarang' }, 1), 2306000002: ans({ pilih: 'tidak', kenapa: 'Terlalu mahal' }, 3),
+    2306000003: ans({ pilih: 'say', kenapa: 'Menarik saja' }, 2), 2306000004: ans({ pilih: 'do' }, 4), 2306000005: ans({ pilih: 'tidak', kenapa: '=HYPERLINK("x")' }, 5) };
+  const hidden = { 2306000005: true };
+  const agg = aggregateScreen(sc, answers, hidden);
+  const items = kenapaItems(sc, sc.fields[1], agg.fields.kenapa.items, answers);
+  assert.deepEqual(items.map((i) => `${i.pilih}:${i.text}`), ['Tidak:Terlalu mahal', 'SAY:Menarik saja', 'PAY:Saya pesan sekarang']);
+  const csv = toCsvTable(RESULT_COLUMNS, resultRows(sc, agg, answers, hidden));
+  const lines = csv.slice(1).split('\r\n');
+  assert.equal(lines[0], 'bagian;pilihan;jumlah;persen;teks');
+  assert.ok(lines.includes('Jawaban masuk;;4;;'));
+  assert.ok(lines.includes('Persentase;SAY;1;25%;Saya bilang tertarik, tapi belum melakukan apa-apa'));
+  assert.ok(lines.includes('Persentase;Tidak;1;25%;Saya tidak tertarik'));
+  assert.deepEqual(lines.filter((l) => l.startsWith('Kenapa?')), ['Kenapa?;Tidak;;;Terlalu mahal', 'Kenapa?;SAY;;;Menarik saja', 'Kenapa?;PAY;;;Saya pesan sekarang']);
+  assert.ok(!/23060000/.test(csv), 'tanpa NIM');
+  assert.ok(!/HYPERLINK/.test(csv), 'yang disembunyikan tidak ikut');
+  assert.equal(resultFileName(sc), 'hasil-s7-uk2-uji-kartu-2.csv');
+  // layar lain tidak terpengaruh: teks tanpa label pilihan
+  const q = SCREEN_BY_ID.l1; assert.equal(kenapaItems(q, q.fields[0], [{ ref: 1, text: 'x', t: 1 }], {})[0].pilih, undefined);
+});
+
 test('filter sesi × jenis', () => {
-  assert.equal(SCREENS.filter((s) => matchFilter(s, {})).length, 45);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, {})).length, 56);
+  assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S7' })).length, 11);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S6' })).length, 4);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S6', jenis: 'insight' })).length, 0);
   assert.equal(SCREENS.filter((s) => matchFilter(s, { sesi: 'S5' })).length, 13);

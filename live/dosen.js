@@ -6,7 +6,7 @@ import { aggregateScreen } from './aggregate.js';
 import { collectFlags, markSummary } from './flags.js';
 import { renderResults } from './results.js';
 import { konteksBox } from './render.js';
-import { attendanceRows, attendanceColumns, toCsvTable } from './csv.js';
+import { attendanceRows, attendanceColumns, toCsvTable, resultRows, RESULT_COLUMNS, resultFileName } from './csv.js';
 import { downloadText } from './download.js';
 
 const root = document.getElementById('app');
@@ -16,8 +16,10 @@ const S = {
   user: null, state: null, sel: SCREENS[0].id, answers: {}, hidden: {}, spot: null,
   online: 0, peak: 0, lat: [], roster: null, tab: 'kelas', att: null, attBusy: false, confirmEnd: false, openHidden: false, err: '',
   filter: { sesi: '', jenis: '' }, opened: {}, confirmReset: false, attAnswers: null,
-  keyOn: {}, // layar kunciTerpisah (L1): tanda kunci ditampilkan setelah dosen klik, hanya di layar dosen
+  keyOn: loadKeyOn(), // layar kunciTerpisah: tanda kunci ditampilkan setelah dosen klik, hanya di layar dosen (diingat browser ini)
 };
+function loadKeyOn() { try { return JSON.parse(localStorage.getItem('kl-keyOn') || '{}') || {}; } catch { return {}; } }
+function saveKeyOn(k) { try { localStorage.setItem('kl-keyOn', JSON.stringify(k)); } catch { /* penyimpanan browser tidak tersedia */ } }
 const pct = (arr, q) => { const a = [...arr].sort((x, y) => x - y); return a[Math.max(0, Math.ceil(q * a.length) - 1)]; };
 let started = false;
 let watchedId = null;
@@ -162,7 +164,9 @@ function controls() {
   if (isActive && st.open) btns.push(h('button', { id: 'btn-close', class: 'primary', type: 'button', onclick: () => act({ open: false }) }, 'Tutup layar'));
   if (isActive) btns.push(h('button', { id: 'btn-reveal', class: st.revealed ? 'ghost' : 'primary', type: 'button', onclick: () => act({ revealed: !st.revealed }) }, st.revealed ? 'Sembunyikan hasil' : 'Tampilkan hasil'));
   if (sc.kunciTerpisah && (!isActive || st.revealed)) btns.push(h('button', { id: 'btn-key', class: S.keyOn[sc.id] ? 'ghost' : 'primary', type: 'button',
-    onclick: () => { S.keyOn = { ...S.keyOn, [sc.id]: !S.keyOn[sc.id] }; draw(); } }, S.keyOn[sc.id] ? 'Sembunyikan tanda' : (sc.labelKunci || 'Tandai yang dilaporkan')));
+    onclick: () => { S.keyOn = { ...S.keyOn, [sc.id]: !S.keyOn[sc.id] }; saveKeyOn(S.keyOn); draw(); } }, S.keyOn[sc.id] ? 'Sembunyikan tanda' : (sc.labelKunci || 'Tandai yang dilaporkan')));
+  btns.push(h('button', { id: 'btn-dl', class: 'ghost', type: 'button', title: 'Persentase + isi teks (anonim), tanpa jawaban yang disembunyikan',
+    onclick: () => downloadText(resultFileName(sc), toCsvTable(RESULT_COLUMNS, resultRows(sc, aggregateScreen(sc, S.answers, S.hidden), S.answers, S.hidden))) }, 'Unduh hasil'));
   btns.push(h('button', { id: 'btn-end', class: 'ghost', type: 'button', onclick: () => {
     if (!S.confirmEnd) { S.confirmEnd = true; draw(); setTimeout(() => { S.confirmEnd = false; draw(); }, 4000); return; }
     S.confirmEnd = false; B.setSpot(null); act({ active: '', open: false, revealed: false, penutup: true });

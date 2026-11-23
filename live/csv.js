@@ -89,3 +89,31 @@ export function catatankuRows(nim, mine, screens) {
 }
 
 export const csvFileName = (nim) => `catatanku-${String(nim).replace(/[^0-9A-Za-z]/g, '')}.csv`;
+
+// Hasil satu layar untuk diunduh dosen (S7: dikirim ke pemilik kartu). Fungsi murni.
+// agg = aggregateScreen(screen, answers, hidden). Jawaban yang disembunyikan dosen tidak ikut.
+// Kolom: bagian;pilihan;jumlah;persen;teks. Anonim: tanpa NIM.
+export const RESULT_COLUMNS = ['bagian', 'pilihan', 'jumlah', 'persen', 'teks'];
+export function resultRows(screen, agg, answers = {}, hidden = {}) {
+  const rows = [{ bagian: 'Layar', pilihan: screen.judul, teks: `${screen.sesi || ''} · ${screen.no}${screen.slide ? ` · slide ${screen.slide}` : ''}` },
+    { bagian: 'Jawaban masuk', jumlah: agg.ditampilkan }];
+  for (const f of screen.fields) {
+    const t = agg.fields[f.id];
+    if (f.type === 'single' || f.type === 'multi') {
+      rows.push({ bagian: 'Pertanyaan', teks: f.label });
+      for (const o of f.options) {
+        const n = t.counts[o.v] || 0;
+        rows.push({ bagian: 'Persentase', pilihan: o.t, jumlah: n, persen: `${t.total ? Math.round((n / t.total) * 100) : 0}%`, teks: o.d || '' });
+      }
+    } else if (f.type === 'text') {
+      const src = screen.kenapaDari && screen.fields.find((x) => x.id === screen.kenapaDari);
+      const order = screen.urutKenapa || [];
+      const rank = (v) => { const i = order.indexOf(v); return i < 0 ? order.length : i; };
+      const items = t.items.map((it) => ({ ...it, v: src ? answers?.[it.ref]?.values?.[src.id] : null }))
+        .sort((a, b) => rank(a.v) - rank(b.v) || a.t - b.t);
+      for (const it of items) rows.push({ bagian: f.label, pilihan: src ? optText(src, it.v ?? '—') : '', teks: it.text });
+    }
+  }
+  return rows;
+}
+export const resultFileName = (screen) => `hasil-${screen.id}-${screen.judul.replace(/[^0-9A-Za-z]+/g, '-').replace(/^-|-$/g, '').toLowerCase()}.csv`;
