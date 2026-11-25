@@ -212,3 +212,43 @@ Terkunci: ya, 28 ID
 | 9 | `s5.p9.m2` | MILESTONE 2 · months ___ to ___ | parts | opsional | ya |
 | 9 | `s5.p9.m3` | MILESTONE 3 · months ___ to 12 | parts | opsional | ya |
 
+## S6 · Go-to-Market and Brand Activation Plan
+
+Hal inti: 13. Customer Journey (hlm. 4); 14. Message (hlm. 5); 15. KPI Tree (hlm. 9)
+
+Terkunci: ya, 31 ID
+
+| Hlm | ID | Label | Tipe | Peran | Kunci |
+|---|---|---|---|---|---|
+| 2 | `s6.p2.goal` | 1 · GOAL | longtext | opsional | ya |
+| 2 | `s6.p2.audience` | 2 · AUDIENCE | shown | opsional | ya |
+| 2 | `s6.p2.money` | 3 · THE MONEY LINE | shown | opsional | ya |
+| 2 | `s6.p2.date` | 4 · DATE | text | opsional | ya |
+| 2 | `s6.p2.message` | 5 · MAIN MESSAGE | shown | opsional | ya |
+| 2 | `s6.p2.channels` | 6 · CHANNELS | longtext | opsional | ya |
+| 2 | `s6.p2.hours` | 7 · HOURS | text | opsional | ya |
+| 2 | `s6.p2.top` | 8 · TOP NUMBER | shown | opsional | ya |
+| 2 | `s6.p2.sentence` | THE PLAN IN ONE SENTENCE | longtext | opsional | ya |
+| 2 | `s6.p2.contra` | ONE CONTRADICTION, KEPT VISIBLE | longtext | opsional | ya |
+| 3 | `s6.p3.funnel` | Audience Funnel | table | opsional | ya |
+| 3 | `s6.p3.drop` | WHERE MOST PEOPLE STOP, AND WHY WE THINK SO | longtext | opsional | ya |
+| 4 | `s6.p4.person` | OUR ONE PERSON | longtext | HAL INTI | ya |
+| 4 | `s6.p4.journey` | Customer Journey Map | table | HAL INTI | ya |
+| 4 | `s6.p4.fix` | ONE FRICTION WE FIX: WHAT CHANGES · WHO · BY WHEN | parts | HAL INTI | ya |
+| 5 | `s6.p5.main` | MAIN MESSAGE · ONE SENTENCE | longtext | HAL INTI | ya |
+| 5 | `s6.p5.reasons` | REASON (SUPPORTING MESSAGE) | list | HAL INTI | ya |
+| 5 | `s6.p5.ask` | ONE ASK | longtext | HAL INTI | ya |
+| 5 | `s6.p5.test` | THE TEST | status | HAL INTI | ya |
+| 6 | `s6.p6.media` | Paid–Owned–Earned–Shared Media Map | table | opsional | ya |
+| 7 | `s6.p7.from` | WORKING BACKWARDS FROM | longtext | opsional | ya |
+| 7 | `s6.p7.calendar` | Campaign Calendar | table | opsional | ya |
+| 8 | `s6.p8.rows` | ACTIVITY · RUPIAH · HOURS / WEEK · EFFECT ON YOUR TOP NUMBER · PRIORIT | list | opsional | ya |
+| 8 | `s6.p8.test` | THE HOURS TEST | longtext | opsional | ya |
+| 8 | `s6.p8.cut` | WHAT WE CUT FIRST, AND WHY | longtext | opsional | ya |
+| 9 | `s6.p9.target` | 1 · TARGET | parts | HAL INTI | ya |
+| 9 | `s6.p9.breakdown` | 2 · BREAK IT DOWN | longtext | HAL INTI | ya |
+| 9 | `s6.p9.drivers` | 3 · WHAT DRIVES IT | longtext | HAL INTI | ya |
+| 9 | `s6.p9.signal` | 4 · EARLY SIGNAL | longtext | HAL INTI | ya |
+| 9 | `s6.p9.check` | KPI Tree | table | HAL INTI | ya |
+| 10 | `s6.p10.risks` | RISK: WHAT HAPPENS · EARLY-WARNING SIGN · IF X, THEN Y · OWNER | list | opsional | ya |
+
