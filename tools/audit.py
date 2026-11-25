@@ -39,7 +39,8 @@ def shape_family(t):
 DATE_RE = re.compile(r"\b\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Mei|Jun|Jul|Aug|Agu|Sep|Oct|Okt|Nov|Dec|Des)\b|\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun|Sen|Sel|Rab|Kam|Jum|Sab|Min)\s+\d{1,2}\b", re.I)
 # content.caseDates (S6, 17 Nov 2026): contoh memakai tanggal kasus (2027) yang sah. Yang tetap ditolak hanya tanggal minggu kursus:
 # tanggal November/Desember tanpa tahun (mis. "Fri 27 Nov", "Wed 2 Dec"). Tanggal dengan tahun = tanggal kasus.
-COURSE_DATE_RE = re.compile(r"\b\d{1,2}\s+(Nov|Nop|Dec|Des)[a-z]*\.?(?!\s+\d{4})", re.I)
+# v0.9.0: nama bulan harus kata utuh ("Session 6 deck" bukan tanggal)
+COURSE_DATE_RE = re.compile(r"\b\d{1,2}\s+(Nov|Nop|Nopember|November|Dec|Des|Desember|December)\b\.?(?!\s+\d{4})", re.I)
 STATUS_RE = re.compile(r"APPROVED|REVISION DUE")
 GATE_RE = re.compile(r"\bgates?\b", re.I)
 

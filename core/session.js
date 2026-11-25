@@ -484,6 +484,9 @@
         sec.appendChild(gg);
         wa.appendChild(gr.skip ? makeSkip(sessId, gr.skipLabel || gr.head, gr.ids, sec, "skipfield") : sec);
       });
+    } else if (pg.layout === "pitch" && CB.renderPitch) {
+      /* v0.9.0 (S7 hlm. 9): pitch view dirakit dari halaman asal + ✓/✗ per langkah (core/pitch.js) */
+      CB.renderPitch(sessId, pg, wa, function (f) { return renderField(sessId, f); });
     } else {
       pg.fields.forEach(function (f) { wa.appendChild(renderField(sessId, f)); });
     }
@@ -831,6 +834,8 @@
           gr.ids.forEach(function (fid) { g3.appendChild(box(byId[fid])); });
           pp.appendChild(g3);
         });
+      } else if (pg.layout === "pitch" && CB.pitchPrint) {
+        pp.appendChild(CB.pitchPrint(sessId, pg));
       } else pg.fields.forEach(function (f) { var bx = box(f); bx.style.marginTop = "5pt"; pp.appendChild(bx); });
       if (pg.footer) pp.appendChild(U.el("div", { class: "pp-foot", text: CB.fill(pg.footer, sessId) }));
       pp.appendChild(U.el("div", { class: "pp-foot", text: "Dicetak dari Workbook App · " + U.fmtDate(new Date().toISOString()) + " · arsip pribadi, bukan file pengumpulan." }));

@@ -54,10 +54,13 @@
       "hide_release_date": true
     },
     "S7": {
-      "title": "",
+      "title": "Testing and Brand Governance Plan",
       "week": 6,
-      "release": "2026-11-26T00:00:00+07:00",
-      "due": "2026-12-01T23:59:00+07:00"
+      "release": "2026-11-27T18:00:00+07:00",
+      "due": "2026-12-04T23:59:00+07:00",
+      "no_upload_deadline": true,
+      "deadline_note": "batas pengumpulan diumumkan dosen di kelas dan di grup kelas",
+      "hide_release_date": true
     },
     "S8": {
       "title": "",

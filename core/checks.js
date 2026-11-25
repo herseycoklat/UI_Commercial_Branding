@@ -304,6 +304,51 @@
     return out;
   };
 
+  /* v0.9.0 (S7): hlm. 2 test plan · hlm. 4 revision log · hlm. 5 governance · hlm. 9 pitch view. Hanya hal yang bisa dicek mesin. */
+  CB.checks.S7 = function (data) {
+    var c = cur(data, "S7"), out = [];
+    function team(s) { return /\b(the team|team|tim|semua|all of us|kami semua)\b/i.test(t(s)); }
+    function two(s) { return /\s(dan|and|&|\+|with|dengan)\s|,|\//i.test(t(s)); }
+    /* ---- i16 · page 2 (test plan) ---- */
+    var b1 = items(cur(data, "S5")["s5.p8.bets"])[0] || {};
+    out.push({ group: "i16", key: "e0", label: t(b1.bet) ? "Taruhan baris 1 Sesi 5 tampil di page 2." : "THE BET WE TEST kosong: taruhan baris 1 Sesi 5 (hlm. 8) belum diisi di browser ini. Isi di sana, atau impor file terakhirmu.", where: "S5 · hlm. 8", state: t(b1.bet) ? "ok" : "no" });
+    out.push({ group: "i16", key: "e1", label: txt(c["s7.p2.who"]) ? "WHO WE ASK ditulis." : "WHO WE ASK masih kosong: orang yang cocok dengan FOR WHOM, dan berapa.", where: "S7 · hlm. 2", state: txt(c["s7.p2.who"]) ? "ok" : "no" });
+    var ac = c["s7.p2.action"] || {}, acOk = (ac.status === "do" || ac.status === "pay") && t(ac.note);
+    out.push({ group: "i16", key: "e2", label: acOk ? "Aksi yang diminta: " + ac.status.toUpperCase() + ", ditulis." : "WHAT WE ASK THEM TO DO: pilih DO atau PAY dan tulis aksinya.", where: "S7 · hlm. 2", state: acOk ? "ok" : "no" });
+    var pr = txt(c["s7.p2.prediction"]);
+    out.push({ group: "i16", key: "e3", label: pr ? "Prediksi ditulis." : "OUR PREDICTION masih kosong: \"___ of ___ will ___\", ditulis sebelum uji.", where: "S7 · hlm. 2", state: pr ? "ok" : "no" });
+    if (pr && !/\d/.test(pr)) out.push({ group: "i16", key: "e4", label: "Prediksi belum memuat angka. Tanpa angka, hasil apa pun bisa dibaca sebagai berhasil.", where: "S7 · hlm. 2", state: "warn" });
+    /* ---- i17 · page 4 (revision log) ---- */
+    var rw = items(c["s7.p4.rows"]).filter(function (x) { return x && (t(x.line) || t(x.before) || t(x.after) || t(x.evidence)); });
+    var full = rw.filter(function (x) { return t(x.line) && t(x.after) && t(x.evidence) && (x.strength === "strong" || x.strength === "weak"); });
+    out.push({ group: "i17", key: "r1", label: full.length ? full.length + " baris lengkap (line, after, evidence, STRONG/WEAK)." : "Belum ada baris lengkap. Satu baris per perubahan: line, before, after, evidence, STRONG atau WEAK.", where: "S7 · hlm. 4", state: full.length ? "ok" : "no" });
+    if (rw.length > full.length) out.push({ group: "i17", key: "r2", label: (rw.length - full.length) + " baris belum lengkap: tanpa bukti atau tanpa STRONG/WEAK. Tanpa bukti, tidak ada baris.", where: "S7 · hlm. 4", state: "warn" });
+    /* ---- i18 · page 5 (governance) ---- */
+    [["s7.p5.decides", "g1", "Baris 1 (siapa memutus pesan utama)"], ["s7.p5.master", "g2", "Baris 2 (file master dan aturan versi)"], ["s7.p5.ask_before", "g3", "Baris 3 (siapa wajib ditanya sebelum aset kreatif berubah)"]].forEach(function (r) {
+      var v = txt(c[r[0]]);
+      out.push({ group: "i18", key: r[1], label: r[2] + (v ? " terisi." : " masih kosong."), where: "S7 · hlm. 5", state: v ? "ok" : "no" });
+    });
+    ["s7.p5.decides", "s7.p5.ask_before"].forEach(function (id, i) {
+      var v = txt(c[id]); if (!v) return;
+      if (team(v)) out.push({ group: "i18", key: "g4" + i, label: "Baris " + (i ? 3 : 1) + " menyebut tim, bukan satu nama: \"" + v + "\". \"The team\" bukan pemilik.", where: "S7 · hlm. 5", state: "warn" });
+      else if (two(v)) out.push({ group: "i18", key: "g5" + i, label: "Baris " + (i ? 3 : 1) + " tampaknya berisi dua nama: \"" + v + "\". Dua nama berarti tidak ada yang memutus. Cek sendiri.", where: "S7 · hlm. 5", state: "warn" });
+    });
+    /* ---- i19 · page 9 (pitch view) ---- */
+    var steps = [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) { return c["s7.p9.step" + n] || {}; });
+    var marked = steps.filter(function (v) { return v.status === "ok" || v.status === "no"; }).length;
+    out.push({ group: "i19", key: "v1", label: marked === 8 ? "Delapan langkah diberi ✓ atau ✗." : marked + " dari 8 langkah diberi ✓ atau ✗.", where: "S7 · hlm. 9", state: marked === 8 ? "ok" : "no" });
+    var open = steps.map(function (v, i) { return v.status === "no" && !t(v.note) ? i + 1 : 0; }).filter(Boolean);
+    if (open.length) {
+      var box = txt(c["s7.p9.cant"]);
+      out.push({ group: "i19", key: "v2", label: box ? "Langkah ✗ yang belum diperbaiki (" + open.join(", ") + ") ditulis di WHAT WE COULDN'T FIX YET." : "Langkah " + open.join(", ") + " masih ✗ tanpa perbaikan: tulis di WHAT WE COULDN'T FIX YET (langkah, kenapa, apa yang akan dilakukan, kapan).", where: "S7 · hlm. 9", state: box ? "ok" : "no" });
+    }
+    var fixed = steps.filter(function (v) { return v.status === "no" && t(v.note); }).length;
+    if (fixed && !full.length) out.push({ group: "i19", key: "v3", label: "Ada ✗ yang sudah diperbaiki, tapi page 4 belum punya baris. Setiap perbaikan dicatat satu baris di page 4 (buktinya WEAK).", where: "S7 · hlm. 4", state: "warn" });
+    if (marked === 8 && !steps.some(function (v) { return v.status === "no"; })) out.push({ group: "i19", key: "v4", label: "Semua langkah ✓. Cek lagi dengan jujur: halaman yang semuanya ✓ biasanya kurang dipercaya, bukan lebih.", where: "S7 · hlm. 9", state: "info" });
+    out.push({ group: "i19", key: "v5", label: "Concept Card sembilan baris (baris 9 khusus tim) dirakit dari halamanmu: lihat sesudah hlm. 9.", where: "S7 · kartu", state: "info" });
+    return out;
+  };
+
   /* Kandidat hlm. 8 (doc 73 §3, doc 82 §3): ditampilkan di samping tabel, bukan picker, tidak disimpan. */
   CB.s5Candidates = function (data) {
     var c5 = cur(data, "S5"), out = [];
@@ -362,7 +407,7 @@
   CB.CORE_TOTAL = 9;
   /* v0.7.0: jumlah hal inti = hal inti sesi yang sudah dirilis (S1–S4 = 9, + S5 = 12). Angka per sesi tetap di sini supaya
    * halaman sesi lama (yang tidak memuat spec S5) tetap menulis angka yang sama dengan beranda. */
-  var CORE_COUNT = { S1: 1, S2: 3, S3: 2, S4: 3, S5: 3, S6: 3 };
+  var CORE_COUNT = { S1: 1, S2: 3, S3: 2, S4: 3, S5: 3, S6: 3, S7: 4 };
   CB.coreTotal = function () {
     var n = 0;
     Object.keys(CORE_COUNT).forEach(function (sid) { if (sid <= "S4" || !CB.isReleased || CB.isReleased(sid)) n += CORE_COUNT[sid]; });
@@ -376,7 +421,7 @@
   /* Rantai sembilan hal inti S1–S4 berurutan (n 1…9), hanya sesi yang dirilis (atau mode pratinjau). */
   CB.coreChain = function (data) {
     var out = [];
-    ["S1", "S2", "S3", "S4", "S5", "S6"].forEach(function (sid) {
+    ["S1", "S2", "S3", "S4", "S5", "S6", "S7"].forEach(function (sid) {
       var spec = (CB.specs || {})[sid], fn = CB.checks[sid];
       if (!spec || !spec.core || !fn || (CB.isReleased && !CB.isReleased(sid))) return;
       var rows = fn(data || CB.data, spec.pages.map(function (p) { return p.p; }));

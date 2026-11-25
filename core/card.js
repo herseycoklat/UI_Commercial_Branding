@@ -7,7 +7,10 @@
  *   WHY BELIEVE IT = bukti baris REAL s3.p5.promise_proof (satu sumber; hlm. 5 tidak membuat kolom bukti kedua) ·
  *   WHERE = s6.p4.journey baris access · PRICE = s5.p4.rows (atau NOT MONEY s5.p4.line) · WHAT WE ASK YOU TO DO = s6.p9.target "does".
  * Peringatan hanya untuk hal yang bisa dicek mesin; makna kartu dibaca mahasiswa dan dosen.
- * Unduh PDF = cetak browser satu halaman (tanpa server, tanpa CDN). Layar penuh untuk diproyeksikan di kelas. */
+ * Unduh PDF = cetak browser satu halaman (tanpa server, tanpa CDN). Layar penuh untuk diproyeksikan di kelas.
+ * v0.9.0 (S7, butir 90, PROJECT-CONTEXT blok 00000000000): baris ke-9 WHAT WE'RE BETTING ON = s5.p8.bets baris 1, hanya bila
+ * spec sesi meminta (conceptCard.bet; S7). Dipisah garis putus + label "for the team — don't show this to the person you test";
+ * tersembunyi di Layar penuh sampai tombol "Show the bet"; PDF dua versi (tanpa / dengan baris 9). Kartu S6 tetap delapan baris. */
 (function () {
   "use strict";
   var CB = window.CB;
@@ -28,7 +31,8 @@
     return hit / small.length >= 0.5;
   };
 
-  CB.cardRows = function () {
+  CB.CARD_BET_LABEL = "for the team — don't show this to the person you test";
+  CB.cardRows = function (opt) {
     var id = (CB.data && CB.data.identifier) || {};
     var real = items(get("S3", "s3.p5.promise_proof")).filter(function (x) { return x && x.status === "nyata"; });
     var why = real.map(function (x) { return t(x.proof) || t(x.promise); }).filter(Boolean).join("; ");
@@ -46,13 +50,13 @@
       { k: "where", label: "WHERE", value: t(jr.where) || t(jr["do"]), from: "Session 6, page 4, access", href: "s6.html#p4", s6: true },
       { k: "price", label: "PRICE", value: price, from: "Session 5, page 4", href: "s5.html#p4" },
       { k: "ask", label: "WHAT WE ASK YOU TO DO", value: t(tg.does), from: "Session 6, page 9, step 1", href: "s6.html#p9", s6: true }
-    ];
+    ].concat(opt && opt.bet ? [{ k: "bet", label: "WHAT WE'RE BETTING ON", value: t((items(get("S5", "s5.p8.bets"))[0] || {}).bet), from: "Session 5, page 8 (your three bets), row 1", href: "s5.html#p8", bet: true }] : []);
   };
 
   /* Peringatan yang bisa dicek mesin (tidak memblokir). */
   CB.cardNotes = function (rows) {
     var out = [], empty = rows.filter(function (r) { return !r.value; });
-    if (empty.length) out.push({ state: "no", text: empty.length + " dari 8 baris belum diisi: " + empty.map(function (r) { return r.label; }).join(", ") + ". Isi di halaman asalnya (tautan di tiap baris)." });
+    if (empty.length) out.push({ state: "no", text: empty.length + " dari " + rows.length + " baris belum diisi: " + empty.map(function (r) { return r.label; }).join(", ") + ". Isi di halaman asalnya (tautan di tiap baris)." });
     var pp = items(get("S3", "s3.p5.promise_proof")).filter(function (x) { return x && t(x.promise); });
     if (pp.length && !pp.some(function (x) { return x.status === "nyata"; }))
       out.push({ state: "warn", text: "WHY BELIEVE IT kosong karena Promise → Proof Sesi 3 belum punya baris REAL. Reason di page 5 (message) hanya boleh menunjuk baris REAL." });
@@ -68,7 +72,8 @@
     var U = CB.util, live = !(opt && opt.example);
     var c = U.el("div", { class: "ccard" });
     rows.forEach(function (r) {
-      var row = U.el("div", { class: "ccrow" + (r.s6 ? " s6" : "") + (r.big ? " big" : "") + (r.small ? " small" : "") + (r.k === "name" ? " name" : "") + (r.value ? "" : " empty"), "data-key": r.k });
+      if (r.bet) c.appendChild(U.el("div", { class: "ccbetline", text: CB.CARD_BET_LABEL }));
+      var row = U.el("div", { class: "ccrow" + (r.s6 ? " s6" : "") + (r.big ? " big" : "") + (r.small ? " small" : "") + (r.k === "name" ? " name" : "") + (r.bet ? " bet" : "") + (r.value ? "" : " empty"), "data-key": r.k });
       row.appendChild(U.el("div", { class: "cclabel", text: r.label }));
       row.appendChild(U.el("div", { class: "ccval", text: r.value || "not filled yet" }));
       var src = U.el("div", { class: "ccsrc" });
@@ -81,71 +86,80 @@
   }
 
   /* Halaman cetak satu halaman (dipakai tombol Unduh PDF dan cetak sesi). */
-  CB.cardPrintPage = function () {
+  CB.cardPrintPage = function (opt) {
     var U = CB.util, id = (CB.data && CB.data.identifier) || {};
+    opt = opt || { bet: !!CB.cardBet };
     var pp = U.el("div", { class: "pp ppcard" });
     pp.appendChild(U.el("div", { class: "pp-id", text: (id.full_name || "") + " · NIM " + (id.nim || "") + " · " + (id.group_id || "") + " · " + (id.project_name || "") }));
     pp.appendChild(U.el("div", { class: "pp-title", text: "Concept Card" }));
-    pp.appendChild(U.el("p", { class: "pp-sub", text: "Built from your pages. To change a row, change its page." }));
-    pp.appendChild(cardEl(CB.cardRows(), { example: true }));
+    pp.appendChild(U.el("p", { class: "pp-sub", text: "Built from your pages. To change a row, change its page." + (opt.bet ? " Row 9 is for the team only." : "") }));
+    pp.appendChild(cardEl(CB.cardRows(opt), { example: true }));
     pp.appendChild(U.el("div", { class: "pp-foot", text: "Dicetak dari Workbook App · " + U.fmtDate(new Date().toISOString()) }));
     return pp;
   };
-  CB.downloadCard = function () {
+  CB.downloadCard = function (opt) {
     var U = CB.util, root = document.getElementById("print-root");
     if (!root) { root = U.el("div", { id: "print-root" }); document.body.appendChild(root); }
     if (CB.saveNow) CB.saveNow();
-    root.innerHTML = ""; root.appendChild(CB.cardPrintPage());
+    root.innerHTML = ""; root.appendChild(CB.cardPrintPage(opt));
     var id = (CB.data && CB.data.identifier) || {}, old = document.title;
-    document.title = "ConceptCard_" + (id.nim || "") + "_" + String(id.project_name || "").replace(/[^\w]+/g, "-");
+    document.title = "ConceptCard" + (opt && opt.bet ? "-team" : "") + "_" + (id.nim || "") + "_" + String(id.project_name || "").replace(/[^\w]+/g, "-");
     window.print();
     setTimeout(function () { document.title = old; }, 500);
   };
 
   CB.renderConceptCard = function (sessId, ct) {
-    var U = CB.util;
+    var U = CB.util, spec = (CB.specs || {})[sessId] || {}, bet = !!(spec.conceptCard && spec.conceptCard.bet);
+    CB.cardBet = bet;
     var sec = U.el("section", { class: "card cardsec", id: "kartu" });
     var head = U.el("div", { class: "pagehead" });
     head.appendChild(U.el("span", { class: "num", text: "★" }));
     var ht = U.el("div");
     ht.appendChild(U.el("h2", { text: "Your Concept Card" }));
     ht.appendChild(U.el("span", { class: "pglabel", text: sessId + " · built from your pages (not a page to fill)" }));
-    ht.appendChild(U.el("p", { class: "wbsub", text: "Built from your pages. To change a row, change its page. The three highlighted rows come from Session 6." }));
+    ht.appendChild(U.el("p", { class: "wbsub", text: bet ? "Built from your pages. To change a row, change its page. Row 9 is for the team only." : "Built from your pages. To change a row, change its page. The three highlighted rows come from Session 6." }));
     head.appendChild(ht); sec.appendChild(head);
 
     var wrap = U.el("div", { class: "ccwrap" });
     var tools = U.el("div", { class: "cctools" });
-    var bPdf = U.el("button", { type: "button", class: "btn", text: "Unduh PDF kartu" });
+    var bPdf = U.el("button", { type: "button", class: "btn", text: bet ? "Unduh PDF kartu (8 baris, untuk orang yang dites)" : "Unduh PDF kartu" });
+    var bPdfTeam = bet ? U.el("button", { type: "button", class: "btn ghost", text: "Unduh PDF kartu tim (dengan baris 9)" }) : null;
     var bFull = U.el("button", { type: "button", class: "btn ghost", text: "Layar penuh" });
-    tools.appendChild(bPdf); tools.appendChild(bFull);
+    tools.appendChild(bPdf); if (bPdfTeam) tools.appendChild(bPdfTeam); tools.appendChild(bFull);
     tools.appendChild(U.el("span", { class: "small muted", text: " PDF: pilih \"Save as PDF\" / \"Simpan sebagai PDF\" di jendela cetak." }));
     var host = U.el("div", { class: "cchost" });
     var bExit = U.el("button", { type: "button", class: "btn ghost ccexit", text: "Keluar layar penuh (Esc)" });
     wrap.appendChild(bExit);
+    /* baris 9 tersembunyi di Layar penuh sampai dibuka (sesudah hasil uji) */
+    var bShow = bet ? U.el("button", { type: "button", class: "btn ghost ccshowbet", text: "Show the bet" }) : null;
+    if (bShow) { wrap.appendChild(bShow); bShow.onclick = function () { wrap.classList.toggle("betshown"); bShow.textContent = wrap.classList.contains("betshown") ? "Hide the bet" : "Show the bet"; }; }
     var notes = U.el("ul", { class: "ccnotes" });
     wrap.appendChild(host);
     sec.appendChild(tools); sec.appendChild(wrap); sec.appendChild(notes);
     if (ct && ct.intro) {
       var det = U.el("details", { class: "theory-collapse ccintro" });
-      det.appendChild(U.el("summary", { text: "Where each row comes from, and what happens if it is empty (R4)" }));
+      det.appendChild(U.el("summary", { text: bet ? "Where each row comes from, and why row 9 is hidden from the person you test" : "Where each row comes from, and what happens if it is empty (R4)" }));
       det.appendChild(U.el("div", { class: "why" }, ct.intro));
       sec.appendChild(det);
     }
     function draw() {
       host.innerHTML = "";
-      var rows = CB.cardRows();
+      var rows = CB.cardRows({ bet: bet });
       host.appendChild(cardEl(rows));
       notes.innerHTML = "";
       CB.cardNotes(rows).forEach(function (n) { notes.appendChild(U.el("li", { class: "ccn " + n.state, text: n.text })); });
     }
     draw(); if (CB.on) CB.on("change", draw);
-    bPdf.onclick = function () { CB.downloadCard(); };
+    bPdf.onclick = function () { CB.downloadCard({ bet: false }); };
+    if (bPdfTeam) bPdfTeam.onclick = function () { CB.downloadCard({ bet: true }); };
     bFull.onclick = function () {
       if (wrap.requestFullscreen && !document.fullscreenElement) { wrap.requestFullscreen().catch(function () { wrap.classList.toggle("ccfull"); }); }
       else if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
       else wrap.classList.toggle("ccfull");
     };
-    bExit.onclick = function () { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); wrap.classList.remove("ccfull"); };
+    function hideBet() { wrap.classList.remove("betshown"); if (bShow) bShow.textContent = "Show the bet"; }
+    document.addEventListener("fullscreenchange", function () { if (!document.fullscreenElement) hideBet(); });
+    bExit.onclick = function () { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); wrap.classList.remove("ccfull"); hideBet(); };
     wrap.addEventListener("click", function (ev) { if (wrap.classList.contains("ccfull") && ev.target === wrap) wrap.classList.remove("ccfull"); });
     document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") wrap.classList.remove("ccfull"); });
 
@@ -163,15 +177,16 @@
           active = k; b.classList.add("active"); panel.innerHTML = "";
           panel.appendChild(U.el("h4", { text: "Contoh — " + ex.name + " · Concept Card" }));
           if (ex.how) panel.appendChild(U.el("div", { class: "exbox" }, "<b>HOW TO USE THIS EXAMPLE</b><div class='exval'>" + U.esc(ex.how).replace(/\n/g, "<br>") + "</div>"));
-          panel.appendChild(cardEl(ex.rows.map(function (r, i) { return { k: ["name", "forwhom", "main", "positioning", "why", "where", "price", "ask"][i], label: r[0], value: r[1], from: r[2], s6: [2, 5, 7].indexOf(i) >= 0, big: i === 2, small: i === 3 }; }), { example: true }));
+          panel.appendChild(cardEl(ex.rows.map(function (r, i) { return { k: ["name", "forwhom", "main", "positioning", "why", "where", "price", "ask", "bet"][i], label: r[0], value: r[1], from: r[2], s6: [2, 5, 7].indexOf(i) >= 0, big: i === 2, small: i === 3, bet: i === 8 }; }), { example: true }));
           panel.appendChild(U.el("div", { class: "exnotice", text: ex.cardNotice }));
-          var bx = U.el("div", { class: "exbox" }); bx.appendChild(U.el("b", { text: "CHECK BEFORE YOU SUBMIT (the three core pages and the card, YES or NOT YET)" }));
+          var bx = U.el("div", { class: "exbox" }); bx.appendChild(U.el("b", { text: ex.checkHead || "CHECK BEFORE YOU SUBMIT (the three core pages and the card, YES or NOT YET)" }));
           var sc = U.el("div", { class: "tscroll" }), tb = U.el("table", { class: "wbtable ex" });
           var hr = U.el("tr"); ["PAGE", "WHAT IT ASKS", "OUR ANSWER", "EVIDENCE"].forEach(function (h) { hr.appendChild(U.el("th", { text: h })); }); tb.appendChild(hr);
           ex.check.forEach(function (r) { var tr = U.el("tr"); r.forEach(function (c, i) { tr.appendChild(U.el(i ? "td" : "th", { text: c, class: i === 2 ? (c === "YES" ? "ccyes" : "ccnot") : "" })); }); tb.appendChild(tr); });
           sc.appendChild(tb); bx.appendChild(sc); panel.appendChild(bx);
-          panel.appendChild(U.el("div", { class: "exbox" }, "<b>STILL OPEN, EACH WITH AN OWNER</b><div class='exval'>" + U.esc(ex.open) + "</div>"));
-          panel.appendChild(U.el("div", { class: "exnotice", text: ex.checkNotice }));
+          if (ex.open) panel.appendChild(U.el("div", { class: "exbox" }, "<b>STILL OPEN, EACH WITH AN OWNER</b><div class='exval'>" + U.esc(ex.open) + "</div>"));
+          if (ex.defence) panel.appendChild(U.el("div", { class: "exbox" }, "<b>YOUR DEFENCE</b><div class='exval'>" + U.esc(ex.defence) + "</div>"));
+          if (ex.checkNotice) panel.appendChild(U.el("div", { class: "exnotice", text: ex.checkNotice }));
           if (ex.note) panel.appendChild(U.el("div", { class: "exnote", text: ex.note }));
           panel.classList.remove("hidden");
         };

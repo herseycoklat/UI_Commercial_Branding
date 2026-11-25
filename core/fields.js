@@ -107,7 +107,7 @@
       });
       val.extra.forEach(function (row, i) {
         var tr = U.el("tr", { class: "extra" });
-        tr.appendChild(cell(function () { return row.label; }, function (v) { row.label = v; }, "touchpoint lain"));
+        tr.appendChild(cell(function () { return row.label; }, function (v) { row.label = v; }, f.extraPh || "touchpoint lain"));
         f.columns.forEach(function (c) {
           tr.appendChild(cell(function () { return row[c.k]; }, function (v) { row[c.k] = v; }));
         });
@@ -989,7 +989,17 @@
   CB.shownSource = function (src) {
     var m = /^s(\d+)\./.exec(src.id), sid = m ? "S" + m[1] : "";
     var f = CB.findField(src.id), v = sid ? CB.getField(sid, src.id) : null;
-    if (src.item != null) { var it = v && v.items && v.items[src.item]; return it ? String(it[src.k] || "").trim() : ""; }
+    if (src.item != null) {
+      var it = v && v.items && v.items[src.item]; if (!it) return "";
+      /* src.opt (v0.9.0, S7 hlm. 2): kolom select tampil sebagai labelnya (mis. KIND "desirability" → "Desirability · will people want it?") */
+      if (src.opt && f && f.itemFields) { var sf = f.itemFields.filter(function (x) { return x.k === src.k; })[0]; if (sf && it[src.k]) return String(CB.optLabel(sf, it[src.k]) || "").trim(); }
+      return String(it[src.k] || "").trim();
+    }
+    /* src.row (v0.9.0, S7 hlm. 9): satu baris tabel, kolom-kolomnya digabung (mis. langkah access journey S6) */
+    if (src.row && f && f.type === "table") {
+      var rv = ((v || {}).rows || {})[src.row] || {};
+      return f.columns.map(function (c) { return String(rv[c.k] || "").trim(); }).filter(Boolean).join(" · ");
+    }
     /* src.filter (v0.8.0, S6): semua item list yang item[filter.k] === filter.eq, satu baris per item (k, lalu k2 bila ada).
      * Dipakai untuk baris REAL Promise → Proof S3 dan baris PRIMARY Revenue Streams S5. */
     if (src.filter) {

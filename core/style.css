@@ -621,3 +621,30 @@ ol.chain li.done .chainst{color:var(--ok);}
   .ccrow{grid-template-columns:1fr; gap:2px; padding:10px 14px;}
   .ccsrc{grid-column:1;}
 }
+
+/* ---------- v0.9.0 (S7): Concept Card baris 9 (khusus tim) ---------- */
+.ccbetline{border-top:2px dashed #B85042; margin-top:2px; padding:6px 14px 2px; font-size:11.5px; font-style:italic; color:var(--terra);}
+.ccrow.bet{background:#FBF2EF;}
+.ccshowbet{display:none; margin:0 0 12px 8px;}
+.ccwrap:fullscreen .ccshowbet, .ccwrap.ccfull .ccshowbet{display:inline-block;}
+.ccwrap:fullscreen .ccbetline, .ccwrap.ccfull .ccbetline,
+.ccwrap:fullscreen .ccrow.bet, .ccwrap.ccfull .ccrow.bet{display:none;}
+.ccwrap.betshown:fullscreen .ccbetline, .ccwrap.betshown.ccfull .ccbetline{display:block; font-size:1vw;}
+.ccwrap.betshown:fullscreen .ccrow.bet, .ccwrap.betshown.ccfull .ccrow.bet{display:grid;}
+@media print{ .ppcard .ccrow.bet{background:#FBF2EF; -webkit-print-color-adjust:exact; print-color-adjust:exact;} .ppcard .ccbetline{font-size:8pt;} }
+
+/* ---------- v0.9.0 (S7 hlm. 9): pitch view + cek ✓/✗ ---------- */
+.pvrow{border:1px solid var(--line, #D8CFC6); border-radius:8px; margin:12px 0; overflow:hidden; background:#fff;}
+.pvrow.mark-ok{border-left:5px solid var(--ok);}
+.pvrow.mark-no{border-left:5px solid var(--terra);}
+.pvhead{background:#F3EFE3; padding:8px 14px; font-weight:bold; font-size:14px; color:var(--deep);}
+.pvhead .pvfix{font-weight:normal; color:var(--muted); font-size:12.5px;}
+.pvbody{display:grid; grid-template-columns:1.25fr 1fr; gap:14px; padding:10px 14px;}
+.pvsays .pvlbl, .pvcheck .pvlbl{font-size:11px; font-weight:bold; letter-spacing:.06em; color:var(--muted); margin-bottom:4px;}
+.pvsays .shownsrc{margin:0 0 8px;}
+.pvcheck .box{margin:0; border:none; padding:0; background:transparent;}
+.pvcheck .box > label, .pvcheck .box > .hint{display:none;}
+.pvask{font-style:italic; margin-bottom:8px; font-size:14px;}
+.pvcalc{white-space:pre-wrap; font-size:14px;}
+.pvcalc.empty{color:var(--terra); font-style:italic;}
+@media (max-width:760px){ .pvbody{grid-template-columns:1fr;} }
