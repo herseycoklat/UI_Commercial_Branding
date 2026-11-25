@@ -178,7 +178,7 @@
     how.appendChild(U.el("h2", { text: "Cara kerja" }));
     var ol = U.el("ol", { class: "steps" });
     ["Buka sesi, isi halaman workbook-nya. Isianmu tersimpan otomatis di browser ini.",
-      "Tekan <b>Submit</b> di halaman sesi. App mengunduh satu file .json berisi semua sesi dan Leadership Log-mu.",
+      "Tekan <b>Submit</b> di halaman sesi. App mengunduh satu file .json berisi semua sesimu.",
       "Kumpulkan file TERBARU lewat Google Form" + (CB.config.form_url ? " (<a href='" + U.esc(CB.config.form_url) + "' target='_blank' rel='noopener'>buka Form</a>)" : "") + ", pilih minggunya.",
       "Minggu berikutnya, kalau pindah perangkat atau browser, tekan <b>Lanjutkan dari file</b> dan pilih file terakhirmu."
     ].forEach(function (t) { ol.appendChild(U.el("li", null, t)); });
@@ -231,10 +231,12 @@
     lg.appendChild(U.el("h2", { text: "Leadership Log" }));
     var ents = CB.data.leadership_log.entries.filter(function (e) { return (e.text || "").trim(); });
     var last = ents.length ? ents.slice().sort(function (x, y) { return (y.updated_at || y.created_at || "").localeCompare(x.updated_at || x.created_at || ""); })[0] : null;
-    lg.appendChild(U.el("p", { class: "lead", text: "Catatan individualmu sepanjang kursus (silabus §9D, nilai individual 10%). Satu entri per kerja yang kamu pimpin atau putuskan. Ikut di setiap file yang kamu unduh." }));
-    lg.appendChild(U.el("p", null, "<b>" + ents.length + "</b> entri" + (last ? " · terakhir " + U.esc(U.fmtDate(last.updated_at || last.created_at)) : "")));
-    if (CB.isReleased("S1")) lg.appendChild(U.el("a", { class: "btn", href: "leadership.html", text: "Buka Leadership Log" }));
-    else lg.appendChild(U.el("p", { class: "small muted", text: "Log terbuka bersama Sesi 1." }));
+    /* v0.9.2 (Fai 26 Nov, butir 112): tidak ditulis terpisah lagi. Entri lama tetap tersimpan dan bisa dibuka. */
+    lg.appendChild(U.el("p", { class: "lead", text: "Leadership Log (nilai individual 10%) tidak perlu ditulis terpisah. Ia dibaca dari pekerjaan yang sudah kamu lakukan: perubahan yang kamu catat di Strategy Revision Log (Sesi 7, page 4) dan Decision Log (Sesi 1, hlm. 8), pengumpulan tepat waktu dan umpan balik yang benar-benar kamu perbaiki, serta vote-mu di Kelas Live." }));
+    if (ents.length) {
+      lg.appendChild(U.el("p", { class: "small muted" }, "Kamu sudah menulis <b>" + ents.length + "</b> entri" + (last ? " (terakhir " + U.esc(U.fmtDate(last.updated_at || last.created_at)) + ")" : "") + ". Entri itu tetap tersimpan di filemu."));
+      lg.appendChild(U.el("a", { class: "btn ghost", href: "leadership.html", text: "Lihat entri lama" }));
+    }
     main.appendChild(lg);
   }
 

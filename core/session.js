@@ -712,7 +712,7 @@
     var how = U.el("div", { class: "pc-box" });
     how.appendChild(U.el("div", { class: "pc-h", text: "Cara kerja" }));
     ["Buka sesi, isi halaman workbook-nya. Isianmu tersimpan otomatis di browser ini.",
-      "Tekan Submit di halaman sesi. App mengunduh satu file .json berisi semua sesi dan Leadership Log-mu.",
+      "Tekan Submit di halaman sesi. App mengunduh satu file .json berisi semua sesimu.",
       "Kumpulkan file TERBARU lewat Google Form" + (CB.config.form_url ? " (" + CB.config.form_url + ")" : "") + ", pilih minggunya.",
       "Kalau pindah perangkat atau browser, tekan Lanjutkan dari file dan pilih file terakhirmu."
     ].forEach(function (t, i) {

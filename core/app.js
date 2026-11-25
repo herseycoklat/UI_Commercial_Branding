@@ -21,7 +21,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "0.9.1";
+  var APP_VERSION = "0.9.2";
   var SCHEMA = "cb-student/1";
   var KEY_ACTIVE = "cb_active_nim";
   var KEY_PREFIX = "cb_student_";
@@ -513,7 +513,9 @@
     a2.href = "leadership.html" + (sessId ? "?dari=" + sessId : "");
     a2.textContent = "Leadership Log";
     (active === "leadership" ? a2 : a1).className = "on";
-    wrap.appendChild(a1); wrap.appendChild(a2);
+    /* v0.9.2 (Fai 26 Nov, butir 112): Leadership Log dibaca dari pekerjaan yang sudah ada; tab disembunyikan.
+       Halaman leadership.html tetap ada (entri lama tetap tersimpan dan bisa dibuka dari beranda). */
+    wrap.appendChild(a1); if (active === "leadership") wrap.appendChild(a2);
     host.parentNode.insertBefore(wrap, host.nextSibling);
     return wrap;
   };
