@@ -648,3 +648,5 @@ ol.chain li.done .chainst{color:var(--ok);}
 .pvcalc{white-space:pre-wrap; font-size:14px;}
 .pvcalc.empty{color:var(--terra); font-style:italic;}
 @media (max-width:760px){ .pvbody{grid-template-columns:1fr;} }
+.pvcheck .pvref{margin:0 0 10px; padding:6px 10px; border-left:3px solid var(--terra); background:#FBF7F2;}
+.pvcheck .pvref .shownhead b{font-size:12px; font-weight:normal; font-style:italic;}

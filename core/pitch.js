@@ -17,6 +17,7 @@
       return its.length + (its.length === 1 ? " row" : " rows") + " (" + st + " STRONG · " + wk + " WEAK" + (its.length - st - wk ? " · " + (its.length - st - wk) + " not marked" : "") + ")\n" +
         its.map(function (x, i) { return (i + 1) + ". " + (t(x.line) || "(line?)") + ": " + (t(x.after) || "—") + " · evidence: " + (t(x.evidence) || "—") + (x.strength ? " · " + x.strength.toUpperCase() : ""); }).join("\n");
     }
+    if (src.calc === "card" && CB.cardRows) { var cr = CB.cardRows().filter(function (r) { return r.k === src.row; })[0]; return cr ? t(cr.value) : ""; }
     if (src.calc === "ask") return t((CB.getField("S6", "s6.p9.target") || {}).does);
     if (src.calc === "name") {
       var nm = t(CB.getField("S4", "s4.p2.product"));
@@ -54,6 +55,8 @@
       var chk = U.el("div", { class: "pvcheck" });
       chk.appendChild(U.el("div", { class: "pvlbl", text: "ASK YOURSELF" }));
       chk.appendChild(U.el("div", { class: "pvask", text: f.hint }));
+      /* pernyataan yang dirujuk pertanyaan, dikutip (spec askRefs; tampilan saja) */
+      (f.askRefs || []).forEach(function (src) { var r = sourceEl(src); r.classList.add("pvref"); chk.appendChild(r); });
       chk.appendChild(U.el("div", { class: "pvlbl", text: "✓ / ✗" }));
       chk.appendChild(renderField(f));
       body.appendChild(says); body.appendChild(chk); row.appendChild(body);
@@ -75,7 +78,8 @@
       var v = CB.getField(sessId, f.id) || {};
       var says = f.pv.map(function (src) { var x = CB.pitchSourceText(src); return src.label + ": " + (x || "not filled yet"); }).join("\n");
       var tr = U.el("tr");
-      [f.label, says, f.hint, v.status === "ok" ? "✓" : v.status === "no" ? "✗" : "—", t(v.note) || "—"].forEach(function (c, i) {
+      var ask = f.hint + (f.askRefs || []).map(function (src) { return "\n" + src.label + ": " + (CB.pitchSourceText(src) || "not filled yet"); }).join("");
+      [f.label, says, ask, v.status === "ok" ? "✓" : v.status === "no" ? "✗" : "—", t(v.note) || "—"].forEach(function (c, i) {
         var td = U.el(i ? "td" : "th", { text: c }); td.style.whiteSpace = "pre-wrap"; tr.appendChild(td);
       });
       body.appendChild(tr);

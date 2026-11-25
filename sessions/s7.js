@@ -17,9 +17,11 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
   var REAL = { id: "s3.p5.promise_proof", filter: { k: "status", eq: "nyata" }, k: "promise", k2: "proof", countOthers: true,
     label: "REAL rows of Promise → Proof (S3 hlm. 5)" };
   var MARK = [{ v: "ok", label: "✓" }, { v: "no", label: "✗" }];
-  function step(n, label, ask, pv) {
+  /* askRefs (tampilan saja, 26 Nov, permintaan Fai): pernyataan yang dirujuk pertanyaan ASK YOURSELF dan belum tampil di
+   * kolom kiri langkah itu, dikutip di bawah pertanyaannya. Tidak menyimpan apa pun. */
+  function step(n, label, ask, pv, refs) {
     return { id: "s7.p9.step" + n, type: "status", label: label, hint: ask, options: MARK,
-      noteLabel: "IF ✗: WHERE WE FIXED IT", notePh: "— if ✗: session · page —", pv: pv };
+      noteLabel: "IF ✗: WHERE WE FIXED IT", notePh: "— if ✗: session · page —", pv: pv, askRefs: refs || [] };
   }
 
   CB.specs.S7 = {
@@ -187,13 +189,16 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
         layout: "pitch",
         fields: [
           step(1, "1 · The problem → Session 1", "Is your problem still a problem for the people in step 2?",
-            [{ id: "s1.p7.problem1", label: "Problem 1 (S1 hlm. 7)" }]),
+            [{ id: "s1.p7.problem1", label: "Problem 1 (S1 hlm. 7)" }],
+            [{ id: "s2.p4.primary", label: "\"the people in step 2\" · primary audience (S2 hlm. 4)" }]),
           step(2, "2 · Who, and how we know → Session 2", "Is your card's FOR WHOM your primary audience from Session 2, with an insight behind it?",
-            [{ id: "s2.p4.primary", label: "Primary audience (S2 hlm. 4)" }, { id: "s2.p5.insight", label: "Insight sentence (S2 hlm. 5)" }]),
+            [{ id: "s2.p4.primary", label: "Primary audience (S2 hlm. 4)" }, { id: "s2.p5.insight", label: "Insight sentence (S2 hlm. 5)" }],
+            [{ calc: "card", row: "forwhom", id: "s2.p4.primary", label: "\"your card's FOR WHOM\" · Concept Card (built from S2 hlm. 4)" }]),
           step(3, "3 · Why us → Session 3", "Does every promise in your positioning have a REAL proof?",
             [{ id: "s3.p2.final", label: "Positioning (S3 hlm. 2)" }, REAL]),
           step(4, "4 · The money story → Session 5", "Is the price on your card your Session 5 price, and above your survival line?",
-            [{ id: "s5.p2.rev", filter: { k: "role", eq: "primary" }, k: "stream", label: "PRIMARY revenue (S5 hlm. 2)" }, { id: "s5.p4.rows", label: "Price (S5 hlm. 4)" }, { id: "s5.p4.survival", label: "Survival line (S5 hlm. 4)" }]),
+            [{ id: "s5.p2.rev", filter: { k: "role", eq: "primary" }, k: "stream", label: "PRIMARY revenue (S5 hlm. 2)" }, { id: "s5.p4.rows", label: "Price (S5 hlm. 4)" }, { id: "s5.p4.survival", label: "Survival line (S5 hlm. 4)" }],
+            [{ calc: "card", row: "price", id: "s5.p4.rows", label: "\"the price on your card\" · Concept Card PRICE (built from S5 hlm. 4)" }]),
           step(5, "5 · The road to the audience → Session 6", "Is the ask in your message the same action as the top of your KPI tree?",
             [{ id: "s6.p4.journey", row: "access", label: "Access step (S6 hlm. 4)" }, { id: "s6.p5.main", label: "Main message (S6 hlm. 5)" }, { id: "s6.p5.ask", label: "One ask (S6 hlm. 5)" }, { id: "s6.p9.target", label: "Top of the KPI tree (S6 hlm. 9, step 1)" }]),
           step(6, "6 · What we tested and changed → Session 7", "Is there a test plan with a number written before the test, and at least one page-4 row whose evidence comes from people (class test, feedback, your own test), not only from this check?",
@@ -201,7 +206,8 @@ window.CB = window.CB || {}; CB.specs = CB.specs || {};
           step(7, "7 · The ask and what's next → Sessions 5 and 7", "Is your open bet written down, with one name who decides?",
             [{ calc: "ask", id: "s6.p9.target", label: "The ask on your card (S6 hlm. 9, step 1)" }, { id: "s5.p8.bets", item: 0, k: "bet", label: "Open bet: row 1 (S5 hlm. 8)" }, { id: "s7.p5.decides", label: "Who decides (page 5, row 1)" }]),
           step(8, "8 · Brand identity (not in the pitch view) → Session 4", "Do your name and brand codes still promise what your positioning promises?",
-            [{ calc: "name", id: "s4.p2.product", label: "Name (S4 hlm. 2, or your project name)" }, { id: "s4.p6.have", label: "Brand codes you have (S4 hlm. 6)" }]),
+            [{ calc: "name", id: "s4.p2.product", label: "Name (S4 hlm. 2, or your project name)" }, { id: "s4.p6.have", label: "Brand codes you have (S4 hlm. 6)" }],
+            [{ id: "s3.p2.final", label: "\"what your positioning promises\" · positioning (S3 hlm. 2)" }]),
           { id: "s7.p9.cant", type: "longtext", label: "WHAT WE COULDN'T FIX YET", hint: "— only the steps still ✗: which step, why, and what you will do, by when. A big change with no strong finding goes here —" }
         ]
       }
