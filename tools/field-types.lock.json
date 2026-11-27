@@ -202,5 +202,32 @@
     "s6.p9.drivers": "teks",
     "s6.p9.signal": "teks",
     "s6.p9.target": "parts"
+  },
+  "S7": {
+    "s7.p2.action": "status",
+    "s7.p2.bet": "shown",
+    "s7.p2.forwhom": "shown",
+    "s7.p2.prediction": "teks",
+    "s7.p2.result": "teks",
+    "s7.p2.who": "teks",
+    "s7.p3.rows": "list",
+    "s7.p4.rows": "list",
+    "s7.p5.adapt": "teks",
+    "s7.p5.ask_before": "teks",
+    "s7.p5.decides": "teks",
+    "s7.p5.master": "teks",
+    "s7.p5.never": "teks",
+    "s7.p6.matrix": "table",
+    "s7.p7.risks": "list",
+    "s7.p8.dash": "table",
+    "s7.p9.cant": "teks",
+    "s7.p9.step1": "status",
+    "s7.p9.step2": "status",
+    "s7.p9.step3": "status",
+    "s7.p9.step4": "status",
+    "s7.p9.step5": "status",
+    "s7.p9.step6": "status",
+    "s7.p9.step7": "status",
+    "s7.p9.step8": "status"
   }
 }

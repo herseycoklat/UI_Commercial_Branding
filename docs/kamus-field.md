@@ -252,3 +252,37 @@ Terkunci: ya, 31 ID
 | 9 | `s6.p9.check` | KPI Tree | table | HAL INTI | ya |
 | 10 | `s6.p10.risks` | RISK: WHAT HAPPENS · EARLY-WARNING SIGN · IF X, THEN Y · OWNER | list | opsional | ya |
 
+## S7 · Testing and Brand Governance Plan
+
+Hal inti: 16. Test plan (hlm. 2); 17. Revision Log (hlm. 4); 18. Governance (hlm. 5); 19. Pitch view (hlm. 9)
+
+Terkunci: ya, 25 ID
+
+| Hlm | ID | Label | Tipe | Peran | Kunci |
+|---|---|---|---|---|---|
+| 2 | `s7.p2.bet` | THE BET WE TEST + CATEGORY · SESSION 5, PAGE 8, ROW 1 · SHOWN, NOT RET | shown | HAL INTI | ya |
+| 2 | `s7.p2.forwhom` | FOR WHOM · SESSION 2, PAGE 4 · SHOWN, NOT RETYPED | shown | HAL INTI | ya |
+| 2 | `s7.p2.who` | WHO WE ASK | longtext | HAL INTI | ya |
+| 2 | `s7.p2.action` | WHAT WE ASK THEM TO DO · DO OR PAY | status | HAL INTI | ya |
+| 2 | `s7.p2.prediction` | OUR PREDICTION · BEFORE THE TEST | longtext | HAL INTI | ya |
+| 2 | `s7.p2.result` | RESULT (OPTIONAL) | longtext | HAL INTI | ya |
+| 3 | `s7.p3.rows` | Evidence Strength Matrix | list | opsional | ya |
+| 4 | `s7.p4.rows` | Strategy Revision Log | list | HAL INTI | ya |
+| 5 | `s7.p5.decides` | 1 · WHO DECIDES IF THE MAIN MESSAGE CHANGES | text | HAL INTI | ya |
+| 5 | `s7.p5.master` | 2 · WHERE THE MASTER FILE OF YOUR BRAND CODES LIVES, AND WHICH VERSION | longtext | HAL INTI | ya |
+| 5 | `s7.p5.ask_before` | 3 · WHO MUST BE ASKED BEFORE A CREATIVE ASSET CHANGES | text | HAL INTI | ya |
+| 5 | `s7.p5.never` | NEVER CHANGES WITHOUT THE OWNER (OPTIONAL) | longtext | HAL INTI | ya |
+| 5 | `s7.p5.adapt` | MAY ADAPT (OPTIONAL) | longtext | HAL INTI | ya |
+| 6 | `s7.p6.matrix` | Decision-Rights Matrix | table | opsional | ya |
+| 7 | `s7.p7.risks` | Brand Risk Register | list | opsional | ya |
+| 8 | `s7.p8.dash` | KPI Dashboard | table | opsional | ya |
+| 9 | `s7.p9.step1` | 1 · The problem → Session 1 | status | HAL INTI | ya |
+| 9 | `s7.p9.step2` | 2 · Who, and how we know → Session 2 | status | HAL INTI | ya |
+| 9 | `s7.p9.step3` | 3 · Why us → Session 3 | status | HAL INTI | ya |
+| 9 | `s7.p9.step4` | 4 · The money story → Session 5 | status | HAL INTI | ya |
+| 9 | `s7.p9.step5` | 5 · The road to the audience → Session 6 | status | HAL INTI | ya |
+| 9 | `s7.p9.step6` | 6 · What we tested and changed → Session 7 | status | HAL INTI | ya |
+| 9 | `s7.p9.step7` | 7 · The ask and what's next → Sessions 5 and 7 | status | HAL INTI | ya |
+| 9 | `s7.p9.step8` | 8 · Brand identity (not in the pitch view) → Session 4 | status | HAL INTI | ya |
+| 9 | `s7.p9.cant` | WHAT WE COULDN'T FIX YET | longtext | HAL INTI | ya |
+

@@ -202,5 +202,32 @@
     "s6.p9.signal",
     "s6.p9.check",
     "s6.p10.risks"
+  ],
+  "S7": [
+    "s7.p2.bet",
+    "s7.p2.forwhom",
+    "s7.p2.who",
+    "s7.p2.action",
+    "s7.p2.prediction",
+    "s7.p2.result",
+    "s7.p3.rows",
+    "s7.p4.rows",
+    "s7.p5.decides",
+    "s7.p5.master",
+    "s7.p5.ask_before",
+    "s7.p5.never",
+    "s7.p5.adapt",
+    "s7.p6.matrix",
+    "s7.p7.risks",
+    "s7.p8.dash",
+    "s7.p9.step1",
+    "s7.p9.step2",
+    "s7.p9.step3",
+    "s7.p9.step4",
+    "s7.p9.step5",
+    "s7.p9.step6",
+    "s7.p9.step7",
+    "s7.p9.step8",
+    "s7.p9.cant"
   ]
 }
